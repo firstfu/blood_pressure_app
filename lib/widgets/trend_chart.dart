@@ -16,14 +16,23 @@ class TrendChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (records.isEmpty) {
-      return const Center(child: Text('暫無數據'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withOpacity(0.5)),
+            const SizedBox(height: 16),
+            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withOpacity(0.7))),
+          ],
+        ),
+      );
     }
 
     // 按時間排序
     final sortedRecords = List<BloodPressureRecord>.from(records)..sort((a, b) => a.measureTime.compareTo(b.measureTime));
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
@@ -32,10 +41,10 @@ class TrendChart extends StatelessWidget {
             horizontalInterval: 20,
             verticalInterval: 1,
             getDrawingHorizontalLine: (value) {
-              return FlLine(color: Colors.grey[300], strokeWidth: 1);
+              return FlLine(color: Colors.grey[200], strokeWidth: 1);
             },
             getDrawingVerticalLine: (value) {
-              return FlLine(color: Colors.grey[300], strokeWidth: 1);
+              return FlLine(color: Colors.grey[200], strokeWidth: 1);
             },
           ),
           titlesData: FlTitlesData(
@@ -55,7 +64,10 @@ class TrendChart extends StatelessWidget {
                   final record = sortedRecords[value.toInt()];
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Text(DateTimeUtils.formatDateMMDD(record.measureTime), style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                    child: Text(
+                      DateTimeUtils.formatDateMMDD(record.measureTime),
+                      style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 10, fontWeight: FontWeight.w500),
+                    ),
                   );
                 },
               ),
@@ -65,13 +77,37 @@ class TrendChart extends StatelessWidget {
                 showTitles: showLabels,
                 interval: 20,
                 getTitlesWidget: (value, meta) {
-                  return Text(value.toInt().toString(), style: const TextStyle(color: Colors.grey, fontSize: 10));
+                  return Text(
+                    value.toInt().toString(),
+                    style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 10, fontWeight: FontWeight.w500),
+                  );
                 },
                 reservedSize: 30,
               ),
             ),
           ),
-          borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey[300]!)),
+          borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey[200]!)),
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              tooltipBgColor: Colors.white,
+              tooltipRoundedRadius: 8,
+              tooltipBorder: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2), width: 1),
+              tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                return touchedBarSpots.map((barSpot) {
+                  final record = sortedRecords[barSpot.x.toInt()];
+                  final isSystolic = barSpot.barIndex == 0;
+                  final value = isSystolic ? record.systolic : record.diastolic;
+                  final title = isSystolic ? '收縮壓' : '舒張壓';
+                  final color = isSystolic ? AppTheme.primaryColor : AppTheme.successColor;
+
+                  return LineTooltipItem('$title: $value mmHg', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
+                }).toList();
+              },
+            ),
+            handleBuiltInTouches: true,
+            touchSpotThreshold: 20,
+          ),
           minX: 0,
           maxX: sortedRecords.length - 1.0,
           minY: _getMinY(),
@@ -82,22 +118,80 @@ class TrendChart extends StatelessWidget {
               spots: _getSystolicSpots(sortedRecords),
               isCurved: true,
               color: AppTheme.primaryColor,
-              barWidth: 3,
+              barWidth: 2.5,
               isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              belowBarData: BarAreaData(show: true, color: AppTheme.primaryColor.withOpacity(0.1)),
+              dotData: FlDotData(
+                show: true,
+                getDotPainter:
+                    (spot, percent, barData, index) =>
+                        FlDotCirclePainter(radius: 4, color: Colors.white, strokeWidth: 2, strokeColor: AppTheme.primaryColor),
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [AppTheme.primaryColor.withOpacity(0.2), AppTheme.primaryColor.withOpacity(0.05)],
+                ),
+              ),
             ),
             // 舒張壓線
             LineChartBarData(
               spots: _getDiastolicSpots(sortedRecords),
               isCurved: true,
               color: AppTheme.successColor,
-              barWidth: 3,
+              barWidth: 2.5,
               isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              belowBarData: BarAreaData(show: true, color: AppTheme.successColor.withOpacity(0.1)),
+              dotData: FlDotData(
+                show: true,
+                getDotPainter:
+                    (spot, percent, barData, index) =>
+                        FlDotCirclePainter(radius: 4, color: Colors.white, strokeWidth: 2, strokeColor: AppTheme.successColor),
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                color: AppTheme.successColor.withOpacity(0.1),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [AppTheme.successColor.withOpacity(0.2), AppTheme.successColor.withOpacity(0.05)],
+                ),
+              ),
             ),
           ],
+          extraLinesData: ExtraLinesData(
+            horizontalLines: [
+              // 正常血壓上限參考線
+              HorizontalLine(
+                y: 120,
+                color: AppTheme.successColor.withOpacity(0.5),
+                strokeWidth: 1,
+                dashArray: [5, 5],
+                label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topRight,
+                  padding: const EdgeInsets.only(right: 8, bottom: 2),
+                  style: TextStyle(color: AppTheme.successColor, fontSize: 9, fontWeight: FontWeight.w500),
+                  labelResolver: (line) => '正常上限',
+                ),
+              ),
+              // 高血壓參考線
+              HorizontalLine(
+                y: 140,
+                color: AppTheme.warningColor.withOpacity(0.5),
+                strokeWidth: 1,
+                dashArray: [5, 5],
+                label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topRight,
+                  padding: const EdgeInsets.only(right: 8, bottom: 2),
+                  style: TextStyle(color: AppTheme.warningColor, fontSize: 9, fontWeight: FontWeight.w500),
+                  labelResolver: (line) => '高血壓',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -13,16 +13,29 @@ class HealthTipCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      color: AppTheme.primaryLightColor.withOpacity(0.1),
+      shadowColor: AppTheme.primaryColor.withOpacity(0.1),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.lightbulb_outline, color: AppTheme.primaryColor, size: 24),
-            const SizedBox(width: 12),
-            Expanded(child: Text(tip, style: Theme.of(context).textTheme.bodyMedium)),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+              child: Icon(Icons.lightbulb_outline, color: AppTheme.primaryColor, size: 20),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('健康小貼士', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                  const SizedBox(height: 4),
+                  Text(tip, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textPrimaryColor)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
