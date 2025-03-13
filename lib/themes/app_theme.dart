@@ -116,12 +116,7 @@ class AppTheme {
         primary: primaryColor,
         secondary: primaryLightColor,
         error: warningColor,
-        background: backgroundColor,
-        surface: cardColor,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onError: Colors.white,
-        onBackground: textPrimaryColor,
+        surface: backgroundColor,
         onSurface: textPrimaryColor,
       ),
     );
