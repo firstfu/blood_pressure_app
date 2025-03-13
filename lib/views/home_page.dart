@@ -22,14 +22,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat(reverse: true);
-
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -120,7 +117,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 1))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,19 +131,24 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildMeasurementStatus(BuildContext context, bool isMeasuredToday) {
+    final successColorLight = AppTheme.successColor.withAlpha(20);
+    final alertColorLight = AppTheme.alertColor.withAlpha(20);
+    final successColorBorder = AppTheme.successColor.withAlpha(77);
+    final alertColorBorder = AppTheme.alertColor.withAlpha(77);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: isMeasuredToday ? AppTheme.successColor.withOpacity(0.08) : AppTheme.alertColor.withOpacity(0.08),
+        color: isMeasuredToday ? successColorLight : alertColorLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isMeasuredToday ? AppTheme.successColor.withOpacity(0.3) : AppTheme.alertColor.withOpacity(0.3), width: 1),
+        border: Border.all(color: isMeasuredToday ? successColorBorder : alertColorBorder, width: 1),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isMeasuredToday ? AppTheme.successColor.withOpacity(0.15) : AppTheme.alertColor.withOpacity(0.15),
+              color: isMeasuredToday ? AppTheme.successColor.withAlpha(38) : AppTheme.alertColor.withAlpha(38),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -184,7 +186,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
     return Card(
       elevation: 1,
-      shadowColor: AppTheme.primaryColor.withOpacity(0.1),
+      shadowColor: AppTheme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -200,7 +202,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(16)),
+                  decoration: BoxDecoration(color: statusColor.withAlpha(26), borderRadius: BorderRadius.circular(16)),
                   child: Text(statusText, style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 14)),
                 ),
               ],
@@ -268,7 +270,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Card(
       elevation: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      shadowColor: AppTheme.primaryColor.withOpacity(0.1),
+      shadowColor: AppTheme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),

@@ -13,7 +13,7 @@ class HealthTipCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      shadowColor: AppTheme.primaryColor.withOpacity(0.1),
+      shadowColor: AppTheme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -22,7 +22,7 @@ class HealthTipCard extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(12)),
               child: Icon(Icons.lightbulb_outline, color: AppTheme.primaryColor, size: 20),
             ),
             const SizedBox(width: 16),

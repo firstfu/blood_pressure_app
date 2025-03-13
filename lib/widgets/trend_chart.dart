@@ -20,9 +20,9 @@ class TrendChart extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withOpacity(0.5)),
+            Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
             const SizedBox(height: 16),
-            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withOpacity(0.7))),
+            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
           ],
         ),
       );
@@ -91,7 +91,7 @@ class TrendChart extends StatelessWidget {
             touchTooltipData: LineTouchTooltipData(
               tooltipBgColor: Colors.white,
               tooltipRoundedRadius: 8,
-              tooltipBorder: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2), width: 1),
+              tooltipBorder: BorderSide(color: AppTheme.primaryColor.withAlpha(51), width: 1),
               tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                 return touchedBarSpots.map((barSpot) {
@@ -128,11 +128,11 @@ class TrendChart extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withAlpha(26),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [AppTheme.primaryColor.withOpacity(0.2), AppTheme.primaryColor.withOpacity(0.05)],
+                  colors: [AppTheme.primaryColor.withAlpha(51), AppTheme.primaryColor.withAlpha(13)],
                 ),
               ),
             ),
@@ -151,11 +151,11 @@ class TrendChart extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: AppTheme.successColor.withOpacity(0.1),
+                color: AppTheme.successColor.withAlpha(26),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [AppTheme.successColor.withOpacity(0.2), AppTheme.successColor.withOpacity(0.05)],
+                  colors: [AppTheme.successColor.withAlpha(51), AppTheme.successColor.withAlpha(13)],
                 ),
               ),
             ),
@@ -165,7 +165,7 @@ class TrendChart extends StatelessWidget {
               // 正常血壓上限參考線
               HorizontalLine(
                 y: 120,
-                color: AppTheme.successColor.withOpacity(0.5),
+                color: AppTheme.successColor.withAlpha(128),
                 strokeWidth: 1,
                 dashArray: [5, 5],
                 label: HorizontalLineLabel(
@@ -179,7 +179,7 @@ class TrendChart extends StatelessWidget {
               // 高血壓參考線
               HorizontalLine(
                 y: 140,
-                color: AppTheme.warningColor.withOpacity(0.5),
+                color: AppTheme.warningColor.withAlpha(128),
                 strokeWidth: 1,
                 dashArray: [5, 5],
                 label: HorizontalLineLabel(
@@ -216,9 +216,7 @@ class TrendChart extends StatelessWidget {
   double _getMinY() {
     if (records.isEmpty) return 60;
 
-    final minSystolic = records.map((e) => e.systolic).reduce((a, b) => a < b ? a : b);
     final minDiastolic = records.map((e) => e.diastolic).reduce((a, b) => a < b ? a : b);
-
     return (minDiastolic - 10).toDouble().clamp(60, double.infinity);
   }
 
@@ -226,8 +224,6 @@ class TrendChart extends StatelessWidget {
     if (records.isEmpty) return 180;
 
     final maxSystolic = records.map((e) => e.systolic).reduce((a, b) => a > b ? a : b);
-    final maxDiastolic = records.map((e) => e.diastolic).reduce((a, b) => a > b ? a : b);
-
     return (maxSystolic + 10).toDouble().clamp(0, 200);
   }
 }

@@ -125,7 +125,7 @@ class AppTheme {
       cardTheme: CardTheme(
         color: cardColor,
         elevation: 1,
-        shadowColor: primaryColor.withOpacity(0.1),
+        shadowColor: primaryColor.withAlpha(26),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       ),
@@ -141,7 +141,7 @@ class AppTheme {
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
         errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: warningColor, width: 1.0)),
         focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: warningColor, width: 1.5)),
-        hintStyle: TextStyle(color: textSecondaryColor.withOpacity(0.7), fontSize: 14),
+        hintStyle: TextStyle(color: textSecondaryColor.withAlpha(179), fontSize: 14),
         labelStyle: TextStyle(color: textSecondaryColor, fontSize: 14),
         errorStyle: TextStyle(color: warningColor, fontSize: 12),
       ),
@@ -149,39 +149,39 @@ class AppTheme {
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: primaryColor,
         refreshBackgroundColor: backgroundColor,
-        linearTrackColor: primaryLightColor.withOpacity(0.3),
-        circularTrackColor: primaryLightColor.withOpacity(0.2),
+        linearTrackColor: primaryLightColor.withAlpha(77),
+        circularTrackColor: primaryLightColor.withAlpha(51),
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: primaryColor,
-        inactiveTrackColor: primaryColor.withOpacity(0.2),
+        inactiveTrackColor: primaryColor.withAlpha(51),
         thumbColor: primaryColor,
-        overlayColor: primaryColor.withOpacity(0.2),
+        overlayColor: primaryColor.withAlpha(51),
         valueIndicatorColor: primaryDarkColor,
         valueIndicatorTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return primaryColor;
           }
           return Colors.grey.shade400;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
-            return primaryColor.withOpacity(0.5);
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor.withAlpha(128);
           }
           return Colors.grey.shade300;
         }),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return primaryColor;
           }
           return Colors.transparent;
         }),
-        checkColor: MaterialStateProperty.all(Colors.white),
+        checkColor: WidgetStateProperty.all(Colors.white),
         side: BorderSide(color: textSecondaryColor, width: 1.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
@@ -195,15 +195,15 @@ class AppTheme {
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onError: Colors.white,
-        surfaceTint: primaryColor.withOpacity(0.05),
-        surfaceVariant: backgroundColor.withOpacity(0.8),
+        surfaceTint: primaryColor.withAlpha(13),
+        surfaceContainerHighest: backgroundColor.withAlpha(204),
         onSurfaceVariant: textSecondaryColor,
         outline: dividerColor,
-        shadow: Colors.black.withOpacity(0.1),
+        shadow: Colors.black.withAlpha(26),
         inverseSurface: textPrimaryColor,
         onInverseSurface: Colors.white,
         inversePrimary: primaryLightColor,
-        scrim: Colors.black.withOpacity(0.3),
+        scrim: Colors.black.withAlpha(77),
       ),
     );
   }
