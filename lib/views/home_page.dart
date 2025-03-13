@@ -8,7 +8,6 @@ import '../constants/app_constants.dart';
 import '../models/blood_pressure_record.dart';
 import '../services/mock_data_service.dart';
 import '../utils/date_time_utils.dart';
-import '../widgets/blood_pressure_card.dart';
 import '../widgets/trend_chart.dart';
 import '../widgets/health_tip_card.dart';
 import '../themes/app_theme.dart';

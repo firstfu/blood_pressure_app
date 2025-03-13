@@ -1,7 +1,7 @@
 # 血壓追蹤 - 健康監測應用程式
 
 <div align="center">
-  <img src="docs/imgs/simulator_screenshot_70BB70DD-8C4B-41F0-8662-80C757A5913B.png" alt="血壓追蹤應用程式標誌" width="200">
+  <img src="docs/imgs/app_logo.svg" alt="血壓追蹤應用程式標誌" width="200">
 </div>
 
 ## 📱 應用程式概述

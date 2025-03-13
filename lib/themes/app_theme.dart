@@ -1,32 +1,66 @@
 // 血壓記錄 App 主題檔案
 // 定義應用程式的顏色方案、字體和其他主題設定
+// 遵循 Material Design 3 設計規範
 
 import 'package:flutter/material.dart';
 
+/// AppTheme 類別
+///
+/// 定義應用程式的所有視覺風格和主題設定
+/// 包含顏色、字體、元件樣式等
 class AppTheme {
   // 主色調
-  static const Color primaryColor = Color(0xFF1976D2); // 更專業的醫療藍
-  static const Color primaryLightColor = Color(0xFF4FC3F7); // 更清新的淺藍色
-  static const Color primaryDarkColor = Color(0xFF0D47A1); // 更深沉的藍色
+  /// 主要顏色 - 專業醫療藍
+  static const Color primaryColor = Color(0xFF1976D2);
+
+  /// 淺色主色調 - 清新淺藍色
+  static const Color primaryLightColor = Color(0xFF4FC3F7);
+
+  /// 深色主色調 - 深沉藍色
+  static const Color primaryDarkColor = Color(0xFF0D47A1);
 
   // 功能色彩
-  static const Color successColor = Color(0xFF2E7D32); // 更沉穩的綠色
-  static const Color successLightColor = Color(0xFF81C784); // 淺綠色
-  static const Color warningColor = Color(0xFFD32F2F); // 更醒目的紅色
-  static const Color warningLightColor = Color(0xFFEF5350); // 淺紅色
-  static const Color alertColor = Color(0xFFEF6C00); // 更溫暖的橙色
-  static const Color alertLightColor = Color(0xFFFFB74D); // 淺橙色
+  /// 成功狀態顏色 - 沉穩綠色
+  static const Color successColor = Color(0xFF2E7D32);
+
+  /// 淺色成功狀態 - 淺綠色
+  static const Color successLightColor = Color(0xFF81C784);
+
+  /// 警告狀態顏色 - 醒目紅色
+  static const Color warningColor = Color(0xFFD32F2F);
+
+  /// 淺色警告狀態 - 淺紅色
+  static const Color warningLightColor = Color(0xFFEF5350);
+
+  /// 提醒狀態顏色 - 溫暖橙色
+  static const Color alertColor = Color(0xFFEF6C00);
+
+  /// 淺色提醒狀態 - 淺橙色
+  static const Color alertLightColor = Color(0xFFFFB74D);
 
   // 中性色彩
-  static const Color textPrimaryColor = Color(0xFF212121); // 更深的灰，主要文字
-  static const Color textSecondaryColor = Color(0xFF757575); // 中灰，次要文字
-  static const Color backgroundColor = Color(0xFFF8F9FA); // 更柔和的背景色
-  static const Color cardColor = Color(0xFFFFFFFF); // 白色，卡片背景
-  static const Color dividerColor = Color(0xFFEEEEEE); // 分隔線顏色
+  /// 主要文字顏色 - 深灰色
+  static const Color textPrimaryColor = Color(0xFF212121);
 
-  // 創建主題數據
+  /// 次要文字顏色 - 中灰色
+  static const Color textSecondaryColor = Color(0xFF757575);
+
+  /// 背景顏色 - 柔和灰白色
+  static const Color backgroundColor = Color(0xFFF8F9FA);
+
+  /// 卡片顏色 - 純白色
+  static const Color cardColor = Color(0xFFFFFFFF);
+
+  /// 分隔線顏色 - 淺灰色
+  static const Color dividerColor = Color(0xFFEEEEEE);
+
+  /// 獲取淺色主題
+  ///
+  /// 返回一個完整配置的 ThemeData 對象，用於應用程式的淺色主題
+  /// 包含所有元件的樣式設定
   static ThemeData get lightTheme {
     return ThemeData(
+      useMaterial3: true,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundColor,
       cardColor: cardColor,
@@ -111,6 +145,46 @@ class AppTheme {
         labelStyle: TextStyle(color: textSecondaryColor, fontSize: 14),
         errorStyle: TextStyle(color: warningColor, fontSize: 12),
       ),
+      dividerTheme: const DividerThemeData(color: dividerColor, thickness: 1, space: 1),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: primaryColor,
+        refreshBackgroundColor: backgroundColor,
+        linearTrackColor: primaryLightColor.withOpacity(0.3),
+        circularTrackColor: primaryLightColor.withOpacity(0.2),
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: primaryColor,
+        inactiveTrackColor: primaryColor.withOpacity(0.2),
+        thumbColor: primaryColor,
+        overlayColor: primaryColor.withOpacity(0.2),
+        valueIndicatorColor: primaryDarkColor,
+        valueIndicatorTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return primaryColor;
+          }
+          return Colors.grey.shade400;
+        }),
+        trackColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return primaryColor.withOpacity(0.5);
+          }
+          return Colors.grey.shade300;
+        }),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return primaryColor;
+          }
+          return Colors.transparent;
+        }),
+        checkColor: MaterialStateProperty.all(Colors.white),
+        side: BorderSide(color: textSecondaryColor, width: 1.5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
         primary: primaryColor,
@@ -118,7 +192,27 @@ class AppTheme {
         error: warningColor,
         surface: backgroundColor,
         onSurface: textPrimaryColor,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onError: Colors.white,
+        surfaceTint: primaryColor.withOpacity(0.05),
+        surfaceVariant: backgroundColor.withOpacity(0.8),
+        onSurfaceVariant: textSecondaryColor,
+        outline: dividerColor,
+        shadow: Colors.black.withOpacity(0.1),
+        inverseSurface: textPrimaryColor,
+        onInverseSurface: Colors.white,
+        inversePrimary: primaryLightColor,
+        scrim: Colors.black.withOpacity(0.3),
       ),
     );
+  }
+
+  /// 獲取深色主題（待實現）
+  ///
+  /// 未來可實現深色主題模式
+  static ThemeData get darkTheme {
+    // TODO: 實現深色主題
+    return lightTheme;
   }
 }
