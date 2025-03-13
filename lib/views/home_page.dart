@@ -12,6 +12,7 @@ import '../widgets/trend_chart.dart';
 import '../widgets/health_tip_card.dart';
 import '../themes/app_theme.dart';
 import '../views/record_page.dart';
+import '../views/stats_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -362,7 +363,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
                 TextButton(
                   onPressed: () {
-                    // TODO: 導航到統計頁面
+                    // 導航到統計頁面，並傳遞當前選擇的時間範圍
+                    HapticFeedback.lightImpact();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange)));
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
