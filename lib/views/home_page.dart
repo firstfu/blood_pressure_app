@@ -22,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+  TimeRange _selectedTimeRange = TimeRange.week; // 默認選擇7天
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     final lastRecord = MockDataService.getLastBloodPressureRecord();
     final isMeasuredToday = MockDataService.isMeasuredToday();
-    final last7DaysRecords = MockDataService.getLast7DaysRecords();
+    final records = MockDataService.getRecordsByTimeRange(_selectedTimeRange);
 
     // 隨機選擇 2 條健康建議
     final random = Random();
@@ -69,10 +70,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ],
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(AppConstants.weeklyTrend, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_getTrendTitle(), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    _buildTimeRangeSelector(context),
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
-              _buildTrendCard(context, last7DaysRecords),
+              _buildTrendCard(context, records),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -86,6 +93,64 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
       ),
       floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  // 根據選擇的時間範圍獲取標題
+  String _getTrendTitle() {
+    switch (_selectedTimeRange) {
+      case TimeRange.week:
+        return AppConstants.weeklyTrend;
+      case TimeRange.twoWeeks:
+        return AppConstants.twoWeeksTrend;
+      case TimeRange.month:
+        return AppConstants.monthlyTrend;
+    }
+  }
+
+  // 構建時間範圍選擇器
+  Widget _buildTimeRangeSelector(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.dividerColor),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildTimeRangeButton(context, TimeRange.week, '7天'),
+          _buildTimeRangeButton(context, TimeRange.twoWeeks, '2週'),
+          _buildTimeRangeButton(context, TimeRange.month, '1月'),
+        ],
+      ),
+    );
+  }
+
+  // 構建時間範圍按鈕
+  Widget _buildTimeRangeButton(BuildContext context, TimeRange timeRange, String label) {
+    final isSelected = _selectedTimeRange == timeRange;
+
+    return GestureDetector(
+      onTap: () {
+        if (_selectedTimeRange != timeRange) {
+          setState(() {
+            _selectedTimeRange = timeRange;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(color: isSelected ? AppTheme.primaryColor : Colors.transparent, borderRadius: BorderRadius.circular(14)),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppTheme.textSecondaryColor,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 12,
+          ),
+        ),
+      ),
     );
   }
 

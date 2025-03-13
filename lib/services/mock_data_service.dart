@@ -75,6 +75,118 @@ class MockDataService {
         position: '坐姿',
         arm: '右臂',
       ),
+      // 添加更多模擬數據用於2週和1個月的顯示
+      BloodPressureRecord(
+        id: '8',
+        systolic: 126,
+        diastolic: 81,
+        pulse: 75,
+        measureTime: now.subtract(const Duration(days: 8, hours: 5)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '9',
+        systolic: 132,
+        diastolic: 86,
+        pulse: 79,
+        measureTime: now.subtract(const Duration(days: 10, hours: 4)),
+        position: '坐姿',
+        arm: '右臂',
+        note: '壓力大',
+      ),
+      BloodPressureRecord(
+        id: '10',
+        systolic: 124,
+        diastolic: 80,
+        pulse: 73,
+        measureTime: now.subtract(const Duration(days: 12, hours: 7)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '11',
+        systolic: 129,
+        diastolic: 84,
+        pulse: 76,
+        measureTime: now.subtract(const Duration(days: 14, hours: 3)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '12',
+        systolic: 133,
+        diastolic: 87,
+        pulse: 80,
+        measureTime: now.subtract(const Duration(days: 16, hours: 6)),
+        position: '坐姿',
+        arm: '右臂',
+        isMedicated: true,
+      ),
+      BloodPressureRecord(
+        id: '13',
+        systolic: 127,
+        diastolic: 82,
+        pulse: 74,
+        measureTime: now.subtract(const Duration(days: 18, hours: 5)),
+        position: '臥姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '14',
+        systolic: 131,
+        diastolic: 85,
+        pulse: 77,
+        measureTime: now.subtract(const Duration(days: 20, hours: 4)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '15',
+        systolic: 123,
+        diastolic: 79,
+        pulse: 72,
+        measureTime: now.subtract(const Duration(days: 22, hours: 8)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '16',
+        systolic: 136,
+        diastolic: 88,
+        pulse: 81,
+        measureTime: now.subtract(const Duration(days: 24, hours: 3)),
+        position: '坐姿',
+        arm: '右臂',
+        note: '感冒中',
+      ),
+      BloodPressureRecord(
+        id: '17',
+        systolic: 125,
+        diastolic: 80,
+        pulse: 75,
+        measureTime: now.subtract(const Duration(days: 26, hours: 6)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '18',
+        systolic: 130,
+        diastolic: 84,
+        pulse: 78,
+        measureTime: now.subtract(const Duration(days: 28, hours: 5)),
+        position: '坐姿',
+        arm: '左臂',
+      ),
+      BloodPressureRecord(
+        id: '19',
+        systolic: 128,
+        diastolic: 83,
+        pulse: 76,
+        measureTime: now.subtract(const Duration(days: 29, hours: 7)),
+        position: '坐姿',
+        arm: '右臂',
+      ),
     ];
   }
 
@@ -109,4 +221,41 @@ class MockDataService {
 
     return records.where((record) => record.measureTime.isAfter(sevenDaysAgo)).toList();
   }
+
+  // 獲取最近 14 天的血壓記錄
+  static List<BloodPressureRecord> getLast14DaysRecords() {
+    final records = getMockBloodPressureRecords();
+    final now = DateTime.now();
+    final fourteenDaysAgo = now.subtract(const Duration(days: 14));
+
+    return records.where((record) => record.measureTime.isAfter(fourteenDaysAgo)).toList();
+  }
+
+  // 獲取最近 30 天的血壓記錄
+  static List<BloodPressureRecord> getLast30DaysRecords() {
+    final records = getMockBloodPressureRecords();
+    final now = DateTime.now();
+    final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+
+    return records.where((record) => record.measureTime.isAfter(thirtyDaysAgo)).toList();
+  }
+
+  // 根據時間範圍獲取血壓記錄
+  static List<BloodPressureRecord> getRecordsByTimeRange(TimeRange timeRange) {
+    switch (timeRange) {
+      case TimeRange.week:
+        return getLast7DaysRecords();
+      case TimeRange.twoWeeks:
+        return getLast14DaysRecords();
+      case TimeRange.month:
+        return getLast30DaysRecords();
+    }
+  }
+}
+
+// 時間範圍枚舉
+enum TimeRange {
+  week, // 7天
+  twoWeeks, // 14天
+  month, // 30天
 }

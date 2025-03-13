@@ -31,6 +31,9 @@ class TrendChart extends StatelessWidget {
     // 按時間排序
     final sortedRecords = List<BloodPressureRecord>.from(records)..sort((a, b) => a.measureTime.compareTo(b.measureTime));
 
+    // 根據記錄數量調整顯示間隔
+    final interval = _calculateInterval(sortedRecords.length);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: LineChart(
@@ -39,7 +42,7 @@ class TrendChart extends StatelessWidget {
             show: true,
             drawVerticalLine: true,
             horizontalInterval: 20,
-            verticalInterval: 1,
+            verticalInterval: interval,
             getDrawingHorizontalLine: (value) {
               return FlLine(color: Colors.grey[200], strokeWidth: 1);
             },
@@ -55,13 +58,14 @@ class TrendChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: showLabels,
                 reservedSize: 30,
-                interval: 1,
+                interval: interval,
                 getTitlesWidget: (value, meta) {
-                  if (value.toInt() >= sortedRecords.length || value.toInt() < 0) {
+                  final index = value.toInt();
+                  if (index >= sortedRecords.length || index < 0 || index % interval.toInt() != 0) {
                     return const SizedBox();
                   }
 
-                  final record = sortedRecords[value.toInt()];
+                  final record = sortedRecords[index];
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
@@ -100,8 +104,10 @@ class TrendChart extends StatelessWidget {
                   final value = isSystolic ? record.systolic : record.diastolic;
                   final title = isSystolic ? '收縮壓' : '舒張壓';
                   final color = isSystolic ? AppTheme.primaryColor : AppTheme.successColor;
+                  final date = DateTimeUtils.formatDateMMDD(record.measureTime);
+                  final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
 
-                  return LineTooltipItem('$title: $value mmHg', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
+                  return LineTooltipItem('$title: $value mmHg\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
                 }).toList();
               },
             ),
@@ -122,6 +128,10 @@ class TrendChart extends StatelessWidget {
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
+                checkToShowDot: (spot, barData) {
+                  // 根據記錄數量決定是否顯示所有點
+                  return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
+                },
                 getDotPainter:
                     (spot, percent, barData, index) =>
                         FlDotCirclePainter(radius: 4, color: Colors.white, strokeWidth: 2, strokeColor: AppTheme.primaryColor),
@@ -145,6 +155,10 @@ class TrendChart extends StatelessWidget {
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
+                checkToShowDot: (spot, barData) {
+                  // 根據記錄數量決定是否顯示所有點
+                  return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
+                },
                 getDotPainter:
                     (spot, percent, barData, index) =>
                         FlDotCirclePainter(radius: 4, color: Colors.white, strokeWidth: 2, strokeColor: AppTheme.successColor),
@@ -195,6 +209,17 @@ class TrendChart extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // 根據記錄數量計算顯示間隔
+  double _calculateInterval(int recordCount) {
+    if (recordCount <= 7) {
+      return 1; // 7天內顯示所有點
+    } else if (recordCount <= 14) {
+      return 2; // 2週顯示每隔一天
+    } else {
+      return 3; // 1個月顯示每隔兩天
+    }
   }
 
   List<FlSpot> _getSystolicSpots(List<BloodPressureRecord> sortedRecords) {

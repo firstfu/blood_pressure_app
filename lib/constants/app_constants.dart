@@ -29,6 +29,8 @@ class AppConstants {
   static const String todayNotMeasured = '今日尚未測量';
   static const String todayMeasured = '已完成今日測量';
   static const String weeklyTrend = '近 7 天趨勢';
+  static const String twoWeeksTrend = '近 2 週趨勢';
+  static const String monthlyTrend = '近 1 個月趨勢';
   static const String viewDetails = '查看詳情';
   static const String healthTips = '健康建議';
   static const String addRecord = '新增記錄';
