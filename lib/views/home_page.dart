@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final selectedTips = healthTips.take(2).toList();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -116,10 +117,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final currentDate = DateTimeUtils.getFullCurrentDate();
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 1))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
