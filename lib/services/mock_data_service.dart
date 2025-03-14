@@ -278,3 +278,22 @@ enum TimeRange {
   month, // 30天
   custom, // 自定義日期範圍
 }
+
+// 添加以下方法到 MockDataService 類中
+extension MockDataServiceExtension on MockDataService {
+  // 添加新的血壓記錄
+  static void addBloodPressureRecord(BloodPressureRecord record) {
+    // 在實際應用中，這裡會將記錄保存到數據庫或雲端
+    // 在模擬服務中，我們可以將其添加到靜態列表中
+    // 但由於這是模擬數據，我們這裡不做實際的添加操作
+    print('添加新記錄: ${record.toJson()}');
+  }
+
+  // 更新現有的血壓記錄
+  static void updateBloodPressureRecord(BloodPressureRecord record) {
+    // 在實際應用中，這裡會更新數據庫或雲端中的記錄
+    // 在模擬服務中，我們可以更新靜態列表中的記錄
+    // 但由於這是模擬數據，我們這裡不做實際的更新操作
+    print('更新記錄: ${record.toJson()}');
+  }
+}
