@@ -1,6 +1,6 @@
 // @ Author: 1891_0982
 // @ Create Time: 2024-03-15 10:25:30
-// @ Description: 血壓記錄 App 個人頁面，用於顯示和編輯用戶資料
+// @ Description: 血壓管家 App 個人頁面，用於顯示和編輯用戶資料
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,4 +1,4 @@
-// 血壓記錄 App 血壓記錄模型類
+// 血壓管家 App 血壓記錄模型類
 // 定義血壓記錄的數據結構
 
 import '../constants/app_constants.dart';

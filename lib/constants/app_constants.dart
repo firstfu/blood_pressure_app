@@ -1,4 +1,4 @@
-// 血壓記錄 App 常數檔案
+// 血壓管家 App 常數檔案
 // 定義應用程式中使用的常數
 
 class AppConstants {

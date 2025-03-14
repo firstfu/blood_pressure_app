@@ -1,6 +1,6 @@
 // @ Author: 1891_0982
 // @ Create Time: 2024-03-15 10:30:30
-// @ Description: 血壓記錄 App 主入口檔案
+// @ Description: 血壓管家 App 主入口檔案
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

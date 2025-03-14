@@ -5,7 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../constants/app_constants.dart';
 import '../models/blood_pressure_record.dart';

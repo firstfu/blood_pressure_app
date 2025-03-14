@@ -1,4 +1,4 @@
-// 血壓記錄 App 模擬數據服務
+// 血壓管家 App 模擬數據服務
 // 提供測試數據
 
 import '../models/blood_pressure_record.dart';

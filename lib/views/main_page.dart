@@ -1,4 +1,4 @@
-// 血壓記錄 App 主頁面
+// 血壓管家 App 主頁面
 // 包含底部導航欄，用於切換不同頁面
 
 import 'package:flutter/material.dart';
