@@ -266,6 +266,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
     final statusText = isBPHigh ? '偏高' : (isBPNormal ? '正常' : '臨界');
 
+    // 獲取心率狀態顏色
+    final pulseColor = _getPulseStatusColor(record.pulse);
+
     // 根據血壓狀態選擇圖標
     IconData statusIcon;
     if (isBPHigh) {
@@ -334,7 +337,48 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   isBPHigh ? (record.diastolic >= 90 ? AppTheme.warningColor : AppTheme.alertColor) : AppTheme.textPrimaryColor,
                 ),
                 Container(height: 50, width: 1, color: AppTheme.dividerColor),
-                _buildBPValueColumn(context, record.pulse.toString(), 'PULSE', 'bpm', AppTheme.textPrimaryColor),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          record.pulse.toString(),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: pulseColor, fontSize: 36),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 2, top: 4),
+                          child: Icon(
+                            record.pulse > 100 ? Icons.arrow_upward : (record.pulse < 60 ? Icons.arrow_downward : Icons.favorite),
+                            color: pulseColor,
+                            size: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'PULSE',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor, fontWeight: FontWeight.w500),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('bpm', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                        const SizedBox(width: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          decoration: BoxDecoration(color: pulseColor.withAlpha(26), borderRadius: BorderRadius.circular(4)),
+                          child: Text(
+                            _getPulseStatusText(record.pulse),
+                            style: TextStyle(color: pulseColor, fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -382,6 +426,28 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
+  // 獲取心率狀態顏色
+  Color _getPulseStatusColor(int pulse) {
+    if (pulse < 60) {
+      return Colors.blue; // 心率過低
+    } else if (pulse > 100) {
+      return AppTheme.warningColor; // 心率過高
+    } else {
+      return AppTheme.successColor; // 心率正常
+    }
+  }
+
+  // 獲取心率狀態文字
+  String _getPulseStatusText(int pulse) {
+    if (pulse < 60) {
+      return '偏低';
+    } else if (pulse > 100) {
+      return '偏高';
+    } else {
+      return '正常';
+    }
+  }
+
   Widget _buildMeasurementTag(BuildContext context, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -401,23 +467,52 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(height: 220, padding: const EdgeInsets.only(top: 8), child: TrendChart(records: records)),
+            Container(height: 220, padding: const EdgeInsets.only(top: 8), child: TrendChart(records: records, showPulse: true)),
             const SizedBox(height: 16),
             const Divider(height: 1),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(6))),
-                    const SizedBox(width: 4),
-                    Text('收縮壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-                    const SizedBox(width: 16),
-                    Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.successColor, borderRadius: BorderRadius.circular(6))),
-                    const SizedBox(width: 4),
-                    Text('舒張壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-                  ],
+                Expanded(
+                  child: Wrap(
+                    spacing: 16,
+                    runSpacing: 8,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(6)),
+                          ),
+                          const SizedBox(width: 4),
+                          Text('收縮壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(color: AppTheme.successColor, borderRadius: BorderRadius.circular(6)),
+                          ),
+                          const SizedBox(width: 4),
+                          Text('舒張壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(6))),
+                          const SizedBox(width: 4),
+                          Text('心率', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 TextButton(
                   onPressed: () {

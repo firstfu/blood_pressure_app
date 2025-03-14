@@ -10,8 +10,9 @@ import '../themes/app_theme.dart';
 class TrendChart extends StatelessWidget {
   final List<BloodPressureRecord> records;
   final bool showLabels;
+  final bool showPulse;
 
-  const TrendChart({super.key, required this.records, this.showLabels = true});
+  const TrendChart({super.key, required this.records, this.showLabels = true, this.showPulse = false});
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +101,29 @@ class TrendChart extends StatelessWidget {
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                 return touchedBarSpots.map((barSpot) {
                   final record = sortedRecords[barSpot.x.toInt()];
-                  final isSystolic = barSpot.barIndex == 0;
-                  final value = isSystolic ? record.systolic : record.diastolic;
-                  final title = isSystolic ? '收縮壓' : '舒張壓';
-                  final color = isSystolic ? AppTheme.primaryColor : AppTheme.successColor;
+                  String title;
+                  int value;
+                  Color color;
+
+                  if (barSpot.barIndex == 0) {
+                    title = '收縮壓';
+                    value = record.systolic;
+                    color = AppTheme.primaryColor;
+                  } else if (barSpot.barIndex == 1) {
+                    title = '舒張壓';
+                    value = record.diastolic;
+                    color = AppTheme.successColor;
+                  } else {
+                    title = '心率';
+                    value = record.pulse;
+                    color = Colors.orange;
+                  }
+
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                   final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
+                  final unit = barSpot.barIndex == 2 ? 'bpm' : 'mmHg';
 
-                  return LineTooltipItem('$title: $value mmHg\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
+                  return LineTooltipItem('$title: $value $unit\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
                 }).toList();
               },
             ),
@@ -173,6 +189,26 @@ class TrendChart extends StatelessWidget {
                 ),
               ),
             ),
+            // 心率線 (僅在 showPulse 為 true 時顯示)
+            if (showPulse)
+              LineChartBarData(
+                spots: _getPulseSpots(sortedRecords),
+                isCurved: true,
+                color: Colors.orange,
+                barWidth: 2,
+                isStrokeCapRound: true,
+                dotData: FlDotData(
+                  show: true,
+                  checkToShowDot: (spot, barData) {
+                    // 根據記錄數量決定是否顯示所有點
+                    return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
+                  },
+                  getDotPainter:
+                      (spot, percent, barData, index) =>
+                          FlDotCirclePainter(radius: 3.5, color: Colors.white, strokeWidth: 2, strokeColor: Colors.orange),
+                ),
+                dashArray: [4, 4], // 使用虛線表示心率
+              ),
           ],
           extraLinesData: ExtraLinesData(
             horizontalLines: [
@@ -238,10 +274,23 @@ class TrendChart extends StatelessWidget {
     return spots;
   }
 
+  List<FlSpot> _getPulseSpots(List<BloodPressureRecord> sortedRecords) {
+    final spots = <FlSpot>[];
+    for (int i = 0; i < sortedRecords.length; i++) {
+      spots.add(FlSpot(i.toDouble(), sortedRecords[i].pulse.toDouble()));
+    }
+    return spots;
+  }
+
   double _getMinY() {
     if (records.isEmpty) return 60;
 
     final minDiastolic = records.map((e) => e.diastolic).reduce((a, b) => a < b ? a : b);
+    // 如果顯示心率，考慮心率的最小值
+    if (showPulse) {
+      final minPulse = records.map((e) => e.pulse).reduce((a, b) => a < b ? a : b);
+      return (min(minDiastolic, minPulse) - 10).toDouble().clamp(40, double.infinity);
+    }
     return (minDiastolic - 10).toDouble().clamp(60, double.infinity);
   }
 
@@ -249,6 +298,17 @@ class TrendChart extends StatelessWidget {
     if (records.isEmpty) return 180;
 
     final maxSystolic = records.map((e) => e.systolic).reduce((a, b) => a > b ? a : b);
-    return (maxSystolic + 10).toDouble().clamp(0, 200);
+    // 如果顯示心率，考慮心率的最大值
+    if (showPulse) {
+      final maxPulse = records.map((e) => e.pulse).reduce((a, b) => a > b ? a : b);
+      return (max(maxSystolic, maxPulse) + 10).toDouble().clamp(double.negativeInfinity, 200);
+    }
+    return (maxSystolic + 10).toDouble().clamp(double.negativeInfinity, 200);
   }
+
+  // 取最小值
+  int min(int a, int b) => a < b ? a : b;
+
+  // 取最大值
+  int max(int a, int b) => a > b ? a : b;
 }
