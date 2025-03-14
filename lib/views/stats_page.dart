@@ -11,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/blood_pressure_record.dart';
 import '../services/mock_data_service.dart';
+import '../services/report_service.dart';
 import '../themes/app_theme.dart';
 import '../widgets/trend_chart.dart';
+import '../widgets/bp_category_pie_chart.dart';
+import '../widgets/filter_sort_panel.dart';
 import '../utils/date_time_utils.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +36,16 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
   DateTime? _startDate;
   DateTime? _endDate;
   List<BloodPressureRecord> _records = [];
+  List<BloodPressureRecord> _filteredRecords = [];
   bool _showPulse = true; // 默認顯示心率
+
+  // 篩選和排序相關變數
+  RangeValues _systolicRange = const RangeValues(70, 200);
+  RangeValues _diastolicRange = const RangeValues(40, 130);
+  RangeValues _pulseRange = const RangeValues(40, 160);
+  SortField _sortField = SortField.time;
+  SortOrder _sortOrder = SortOrder.descending;
+  bool _isFiltered = false;
 
   @override
   void initState() {
@@ -65,6 +77,84 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     } else {
       _records = MockDataService.getRecordsByTimeRange(_selectedTimeRange);
     }
+    _applyFiltersAndSort();
+  }
+
+  void _applyFiltersAndSort() {
+    // 應用篩選條件
+    _filteredRecords =
+        _records.where((record) {
+          return record.systolic >= _systolicRange.start &&
+              record.systolic <= _systolicRange.end &&
+              record.diastolic >= _diastolicRange.start &&
+              record.diastolic <= _diastolicRange.end &&
+              record.pulse >= _pulseRange.start &&
+              record.pulse <= _pulseRange.end;
+        }).toList();
+
+    // 應用排序
+    _filteredRecords.sort((a, b) {
+      int comparison;
+      switch (_sortField) {
+        case SortField.time:
+          comparison = a.measureTime.compareTo(b.measureTime);
+          break;
+        case SortField.systolic:
+          comparison = a.systolic.compareTo(b.systolic);
+          break;
+        case SortField.diastolic:
+          comparison = a.diastolic.compareTo(b.diastolic);
+          break;
+        case SortField.pulse:
+          comparison = a.pulse.compareTo(b.pulse);
+          break;
+      }
+      return _sortOrder == SortOrder.ascending ? comparison : -comparison;
+    });
+
+    // 更新是否已篩選的標誌
+    _isFiltered = _filteredRecords.length != _records.length || _sortField != SortField.time || _sortOrder != SortOrder.descending;
+
+    setState(() {});
+  }
+
+  void _resetFiltersAndSort() {
+    setState(() {
+      _systolicRange = const RangeValues(70, 200);
+      _diastolicRange = const RangeValues(40, 130);
+      _pulseRange = const RangeValues(40, 160);
+      _sortField = SortField.time;
+      _sortOrder = SortOrder.descending;
+      _isFiltered = false;
+    });
+    _applyFiltersAndSort();
+  }
+
+  void _showFilterSortPanel() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: FilterSortPanel(
+            systolicRange: _systolicRange,
+            diastolicRange: _diastolicRange,
+            pulseRange: _pulseRange,
+            sortField: _sortField,
+            sortOrder: _sortOrder,
+            onSystolicRangeChanged: (value) => _systolicRange = value,
+            onDiastolicRangeChanged: (value) => _diastolicRange = value,
+            onPulseRangeChanged: (value) => _pulseRange = value,
+            onSortFieldChanged: (value) => _sortField = value,
+            onSortOrderChanged: (value) => _sortOrder = value,
+            onReset: _resetFiltersAndSort,
+            onApply: _applyFiltersAndSort,
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -78,6 +168,10 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white), onPressed: () => Navigator.of(context).pop()),
         title: const Text('血壓統計', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
+        actions: [
+          // 添加生成報告按鈕
+          IconButton(icon: const Icon(Icons.picture_as_pdf, color: Colors.white), tooltip: '生成健康報告', onPressed: () => _generateReport(context)),
+        ],
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
@@ -92,7 +186,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         children: [
           _buildTimeRangeSelector(context),
           if (_selectedTimeRange == TimeRange.custom) _buildDateRangeSelector(context),
-          Expanded(child: TabBarView(controller: _tabController, children: [_buildTrendTab(_records), _buildDataTableTab(_records)])),
+          Expanded(child: TabBarView(controller: _tabController, children: [_buildTrendTab(_filteredRecords), _buildDataTableTab(_filteredRecords)])),
         ],
       ),
     );
@@ -350,13 +444,42 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                     ],
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(height: 250, child: TrendChart(records: records, showPulse: _showPulse)),
+                  SizedBox(height: 250, child: TrendChart(records: _filteredRecords, showPulse: _showPulse)),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          _buildStatisticsCard(records),
+          const SizedBox(height: 16),
+          // 添加血壓分類統計卡片
+          Card(
+            elevation: 2,
+            shadowColor: AppTheme.primaryColor.withAlpha(77), // 0.3 * 255 ≈ 77
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 20,
+                        decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2)),
+                      ),
+                      const SizedBox(width: 8),
+                      Text('血壓分類統計', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  BPCategoryPieChart(records: _filteredRecords),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // 添加統計數據卡片
+          _buildStatisticsCard(_filteredRecords),
         ],
       ),
     );
@@ -457,108 +580,152 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       return const Center(child: Text('暫無數據', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey)));
     }
 
-    // 按時間排序
-    final sortedRecords = List<BloodPressureRecord>.from(records)..sort((a, b) => b.measureTime.compareTo(a.measureTime));
-
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(16),
-      itemCount: sortedRecords.length,
-      itemBuilder: (context, index) {
-        final record = sortedRecords[index];
-        final isBPHigh = record.systolic >= 140 || record.diastolic >= 90;
-        final isBPNormal = record.systolic < 120 && record.diastolic < 80;
-        final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
-
-        // 獲取心率狀態顏色
-        final pulseColor = _getPulseStatusColor(record.pulse);
-        final pulseIcon = _getPulseStatusIcon(record.pulse);
-
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          elevation: 2,
-          shadowColor: AppTheme.primaryColor.withAlpha(51), // 0.2 * 255 ≈ 51
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: statusColor.withAlpha(77), width: 1),
-            ), // 0.3 * 255 ≈ 77
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              title: Row(
-                children: [
-                  Text(
-                    '${record.systolic}/${record.diastolic}',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey[800]),
-                  ),
-                  const SizedBox(width: 8),
-                  Text('mmHg', style: TextStyle(color: Colors.grey[600], fontSize: 14, fontWeight: FontWeight.w500)),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: pulseColor.withAlpha(26), // 0.1 * 255 ≈ 26
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: pulseColor.withAlpha(77)), // 0.3 * 255 ≈ 77
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(pulseIcon, color: pulseColor, size: 16),
-                        const SizedBox(width: 4),
-                        Text('${record.pulse}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: pulseColor)),
-                        const SizedBox(width: 2),
-                        Text('bpm', style: TextStyle(color: pulseColor, fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateTimeUtils.formatDateMMDD(record.measureTime),
-                          style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(width: 12),
-                        Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateTimeUtils.formatTimeHHMM(record.measureTime),
-                          style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    if (record.note != null && record.note!.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.note, size: 14, color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Flexible(child: Text(record.note!, style: TextStyle(fontSize: 14, color: Colors.grey[800], fontWeight: FontWeight.w500))),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch, // 確保子元件橫向填充
+      children: [
+        // 篩選和排序按鈕
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OutlinedButton.icon(
+                onPressed: _showFilterSortPanel,
+                icon: Icon(Icons.filter_list, color: _isFiltered ? AppTheme.primaryColor : Colors.grey[600]),
+                label: Text('篩選與排序', style: TextStyle(color: _isFiltered ? AppTheme.primaryColor : Colors.grey[600])),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: _isFiltered ? AppTheme.primaryColor : Colors.grey[400]!),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  minimumSize: const Size(120, 36),
+                  fixedSize: const Size.fromHeight(36),
                 ),
               ),
-            ),
+              if (_isFiltered) ...[
+                const SizedBox(width: 8),
+                IconButton(onPressed: _resetFiltersAndSort, icon: const Icon(Icons.clear), tooltip: '清除篩選', color: Colors.grey[600], iconSize: 20),
+              ],
+            ],
           ),
-        );
-      },
+        ),
+        // 記錄數量顯示
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Row(
+            children: [
+              Text('共 ${_filteredRecords.length} 筆記錄', style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+              if (_isFiltered && _filteredRecords.length != _records.length) ...[
+                const SizedBox(width: 4),
+                Text('(已篩選，原 ${_records.length} 筆)', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+              ],
+            ],
+          ),
+        ),
+        // 數據表
+        Expanded(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            itemCount: _filteredRecords.length,
+            itemBuilder: (context, index) {
+              final record = _filteredRecords[index];
+              final isBPHigh = record.systolic >= 140 || record.diastolic >= 90;
+              final isBPNormal = record.systolic < 120 && record.diastolic < 80;
+              final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
+
+              // 獲取心率狀態顏色
+              final pulseColor = _getPulseStatusColor(record.pulse);
+              final pulseIcon = _getPulseStatusIcon(record.pulse);
+
+              return Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                elevation: 2,
+                shadowColor: AppTheme.primaryColor.withAlpha(51), // 0.2 * 255 ≈ 51
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: statusColor.withAlpha(77), width: 1),
+                  ), // 0.3 * 255 ≈ 77
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    title: Row(
+                      children: [
+                        Text(
+                          '${record.systolic}/${record.diastolic}',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey[800]),
+                        ),
+                        const SizedBox(width: 8),
+                        Text('mmHg', style: TextStyle(color: Colors.grey[600], fontSize: 14, fontWeight: FontWeight.w500)),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: pulseColor.withAlpha(26), // 0.1 * 255 ≈ 26
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: pulseColor.withAlpha(77)), // 0.3 * 255 ≈ 77
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(pulseIcon, color: pulseColor, size: 16),
+                              const SizedBox(width: 4),
+                              Text('${record.pulse}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: pulseColor)),
+                              const SizedBox(width: 2),
+                              Text('bpm', style: TextStyle(color: pulseColor, fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(
+                                DateTimeUtils.formatDateMMDD(record.measureTime),
+                                style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(width: 12),
+                              Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(
+                                DateTimeUtils.formatTimeHHMM(record.measureTime),
+                                style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          if (record.note != null && record.note!.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.note, size: 14, color: Colors.grey[600]),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(record.note!, style: TextStyle(fontSize: 14, color: Colors.grey[800], fontWeight: FontWeight.w500)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -582,5 +749,121 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     } else {
       return Icons.favorite; // 心率正常
     }
+  }
+
+  // 生成健康報告
+  Future<void> _generateReport(BuildContext context) async {
+    if (_filteredRecords.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('暫無數據，無法生成報告')));
+      return;
+    }
+
+    // 顯示加載對話框
+    showDialog(context: context, barrierDismissible: false, builder: (context) => const Center(child: CircularProgressIndicator()));
+
+    try {
+      // 計算統計數據
+      final Map<String, double> statistics = _calculateStatistics(_filteredRecords);
+
+      // 計算血壓分類統計
+      final Map<String, int> categoryCounts = _calculateCategoryCounts(_filteredRecords);
+
+      // 獲取時間範圍文本
+      final String timeRangeText = _getTimeRangeText();
+
+      // 獲取開始和結束日期
+      final DateTime startDate = _startDate ?? DateTime.now().subtract(const Duration(days: 30));
+      final DateTime endDate = _endDate ?? DateTime.now();
+
+      // 生成報告
+      final pdfData = await ReportService.generateReport(
+        records: _filteredRecords,
+        startDate: startDate,
+        endDate: endDate,
+        categoryCounts: categoryCounts,
+        statistics: statistics,
+        timeRangeText: timeRangeText,
+      );
+
+      // 關閉加載對話框
+      Navigator.of(context).pop();
+
+      // 生成文件名
+      final dateFormat = DateFormat('yyyyMMdd');
+      final fileName = '血壓健康報告_${dateFormat.format(DateTime.now())}.pdf';
+
+      // 保存並分享報告
+      await ReportService.saveAndShareReport(pdfData, fileName);
+    } catch (e) {
+      // 關閉加載對話框
+      Navigator.of(context).pop();
+
+      // 顯示錯誤訊息
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('生成報告失敗: $e')));
+    }
+  }
+
+  // 計算統計數據
+  Map<String, double> _calculateStatistics(List<BloodPressureRecord> records) {
+    if (records.isEmpty) {
+      return {
+        'avgSystolic': 0,
+        'avgDiastolic': 0,
+        'avgPulse': 0,
+        'maxSystolic': 0,
+        'minSystolic': 0,
+        'maxDiastolic': 0,
+        'minDiastolic': 0,
+        'maxPulse': 0,
+        'minPulse': 0,
+      };
+    }
+
+    int totalSystolic = 0;
+    int totalDiastolic = 0;
+    int totalPulse = 0;
+    int maxSystolic = records[0].systolic;
+    int minSystolic = records[0].systolic;
+    int maxDiastolic = records[0].diastolic;
+    int minDiastolic = records[0].diastolic;
+    int maxPulse = records[0].pulse;
+    int minPulse = records[0].pulse;
+
+    for (final record in records) {
+      totalSystolic += record.systolic;
+      totalDiastolic += record.diastolic;
+      totalPulse += record.pulse;
+
+      if (record.systolic > maxSystolic) maxSystolic = record.systolic;
+      if (record.systolic < minSystolic) minSystolic = record.systolic;
+      if (record.diastolic > maxDiastolic) maxDiastolic = record.diastolic;
+      if (record.diastolic < minDiastolic) minDiastolic = record.diastolic;
+      if (record.pulse > maxPulse) maxPulse = record.pulse;
+      if (record.pulse < minPulse) minPulse = record.pulse;
+    }
+
+    return {
+      'avgSystolic': totalSystolic / records.length,
+      'avgDiastolic': totalDiastolic / records.length,
+      'avgPulse': totalPulse / records.length,
+      'maxSystolic': maxSystolic.toDouble(),
+      'minSystolic': minSystolic.toDouble(),
+      'maxDiastolic': maxDiastolic.toDouble(),
+      'minDiastolic': minDiastolic.toDouble(),
+      'maxPulse': maxPulse.toDouble(),
+      'minPulse': minPulse.toDouble(),
+    };
+  }
+
+  // 計算血壓分類統計
+  Map<String, int> _calculateCategoryCounts(List<BloodPressureRecord> records) {
+    final Map<String, int> categoryCounts = {};
+
+    for (final record in records) {
+      final status = record.getBloodPressureStatus();
+      categoryCounts[status] = (categoryCounts[status] ?? 0) + 1;
+    }
+
+    return categoryCounts;
   }
 }
