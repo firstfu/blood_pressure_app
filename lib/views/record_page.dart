@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../constants/app_constants.dart';
 import '../models/blood_pressure_record.dart';
+import '../themes/app_theme.dart';
 
 class RecordPage extends StatefulWidget {
   final BloodPressureRecord? recordToEdit;
@@ -447,11 +448,12 @@ class _RecordPageState extends State<RecordPage> {
     return Scaffold(
       backgroundColor: _backgroundColor,
       appBar: AppBar(
-        backgroundColor: _backgroundColor,
+        backgroundColor: AppTheme.primaryColor,
         elevation: 0,
-        title: Text(_isEditing ? '編輯血壓記錄' : '新增血壓記錄', style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: _textColor)),
-        iconTheme: IconThemeData(color: _textColor),
-        actions: [if (!_isEditing) IconButton(icon: Icon(Icons.refresh, color: _primaryColor), onPressed: _resetForm, tooltip: '重置表單')],
+        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
+        title: Text(_isEditing ? '編輯血壓記錄' : '新增血壓記錄', style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [if (!_isEditing) IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: '重置表單')],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(_spacing),
