@@ -388,8 +388,8 @@ class _RecordPageState extends State<RecordPage> {
       decoration: BoxDecoration(
         color: _cardColor,
         borderRadius: BorderRadius.circular(_borderRadius),
-        boxShadow: [BoxShadow(color: statusColor.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
-        border: Border.all(color: statusColor.withOpacity(0.3), width: 1),
+        boxShadow: [BoxShadow(color: statusColor.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -405,7 +405,7 @@ class _RecordPageState extends State<RecordPage> {
           SizedBox(height: _spacing),
           Container(
             padding: EdgeInsets.all(_spacing),
-            decoration: BoxDecoration(color: statusColor.withOpacity(0.05), borderRadius: BorderRadius.circular(_borderRadius / 2)),
+            decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(_borderRadius / 2)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
