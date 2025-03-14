@@ -1,3 +1,9 @@
+/*
+ * @ Author: 1891_0982
+ * @ Create Time: 2025-03-15 18:45:30
+ * @ Description: 血壓記錄 App 統計頁面 - 顯示血壓和心率的統計數據、趨勢圖和數據表
+ */
+
 // 血壓記錄 App 統計頁面
 // 用於顯示血壓統計數據
 
@@ -27,6 +33,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
   DateTime? _startDate;
   DateTime? _endDate;
   List<BloodPressureRecord> _records = [];
+  bool _showPulse = true; // 默認顯示心率
 
   @override
   void initState() {
@@ -176,24 +183,29 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
             ],
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed:
-                  _startDate != null && _endDate != null
-                      ? () {
-                        setState(() {
-                          _loadRecords();
-                        });
-                      }
-                      : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                elevation: 0,
+          Center(
+            child: SizedBox(
+              width: 120.0,
+              child: ElevatedButton.icon(
+                onPressed:
+                    _startDate != null && _endDate != null
+                        ? () {
+                          setState(() {
+                            _loadRecords();
+                          });
+                        }
+                        : null,
+                icon: const Icon(Icons.search, size: 18),
+                label: const Text('查詢', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  elevation: 2,
+                  shadowColor: AppTheme.primaryColor.withAlpha(100),
+                ),
               ),
-              child: const Text('查詢', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -306,18 +318,39 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: 4,
-                        height: 20,
-                        decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2)),
+                      Row(
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 20,
+                            decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2)),
+                          ),
+                          const SizedBox(width: 8),
+                          Text('血壓趨勢', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Text('血壓趨勢', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                      // 添加心率顯示切換
+                      Row(
+                        children: [
+                          Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 14)),
+                          const SizedBox(width: 8),
+                          Switch(
+                            value: _showPulse,
+                            onChanged: (value) {
+                              setState(() {
+                                _showPulse = value;
+                              });
+                            },
+                            activeColor: Colors.orange,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(height: 250, child: TrendChart(records: records)),
+                  SizedBox(height: 250, child: TrendChart(records: records, showPulse: _showPulse)),
                 ],
               ),
             ),
@@ -350,6 +383,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     final minSystolic = records.map((e) => e.systolic).reduce((a, b) => a < b ? a : b);
     final maxDiastolic = records.map((e) => e.diastolic).reduce((a, b) => a > b ? a : b);
     final minDiastolic = records.map((e) => e.diastolic).reduce((a, b) => a < b ? a : b);
+    final maxPulse = records.map((e) => e.pulse).reduce((a, b) => a > b ? a : b);
+    final minPulse = records.map((e) => e.pulse).reduce((a, b) => a < b ? a : b);
 
     return Card(
       elevation: 2,
@@ -376,6 +411,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
             _buildStatRow('最低收縮壓', '$minSystolic mmHg', AppTheme.primaryColor),
             _buildStatRow('最高舒張壓', '$maxDiastolic mmHg', AppTheme.successColor),
             _buildStatRow('最低舒張壓', '$minDiastolic mmHg', AppTheme.successColor),
+            _buildStatRow('最高心率', '$maxPulse bpm', Colors.orange),
+            _buildStatRow('最低心率', '$minPulse bpm', Colors.orange),
             const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(height: 1)),
             _buildStatRow('記錄總數', '${records.length} 筆', Colors.grey[700]!),
             _buildStatRow('記錄時間範圍', _getTimeRangeText(), Colors.grey[700]!),
@@ -433,6 +470,10 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         final isBPNormal = record.systolic < 120 && record.diastolic < 80;
         final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
 
+        // 獲取心率狀態顏色
+        final pulseColor = _getPulseStatusColor(record.pulse);
+        final pulseIcon = _getPulseStatusIcon(record.pulse);
+
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           elevation: 2,
@@ -457,18 +498,18 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: statusColor.withAlpha(26), // 0.1 * 255 ≈ 26
+                      color: pulseColor.withAlpha(26), // 0.1 * 255 ≈ 26
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: statusColor.withAlpha(77)), // 0.3 * 255 ≈ 77
+                      border: Border.all(color: pulseColor.withAlpha(77)), // 0.3 * 255 ≈ 77
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.favorite, color: statusColor, size: 16),
+                        Icon(pulseIcon, color: pulseColor, size: 16),
                         const SizedBox(width: 4),
-                        Text('${record.pulse}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: statusColor)),
+                        Text('${record.pulse}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: pulseColor)),
                         const SizedBox(width: 2),
-                        Text('bpm', style: TextStyle(color: statusColor, fontSize: 12)),
+                        Text('bpm', style: TextStyle(color: pulseColor, fontSize: 12)),
                       ],
                     ),
                   ),
@@ -519,5 +560,27 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         );
       },
     );
+  }
+
+  // 獲取心率狀態顏色
+  Color _getPulseStatusColor(int pulse) {
+    if (pulse < 60) {
+      return Colors.blue; // 心率過低
+    } else if (pulse > 100) {
+      return AppTheme.warningColor; // 心率過高
+    } else {
+      return AppTheme.successColor; // 心率正常
+    }
+  }
+
+  // 獲取心率狀態圖標
+  IconData _getPulseStatusIcon(int pulse) {
+    if (pulse < 60) {
+      return Icons.arrow_downward; // 心率過低
+    } else if (pulse > 100) {
+      return Icons.arrow_upward; // 心率過高
+    } else {
+      return Icons.favorite; // 心率正常
+    }
   }
 }
