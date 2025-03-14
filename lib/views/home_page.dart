@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   late AnimationController _animationController;
   TimeRange _selectedTimeRange = TimeRange.week; // 默認選擇7天
   List<BloodPressureRecord> _records = [];
+  bool _showPulse = true; // 默認顯示心率
 
   @override
   void initState() {
@@ -467,7 +468,31 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(height: 220, padding: const EdgeInsets.only(top: 8), child: TrendChart(records: records, showPulse: true)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(_getTrendTitle(), style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
+                Row(
+                  children: [
+                    Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 13)),
+                    Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: _showPulse,
+                        onChanged: (value) {
+                          setState(() {
+                            _showPulse = value;
+                          });
+                        },
+                        activeColor: Colors.orange,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Container(height: 220, padding: const EdgeInsets.only(top: 8), child: TrendChart(records: records, showPulse: _showPulse)),
             const SizedBox(height: 16),
             const Divider(height: 1),
             const SizedBox(height: 8),
