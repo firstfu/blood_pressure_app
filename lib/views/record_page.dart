@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../constants/app_constants.dart';
@@ -87,42 +88,114 @@ class _RecordPageState extends State<RecordPage> {
 
   // 選擇日期
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    DateTime? pickedDate = _selectedDate;
+
+    await showCupertinoModalPopup(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(colorScheme: ColorScheme.light(primary: _primaryColor), dialogBackgroundColor: _cardColor),
-          child: child!,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                    child: const Text('取消'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoButton(
+                    child: const Text('確定'),
+                    onPressed: () {
+                      Navigator.of(context).pop(pickedDate);
+                    },
+                  ),
+                ],
+              ),
+              const Divider(height: 0),
+              Expanded(
+                child: CupertinoDatePicker(
+                  initialDateTime: _selectedDate,
+                  maximumDate: DateTime.now(),
+                  minimumDate: DateTime(2020),
+                  mode: CupertinoDatePickerMode.date,
+                  onDateTimeChanged: (DateTime newDate) {
+                    pickedDate = newDate;
+                  },
+                  dateOrder: DatePickerDateOrder.ymd,
+                  use24hFormat: true,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ],
+          ),
         );
       },
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
+    ).then((value) {
+      if (value != null && value != _selectedDate) {
+        setState(() {
+          _selectedDate = value;
+        });
+      }
+    });
   }
 
   // 選擇時間
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+    DateTime initialDateTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, _selectedTime.hour, _selectedTime.minute);
+    DateTime? pickedDateTime = initialDateTime;
+
+    await showCupertinoModalPopup(
       context: context,
-      initialTime: _selectedTime,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(colorScheme: ColorScheme.light(primary: _primaryColor), dialogBackgroundColor: _cardColor),
-          child: child!,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                    child: const Text('取消'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoButton(
+                    child: const Text('確定'),
+                    onPressed: () {
+                      Navigator.of(context).pop(pickedDateTime);
+                    },
+                  ),
+                ],
+              ),
+              const Divider(height: 0),
+              Expanded(
+                child: CupertinoDatePicker(
+                  initialDateTime: initialDateTime,
+                  mode: CupertinoDatePickerMode.time,
+                  use24hFormat: false,
+                  onDateTimeChanged: (DateTime newDateTime) {
+                    pickedDateTime = newDateTime;
+                  },
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ],
+          ),
         );
       },
-    );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          _selectedTime = TimeOfDay(hour: value.hour, minute: value.minute);
+        });
+      }
+    });
   }
 
   // 保存記錄
@@ -269,9 +342,12 @@ class _RecordPageState extends State<RecordPage> {
 
   // 構建日期時間選擇器
   Widget _buildDateTimePicker() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
+        // 日期選擇器
+        Container(
+          margin: EdgeInsets.only(bottom: _spacing),
+          width: double.infinity,
           child: GestureDetector(
             onTap: () => _selectDate(context),
             child: Container(
@@ -285,14 +361,23 @@ class _RecordPageState extends State<RecordPage> {
                 children: [
                   Icon(Icons.calendar_today, size: 20, color: _iconColor),
                   SizedBox(width: _smallSpacing),
-                  Text(DateFormat('yyyy-MM-dd').format(_selectedDate), style: TextStyle(fontSize: _contentFontSize, color: _textColor)),
+                  // 使用中文格式顯示日期
+                  Flexible(
+                    child: Text(
+                      _formatDateInChinese(_selectedDate),
+                      style: TextStyle(fontSize: _contentFontSize, color: _textColor),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        SizedBox(width: _smallSpacing),
-        Expanded(
+
+        // 時間選擇器
+        Container(
+          width: double.infinity,
           child: GestureDetector(
             onTap: () => _selectTime(context),
             child: Container(
@@ -306,7 +391,14 @@ class _RecordPageState extends State<RecordPage> {
                 children: [
                   Icon(Icons.access_time, size: 20, color: _iconColor),
                   SizedBox(width: _smallSpacing),
-                  Text(_selectedTime.format(context), style: TextStyle(fontSize: _contentFontSize, color: _textColor)),
+                  // 使用中文格式顯示時間
+                  Flexible(
+                    child: Text(
+                      _formatTimeInChinese(_selectedTime),
+                      style: TextStyle(fontSize: _contentFontSize, color: _textColor),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -314,6 +406,24 @@ class _RecordPageState extends State<RecordPage> {
         ),
       ],
     );
+  }
+
+  // 將日期格式化為中文顯示
+  String _formatDateInChinese(DateTime date) {
+    final List<String> chineseMonths = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+    return '${date.year}年${chineseMonths[date.month - 1]}${date.day}日';
+  }
+
+  // 將時間格式化為中文顯示
+  String _formatTimeInChinese(TimeOfDay time) {
+    final hour = time.hour;
+    final minute = time.minute.toString().padLeft(2, '0');
+
+    if (hour < 12) {
+      return '上午 ${hour == 0 ? 12 : hour}:$minute';
+    } else {
+      return '下午 ${hour == 12 ? 12 : hour - 12}:$minute';
+    }
   }
 
   // 構建開關選項
