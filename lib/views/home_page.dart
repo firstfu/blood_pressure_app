@@ -1,3 +1,9 @@
+/*
+ * @ Author: 1891_0982
+ * @ Create Time: 2025-03-15 17:25:30
+ * @ Description: 血壓記錄 App 首頁 - 顯示用戶的血壓記錄、健康狀態和趨勢圖表
+ */
+
 // 血壓記錄 App 首頁
 // 顯示用戶的血壓記錄和健康建議
 
@@ -63,7 +69,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             children: [
               _buildHeader(context),
               const SizedBox(height: 16),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildMeasurementStatus(context, isMeasuredToday)),
+              if (!isMeasuredToday)
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildMeasurementStatus(context, isMeasuredToday)),
               const SizedBox(height: 24),
               if (lastRecord != null) ...[
                 Padding(
@@ -259,6 +266,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
     final statusText = isBPHigh ? '偏高' : (isBPNormal ? '正常' : '臨界');
 
+    // 根據血壓狀態選擇圖標
+    IconData statusIcon;
+    if (isBPHigh) {
+      statusIcon = Icons.warning_amber_rounded;
+    } else if (isBPNormal) {
+      statusIcon = Icons.check_circle_outline;
+    } else {
+      statusIcon = Icons.info_outline;
+    }
+
     return Card(
       elevation: 1,
       shadowColor: AppTheme.primaryColor.withAlpha(26),
@@ -275,10 +292,25 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   '今天 ${DateTimeUtils.formatTimeHHMM(record.measureTime)}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryColor),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(color: statusColor.withAlpha(26), borderRadius: BorderRadius.circular(16)),
-                  child: Text(statusText, style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 14)),
+                GestureDetector(
+                  onTap: () {
+                    if (statusText == '臨界') {
+                      _showBorderlineExplanation(context);
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(color: statusColor.withAlpha(26), borderRadius: BorderRadius.circular(16)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(statusIcon, color: statusColor, size: 16),
+                        const SizedBox(width: 4),
+                        Text(statusText, style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 14)),
+                        if (statusText == '臨界') ...[const SizedBox(width: 4), Icon(Icons.help_outline, color: statusColor, size: 14)],
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -323,9 +355,26 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildBPValueColumn(BuildContext context, String value, String label, String unit, Color valueColor) {
+    // 根據數值顏色選擇適當的圖標
+    IconData? valueIcon;
+    if (valueColor == AppTheme.warningColor) {
+      valueIcon = Icons.arrow_upward;
+    } else if (valueColor == AppTheme.alertColor) {
+      valueIcon = Icons.arrow_upward;
+    } else if (valueColor == AppTheme.successColor) {
+      valueIcon = Icons.check;
+    }
+
     return Column(
       children: [
-        Text(value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: valueColor, fontSize: 36)),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: valueColor, fontSize: 36)),
+            if (valueIcon != null) Padding(padding: const EdgeInsets.only(left: 2, top: 4), child: Icon(valueIcon, color: valueColor, size: 16)),
+          ],
+        ),
         const SizedBox(height: 4),
         Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor, fontWeight: FontWeight.w500)),
         Text(unit, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
@@ -391,6 +440,37 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ],
         ),
       ),
+    );
+  }
+
+  // 顯示臨界狀態的解釋
+  void _showBorderlineExplanation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('什麼是臨界血壓？', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('臨界血壓是指血壓值處於正常值和高血壓之間的狀態：'),
+              SizedBox(height: 8),
+              Text('• 收縮壓在 120-139 mmHg 之間'),
+              Text('• 舒張壓在 80-89 mmHg 之間'),
+              SizedBox(height: 12),
+              Text('處於臨界狀態時，雖然尚未達到高血壓標準，但已有發展為高血壓的風險。建議：'),
+              SizedBox(height: 8),
+              Text('• 定期監測血壓變化'),
+              Text('• 保持健康的生活方式'),
+              Text('• 適當控制鹽分攝入'),
+              Text('• 規律運動'),
+            ],
+          ),
+          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('了解了'))],
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        );
+      },
     );
   }
 }
