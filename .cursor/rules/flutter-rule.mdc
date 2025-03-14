@@ -1,0 +1,10 @@
+---
+description: flutter開發風格與規則
+globs: *.dart
+alwaysApply: true
+---
+
+# 要求
+1、withOpacity 方法已被棄用，改用withValues()
+2、http請求用Dio
+3、

@@ -249,7 +249,25 @@ class MockDataService {
         return getLast14DaysRecords();
       case TimeRange.month:
         return getLast30DaysRecords();
+      case TimeRange.custom:
+        // 自定義日期範圍使用 getRecordsByDateRange 方法
+        return getMockBloodPressureRecords(); // 預設返回所有記錄
     }
+  }
+
+  // 根據自定義日期範圍獲取血壓記錄
+  static List<BloodPressureRecord> getRecordsByDateRange(DateTime startDate, DateTime endDate) {
+    final records = getMockBloodPressureRecords();
+
+    // 確保日期範圍的開始和結束時間是當天的 00:00:00 和 23:59:59
+    final start = DateTime(startDate.year, startDate.month, startDate.day);
+    final end = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+
+    return records.where((record) {
+      return record.measureTime.isAfter(start) && record.measureTime.isBefore(end) ||
+          record.measureTime.isAtSameMomentAs(start) ||
+          record.measureTime.isAtSameMomentAs(end);
+    }).toList();
   }
 }
 
@@ -258,4 +276,5 @@ enum TimeRange {
   week, // 7天
   twoWeeks, // 14天
   month, // 30天
+  custom, // 自定義日期範圍
 }

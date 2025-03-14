@@ -13,6 +13,7 @@ import '../widgets/health_tip_card.dart';
 import '../themes/app_theme.dart';
 import '../views/record_page.dart';
 import '../views/stats_page.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,11 +25,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   TimeRange _selectedTimeRange = TimeRange.week; // 默認選擇7天
+  List<BloodPressureRecord> _records = [];
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat(reverse: true);
+    _loadRecords();
   }
 
   @override
@@ -37,11 +40,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+  void _loadRecords() {
+    _records = MockDataService.getRecordsByTimeRange(_selectedTimeRange);
+  }
+
   @override
   Widget build(BuildContext context) {
     final lastRecord = MockDataService.getLastBloodPressureRecord();
     final isMeasuredToday = MockDataService.isMeasuredToday();
-    final records = MockDataService.getRecordsByTimeRange(_selectedTimeRange);
 
     // 隨機選擇 2 條健康建議
     final random = Random();
@@ -80,7 +86,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
               ),
               const SizedBox(height: 12),
-              _buildTrendCard(context, records),
+              _buildTrendCard(context, _records),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -106,6 +112,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         return AppConstants.twoWeeksTrend;
       case TimeRange.month:
         return AppConstants.monthlyTrend;
+      default:
+        return AppConstants.weeklyTrend;
     }
   }
 
@@ -135,8 +143,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return GestureDetector(
       onTap: () {
         if (_selectedTimeRange != timeRange) {
+          HapticFeedback.lightImpact();
           setState(() {
             _selectedTimeRange = timeRange;
+            _loadRecords();
           });
         }
       },
@@ -365,7 +375,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   onPressed: () {
                     // 導航到統計頁面，並傳遞當前選擇的時間範圍
                     HapticFeedback.lightImpact();
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange))).then((_) {
+                      // 返回時刷新數據
+                      setState(() {
+                        _loadRecords();
+                      });
+                    });
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
