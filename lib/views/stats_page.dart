@@ -361,12 +361,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
             } else {
               // 設置默認的日期範圍
               final now = DateTime.now();
-              if (_startDate == null) {
-                _startDate = now.subtract(const Duration(days: 30));
-              }
-              if (_endDate == null) {
-                _endDate = now;
-              }
+              _startDate ??= now.subtract(const Duration(days: 30));
+              _endDate ??= now;
             }
           });
         }
@@ -758,8 +754,11 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       return;
     }
 
+    // 保存當前 context 的引用
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     // 顯示加載對話框
-    showDialog(context: context, barrierDismissible: false, builder: (context) => const Center(child: CircularProgressIndicator()));
+    final loadingDialog = _showLoadingDialog(context);
 
     try {
       // 計算統計數據
@@ -785,8 +784,11 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         timeRangeText: timeRangeText,
       );
 
+      // 檢查 widget 是否仍然掛載在 widget 樹上
+      if (!mounted) return;
+
       // 關閉加載對話框
-      Navigator.of(context).pop();
+      loadingDialog.dismiss();
 
       // 生成文件名
       final dateFormat = DateFormat('yyyyMMdd');
@@ -795,12 +797,31 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       // 保存並分享報告
       await ReportService.saveAndShareReport(pdfData, fileName);
     } catch (e) {
-      // 關閉加載對話框
-      Navigator.of(context).pop();
+      // 檢查 widget 是否仍然掛載在 widget 樹上
+      if (!mounted) return;
 
-      // 顯示錯誤訊息
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('生成報告失敗: $e')));
+      // 關閉加載對話框
+      loadingDialog.dismiss();
+
+      // 使用之前保存的 scaffoldMessenger 顯示錯誤訊息，避免使用異步操作後的 context
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text('生成報告失敗: $e')));
     }
+  }
+
+  // 顯示加載對話框並返回一個可以安全關閉的對話框控制器
+  _LoadingDialogController _showLoadingDialog(BuildContext context) {
+    final controller = _LoadingDialogController();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        controller.dialogContext = dialogContext;
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
+    return controller;
   }
 
   // 計算統計數據
@@ -865,5 +886,17 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     }
 
     return categoryCounts;
+  }
+}
+
+// 加載對話框控制器，用於安全地關閉對話框
+class _LoadingDialogController {
+  BuildContext? dialogContext;
+
+  void dismiss() {
+    if (dialogContext != null && Navigator.canPop(dialogContext!)) {
+      Navigator.pop(dialogContext!);
+      dialogContext = null;
+    }
   }
 }

@@ -76,7 +76,6 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     // 獲取螢幕尺寸和安全區域
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
-    final bottomPadding = mediaQuery.padding.bottom;
     final viewInsets = mediaQuery.viewInsets.bottom;
 
     // 計算合適的面板高度

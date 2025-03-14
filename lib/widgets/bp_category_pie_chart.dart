@@ -93,7 +93,6 @@ class BPCategoryPieChart extends StatelessWidget {
       AppConstants.hypertensionCrisisStatus: const Color(0xFFB71C1C), // 更深的紅色
     };
 
-    int index = 0;
     categoryCounts.forEach((category, count) {
       final percentage = (count / totalCount * 100).toStringAsFixed(1);
       final color = categoryColors[category] ?? Colors.grey;
@@ -107,7 +106,6 @@ class BPCategoryPieChart extends StatelessWidget {
           titleStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       );
-      index++;
     });
 
     return sections;

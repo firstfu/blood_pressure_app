@@ -375,7 +375,7 @@ class _RecordPageState extends State<RecordPage> {
         ),
 
         // 時間選擇器
-        Container(
+        SizedBox(
           width: double.infinity,
           child: GestureDetector(
             onTap: () => _selectTime(context),
@@ -457,6 +457,14 @@ class _RecordPageState extends State<RecordPage> {
             borderRadius: BorderRadius.circular(_borderRadius),
             side: isPrimary ? BorderSide.none : BorderSide(color: _primaryColor),
           ),
+          shadowColor: _primaryLightColor,
+        ).copyWith(
+          overlayColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+            if (states.contains(WidgetState.pressed) && isPrimary) {
+              return _primaryLightColor;
+            }
+            return null;
+          }),
         ),
         child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
       ),
@@ -560,7 +568,7 @@ class _RecordPageState extends State<RecordPage> {
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        title: Text(_isEditing ? '編輯血壓記錄' : '新增血壓記錄', style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(_isEditing ? '編輯血壓記錄' : '新增血壓記錄', style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [if (!_isEditing) IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: '重置表單')],
       ),
