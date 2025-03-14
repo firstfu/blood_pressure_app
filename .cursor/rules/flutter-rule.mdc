@@ -5,6 +5,6 @@ alwaysApply: true
 ---
 
 # 要求
-1、withOpacity 方法已被棄用，改用withValues()
+1、withOpacity 方法已被棄用, 改用 flutter 建議的新方式，請不要自己擴展。
 2、http請求用Dio
 3、

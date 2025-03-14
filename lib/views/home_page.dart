@@ -13,7 +13,6 @@ import '../widgets/health_tip_card.dart';
 import '../themes/app_theme.dart';
 import '../views/record_page.dart';
 import '../views/stats_page.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
