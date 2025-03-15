@@ -107,8 +107,6 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性圖表
   Widget _buildCorrelationChart(Map<String, dynamic> factorData) {
-    print('構建相關性圖表，factorData: $factorData');
-
     // 檢查是否有數據
     final hasData = factorData['hasData'] == true;
 
@@ -272,15 +270,11 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性結果
   Widget _buildCorrelationResults(Map<String, dynamic> factorData) {
-    print('構建相關性結果，factorData: $factorData');
-
     // 添加空值檢查
     final correlation = factorData['correlation'];
     final description = factorData['description'];
     final impact = factorData['impact'];
     final hasData = factorData['hasData'] == true;
-
-    print('correlation: $correlation, hasData: $hasData');
 
     // 如果關鍵數據缺失，顯示錯誤訊息
     if (correlation == null || description == null || impact == null) {
