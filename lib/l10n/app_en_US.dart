@@ -176,7 +176,7 @@ const Map<String, String> enUS = {
   '星期五': 'Friday',
   '星期六': 'Saturday',
   '星期日': 'Sunday',
-  '偏高': 'High',
+  '偏高': 'Elevated',
   '正常': 'Normal',
   '臨界': 'Borderline',
   '偏低': 'Low',
@@ -238,4 +238,5 @@ const Map<String, String> enUS = {
   '高血壓一級': 'Stage 1 Hypertension',
   '高血壓二級': 'Stage 2 Hypertension',
   '高血壓危象': 'Hypertensive Crisis',
+  '筆': 'records',
 };

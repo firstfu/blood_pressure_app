@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../constants/app_constants.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class BPCategoryPieChart extends StatefulWidget {
   final List<BloodPressureRecord> records;
@@ -33,7 +34,7 @@ class _BPCategoryPieChartState extends State<BPCategoryPieChart> {
             children: [
               Icon(Icons.pie_chart_outline, size: 48, color: Colors.grey[400]),
               const SizedBox(height: 16),
-              Text('暫無數據', style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+              Text(context.tr('暫無數據'), style: TextStyle(color: Colors.grey[600], fontSize: 16)),
             ],
           ),
         ),
@@ -68,7 +69,7 @@ class _BPCategoryPieChartState extends State<BPCategoryPieChart> {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 36),
         Wrap(spacing: 16, runSpacing: 12, alignment: WrapAlignment.center, children: _buildLegendItems(categoryCounts)),
       ],
     );
@@ -123,7 +124,7 @@ class _BPCategoryPieChartState extends State<BPCategoryPieChart> {
           color: color,
           radius: radius,
           titleStyle: TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: Colors.white),
-          badgeWidget: isTouched ? _Badge(category: category, count: count, percentage: percentage, color: color) : null,
+          badgeWidget: isTouched ? _Badge(category: context.tr(category), count: count, percentage: percentage, color: color) : null,
           badgePositionPercentageOffset: 1.2,
         ),
       );
@@ -149,6 +150,8 @@ class _BPCategoryPieChartState extends State<BPCategoryPieChart> {
     categoryCounts.forEach((category, count) {
       final percentage = (count / totalCount * 100).toStringAsFixed(1);
       final color = categoryColors[category] ?? Colors.grey;
+      final translatedCategory = context.tr(category);
+      final recordUnit = context.tr('筆');
 
       legendItems.add(
         Row(
@@ -156,7 +159,7 @@ class _BPCategoryPieChartState extends State<BPCategoryPieChart> {
           children: [
             Container(width: 16, height: 16, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
             const SizedBox(width: 8),
-            Text('$category: $count 筆 ($percentage%)', style: const TextStyle(fontSize: 14)),
+            Text('$translatedCategory: $count $recordUnit ($percentage%)', style: const TextStyle(fontSize: 14)),
           ],
         ),
       );
@@ -176,6 +179,8 @@ class _Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final recordUnit = context.tr('筆');
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -189,7 +194,7 @@ class _Badge extends StatelessWidget {
         children: [
           Text(category, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 4),
-          Text('$count 筆 ($percentage%)', style: const TextStyle(color: Colors.black87, fontSize: 12)),
+          Text('$count $recordUnit ($percentage%)', style: const TextStyle(color: Colors.black87, fontSize: 12)),
         ],
       ),
     );
