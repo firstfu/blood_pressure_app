@@ -1,6 +1,6 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-15 18:45:30
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 統計頁面 - 顯示血壓和心率的統計數據、趨勢圖和數據表
  */
 
@@ -62,6 +62,15 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     if (_selectedTimeRange == TimeRange.custom && _startDate == null && _endDate == null) {
       final now = DateTime.now();
       _startDate = now.subtract(const Duration(days: 30));
+      _endDate = now;
+    }
+
+    // 確保日期不超過當前日期
+    final now = DateTime.now();
+    if (_startDate != null && _startDate!.isAfter(now)) {
+      _startDate = now.subtract(const Duration(days: 30));
+    }
+    if (_endDate != null && _endDate!.isAfter(now)) {
       _endDate = now;
     }
 

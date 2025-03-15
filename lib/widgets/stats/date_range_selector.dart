@@ -1,6 +1,6 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-16 10:16:45
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 日期範圍選擇器組件 - 用於選擇自定義日期範圍
  */
 
@@ -124,12 +124,32 @@ class DateRangeSelector extends StatelessWidget {
   }
 
   Future<void> _selectDate(BuildContext context, {required bool isStartDate}) async {
-    final initialDate = isStartDate ? startDate ?? DateTime.now().subtract(const Duration(days: 30)) : endDate ?? DateTime.now();
-    final firstDate = isStartDate ? DateTime(2020) : (startDate ?? DateTime(2020));
-    final lastDate = isStartDate ? (endDate ?? DateTime.now()) : DateTime.now();
+    // 獲取當前日期
+    final now = DateTime.now();
 
+    // 設置初始日期
+    DateTime initialDate;
+    if (isStartDate) {
+      initialDate = startDate ?? now.subtract(const Duration(days: 30));
+    } else {
+      initialDate = endDate ?? now;
+    }
+
+    // 確保初始日期不超過當前日期
+    if (initialDate.isAfter(now)) {
+      initialDate = now;
+    }
+
+    // 設置最小日期
+    final DateTime firstDate = DateTime(2020);
+
+    // 設置最大日期
+    final DateTime lastDate = now;
+
+    // 用於保存選擇的日期
     DateTime? pickedDate = initialDate;
 
+    // 顯示日期選擇器
     await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
@@ -164,6 +184,7 @@ class DateRangeSelector extends StatelessWidget {
                   mode: CupertinoDatePickerMode.date,
                   onDateTimeChanged: (DateTime newDate) {
                     pickedDate = newDate;
+                    print('選擇的日期: ${newDate.toString()}');
                   },
                   dateOrder: DatePickerDateOrder.ymd,
                   use24hFormat: true,
@@ -176,6 +197,7 @@ class DateRangeSelector extends StatelessWidget {
       },
     ).then((value) {
       if (value != null) {
+        print('返回的日期: ${value.toString()}');
         if (isStartDate) {
           onStartDateChanged(value);
           // 如果開始日期晚於結束日期，或結束日期未設置，則將結束日期設為開始日期
