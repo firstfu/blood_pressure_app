@@ -11,6 +11,10 @@ const Map<String, String> enUS = {
   '刪除': 'Delete',
   '新增': 'Add',
   '設定': 'Settings',
+  '查詢': 'Search',
+  '選擇開始日期': 'Select Start Date',
+  '選擇結束日期': 'Select End Date',
+  '至': 'to',
 
   // App Name
   '血壓管家': 'Blood Pressure Manager',

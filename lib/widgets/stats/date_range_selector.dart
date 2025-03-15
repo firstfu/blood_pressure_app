@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../themes/app_theme.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class DateRangeSelector extends StatelessWidget {
   final DateTime? startDate;
@@ -27,8 +28,8 @@ class DateRangeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd');
-    final startDateText = startDate != null ? dateFormat.format(startDate!) : '選擇開始日期';
-    final endDateText = endDate != null ? dateFormat.format(endDate!) : '選擇結束日期';
+    final startDateText = startDate != null ? dateFormat.format(startDate!) : context.tr('選擇開始日期');
+    final endDateText = endDate != null ? dateFormat.format(endDate!) : context.tr('選擇結束日期');
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -62,7 +63,7 @@ class DateRangeSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              const Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('至', style: TextStyle(color: Colors.grey))),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(context.tr('至'), style: const TextStyle(color: Colors.grey))),
               Expanded(
                 child: GestureDetector(
                   onTap: () => _selectDate(context, isStartDate: false),
@@ -94,7 +95,7 @@ class DateRangeSelector extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: startDate != null && endDate != null ? onSearch : null,
                 icon: const Icon(Icons.search, size: 18),
-                label: const Text('查詢', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                label: Text(context.tr('查詢'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
