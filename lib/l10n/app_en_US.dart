@@ -1,4 +1,3 @@
-// @ Author: firstfu
 // @ Create Time: 2024-05-15 16:16:42
 // @ Description: 英文語系文件
 
