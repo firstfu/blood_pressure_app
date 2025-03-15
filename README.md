@@ -1,3 +1,133 @@
+<div align="center">
+  <h1><a href="#blood-pressure-manager---health-monitoring-application">English Version</a> | <a href="#血壓管家---健康監測應用程式">繁體中文版</a></h1>
+</div>
+
+# Blood Pressure Manager - Health Monitoring Application
+
+<div align="center">
+  <img src="docs/imgs/app_logo.svg" alt="Blood Pressure Manager App Logo" width="200">
+</div>
+
+## 📱 Application Overview
+
+"Blood Pressure Manager" is a health management application designed for users who need to regularly monitor their blood pressure. Through a clean and intuitive interface, it helps users record, track, and analyze blood pressure data, provides health recommendations, and promotes cardiovascular health management.
+
+<div align="center">
+  <img src="docs/imgs/screenshot1.png" alt="App Screenshot - Main Page" width="250">
+  <img src="docs/imgs/screenshot2.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/imgs/screenshot3.png" alt="App Screenshot - Recording Feature" width="250">
+</div>
+
+## ✨ Key Features
+
+### 📊 Blood Pressure Recording and Tracking
+
+- Quick recording of systolic pressure, diastolic pressure, and pulse data
+- Support for adding measurement posture, arm used, and personal notes
+- Automatic classification of blood pressure status (normal, elevated, stage 1 hypertension, stage 2 hypertension)
+
+### 📈 Data Analysis and Visualization
+
+- Multi-timeframe trend charts (7 days, 2 weeks, 1 month)
+- Detailed statistical analysis, including averages, highest/lowest values
+- Blood pressure status distribution ratios
+
+### 🔔 Health Reminders and Recommendations
+
+- Daily measurement reminder function
+- Personalized health recommendations based on blood pressure data
+- Professional medical knowledge tips
+
+### 👤 Personal Profile Management
+
+- User profile management
+- Personal health goal setting
+- Data backup and recovery
+
+## 🛠️ Technical Features
+
+- **Flutter Framework**: Cross-platform support, smooth user experience
+- **MVVM Architecture**: Clear code structure, easy to maintain and extend
+- **Local Data Storage**: Protects user privacy, no network connection required
+- **Adaptive UI**: Adapts to different device sizes and screens
+- **Material Design 3**: Modern design language, providing a consistent visual experience
+
+## 📋 User Guide
+
+### Recording Blood Pressure
+
+1. Click the "+" button in the bottom right corner of the main page or "Record" in the bottom navigation bar
+2. Enter systolic pressure, diastolic pressure, and pulse data
+3. Select measurement posture and arm used
+4. Add notes (if needed)
+5. Click "Save" to complete the record
+
+### Viewing Trends
+
+- The main page automatically displays recent blood pressure trend charts
+- Different time ranges can be selected (7 days, 2 weeks, 1 month)
+- Click "View Details" to enter the statistics page for more detailed analysis
+
+### Health Recommendations
+
+- The main page displays health recommendations based on the user's blood pressure condition
+- Click on recommendation cards to get more related information
+
+## 🔜 Future Plans
+
+- Multi-user management functionality
+- Data export in PDF/CSV formats
+- Data sharing with healthcare professionals
+- Direct connection to Bluetooth blood pressure monitors
+- Intelligent blood pressure analysis and early warning
+
+## 📝 Developer Notes
+
+This application is developed using the Flutter framework and adopts the MVVM architectural design pattern.
+
+### Environment Requirements
+
+- Flutter 3.0.0 or higher
+- Dart 2.17.0 or higher
+- Android Studio / VS Code
+
+### Installation and Running
+
+```bash
+# Clone the project
+git clone https://github.com/yourusername/blood_pressure_app.git
+
+# Enter the project directory
+cd blood_pressure_app
+
+# Install dependencies
+flutter pub get
+
+# Run the application
+flutter run
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgements
+
+- Thanks to all users who provided suggestions and feedback for this project
+- Special thanks to healthcare professionals for guidance on blood pressure classification standards
+- Icons and design elements from [Material Design](https://material.io/design)
+
+<div align="center">
+  <p>Caring for your heart health</p>
+  <p>© 2024 Blood Pressure Manager Team</p>
+</div>
+
+---
+
+<div align="center">
+  <h1><a href="#blood-pressure-manager---health-monitoring-application">English Version</a> | <a href="#血壓管家---健康監測應用程式">繁體中文版</a></h1>
+</div>
+
 # 血壓管家 - 健康監測應用程式
 
 <div align="center">
@@ -112,8 +242,6 @@ flutter run
 - 感謝所有為本專案提供建議和反饋的用戶
 - 特別感謝醫療專業人士對血壓分類標準的指導
 - 圖標和設計元素來自 [Material Design](https://material.io/design)
-
----
 
 <div align="center">
   <p>用心守護您的心臟健康</p>
