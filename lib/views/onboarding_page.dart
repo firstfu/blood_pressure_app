@@ -31,37 +31,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
   // 頁面總數
   final int _totalPages = AppConstants.onBoardingTitles.length;
 
-  // 臨時圖標列表，用於替代實際圖片
-  final List<IconData> _tempIcons = [
-    Icons.favorite, // 歡迎頁面 - 心臟圖標
-    Icons.add_chart, // 記錄頁面 - 添加數據圖標
-    Icons.bar_chart, // 分析頁面 - 圖表圖標
-    Icons.notifications_active, // 提醒頁面 - 通知圖標
-  ];
-
-  // 臨時圖標顏色列表，為每個頁面提供不同的顏色
-  final List<Color> _iconColors = [
-    AppTheme.primaryColor, // 歡迎頁面 - 主色調
-    AppTheme.successColor, // 記錄頁面 - 成功綠色
-    AppTheme.primaryDarkColor, // 分析頁面 - 深藍色
-    AppTheme.alertColor, // 提醒頁面 - 橙色
-  ];
-
-  // 臨時背景顏色列表，為每個頁面提供不同的背景色
+  // 頁面背景顏色
   final List<Color> _backgroundColors = [
-    AppTheme.primaryLightColor.withAlpha(15), // 歡迎頁面 - 淺藍色
-    AppTheme.successLightColor.withAlpha(15), // 記錄頁面 - 淺綠色
-    AppTheme.primaryLightColor.withAlpha(20), // 分析頁面 - 中藍色
-    AppTheme.alertLightColor.withAlpha(15), // 提醒頁面 - 淺橙色
+    AppTheme.primaryColor.withAlpha(15),
+    AppTheme.successColor.withAlpha(15),
+    AppTheme.primaryDarkColor.withAlpha(15),
+    AppTheme.alertColor.withAlpha(15),
   ];
 
-  // 輔助圖標列表，為每個頁面提供額外的視覺元素
-  final List<List<IconData>> _supportIcons = [
-    [Icons.monitor_heart, Icons.health_and_safety, Icons.bloodtype], // 歡迎頁面
-    [Icons.edit, Icons.note_add, Icons.input], // 記錄頁面
-    [Icons.trending_up, Icons.pie_chart, Icons.stacked_line_chart], // 分析頁面
-    [Icons.alarm, Icons.timer, Icons.calendar_today], // 提醒頁面
-  ];
+  // 頁面主色調
+  final List<Color> _primaryColors = [AppTheme.primaryColor, AppTheme.successColor, AppTheme.primaryDarkColor, AppTheme.alertColor];
+
+  // 3D 模型圖標（臨時替代）
+  final List<IconData> _tempIcons = [Icons.favorite, Icons.add_chart, Icons.bar_chart, Icons.notifications_active];
 
   @override
   void dispose() {
@@ -70,8 +52,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   /// 完成 onBoarding 流程
-  ///
-  /// 保存用戶已完成 onBoarding 的狀態，並導航到主頁面
   void _completeOnboarding() async {
     await SharedPrefsService.setOnBoardingCompleted();
     if (mounted) {
@@ -80,20 +60,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   /// 跳到下一頁
-  ///
-  /// 如果當前是最後一頁，則完成 onBoarding 流程
-  /// 否則跳到下一頁
   void _nextPage() {
     if (_currentPage == _totalPages - 1) {
       _completeOnboarding();
     } else {
-      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
     }
   }
 
   /// 跳過 onBoarding 流程
-  ///
-  /// 直接完成 onBoarding 流程，跳到主頁面
   void _skipOnboarding() {
     _completeOnboarding();
   }
@@ -101,75 +76,98 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark),
-        actions: [
-          // 跳過按鈕
-          if (_currentPage < _totalPages - 1)
-            TextButton(
-              onPressed: _skipOnboarding,
-              child: Text(
-                AppConstants.onBoardingSkip,
-                style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.w500, fontSize: 16),
-              ),
-            ),
-        ],
-      ),
-      body: Column(
+      body: Stack(
         children: [
+          // 背景漸變
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [_backgroundColors[_currentPage], Colors.white],
+                stops: const [0.3, 1.0],
+              ),
+            ),
+          ),
+
           // 頁面內容
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  _currentPage = page;
-                });
-              },
-              itemCount: _totalPages,
-              itemBuilder: (context, index) {
-                return _buildOnboardingPage(
-                  title: AppConstants.onBoardingTitles[index],
-                  description: AppConstants.onBoardingDescriptions[index],
-                  imagePath: AppConstants.onBoardingImages[index],
-                  iconData: _tempIcons[index],
-                  iconColor: _iconColors[index],
-                  backgroundColor: _backgroundColors[index],
-                  supportIcons: _supportIcons[index],
-                  index: index,
-                );
-              },
-            ),
-          ),
+          SafeArea(
+            child: Column(
+              children: [
+                // 頂部跳過按鈕
+                Align(
+                  alignment: Alignment.topRight,
+                  child:
+                      _currentPage < _totalPages - 1
+                          ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: TextButton(
+                              onPressed: _skipOnboarding,
+                              style: TextButton.styleFrom(
+                                foregroundColor: _primaryColors[_currentPage],
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              ),
+                              child: Text(AppConstants.onBoardingSkip, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                            ),
+                          )
+                          : const SizedBox(height: 56),
+                ),
 
-          // 頁面指示器 - 簡潔設計
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_totalPages, (index) => _buildPageIndicator(index == _currentPage)),
-            ),
-          ),
+                // 主要內容區域
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (int page) {
+                      setState(() {
+                        _currentPage = page;
+                      });
+                    },
+                    itemCount: _totalPages,
+                    itemBuilder: (context, index) {
+                      return _buildOnboardingPage(
+                        title: AppConstants.onBoardingTitles[index],
+                        description: AppConstants.onBoardingDescriptions[index],
+                        imagePath: AppConstants.onBoardingImages[index],
+                        index: index,
+                      );
+                    },
+                  ),
+                ),
 
-          // 底部按鈕 - 簡潔設計
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _nextPage,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                backgroundColor: _iconColors[_currentPage], // 使用當前頁面的主色調
-                elevation: 0, // 移除陰影，更加簡約
-              ),
-              child: Text(
-                _currentPage == _totalPages - 1 ? AppConstants.onBoardingStart : AppConstants.onBoardingNext,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+                // 底部導航區域
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  child: Column(
+                    children: [
+                      // 頁面指示器
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_totalPages, (index) => _buildPageIndicator(index == _currentPage, index)),
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // 下一步按鈕
+                      ElevatedButton(
+                        onPressed: _nextPage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _primaryColors[_currentPage],
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          elevation: 0,
+                          minimumSize: const Size(double.infinity, 56),
+                        ),
+                        child: Text(
+                          _currentPage == _totalPages - 1 ? AppConstants.onBoardingStart : AppConstants.onBoardingNext,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -178,32 +176,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   /// 構建單個引導頁面
-  ///
-  /// 包含圖片、標題和描述
-  Widget _buildOnboardingPage({
-    required String title,
-    required String description,
-    required String imagePath,
-    required IconData iconData,
-    required Color iconColor,
-    required Color backgroundColor,
-    required List<IconData> supportIcons,
-    required int index,
-  }) {
+  Widget _buildOnboardingPage({required String title, required String description, required String imagePath, required int index}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 圖片或臨時圖標
-          Expanded(flex: 3, child: _buildImageOrPlaceholder(imagePath, iconData, iconColor, backgroundColor, supportIcons, index)),
+          // 3D 圖片區域
+          Expanded(flex: 5, child: _buildImageContainer(imagePath, index)),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 40),
 
           // 標題
           Text(
             title,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textPrimaryColor),
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.textPrimaryColor),
             textAlign: TextAlign.center,
           ),
 
@@ -212,340 +199,147 @@ class _OnboardingPageState extends State<OnboardingPage> {
           // 描述
           Text(description, style: const TextStyle(fontSize: 16, color: AppTheme.textSecondaryColor, height: 1.5), textAlign: TextAlign.center),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 40),
         ],
       ),
     );
   }
 
-  /// 構建圖片或臨時占位圖
-  ///
-  /// 嘗試加載圖片，如果失敗則顯示臨時圖標
-  Widget _buildImageOrPlaceholder(
-    String imagePath,
-    IconData iconData,
-    Color iconColor,
-    Color backgroundColor,
-    List<IconData> supportIcons,
-    int index,
-  ) {
+  /// 構建圖片容器
+  Widget _buildImageContainer(String imagePath, int index) {
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(8), blurRadius: 8, offset: const Offset(0, 2))],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: _primaryColors[index].withAlpha(40), blurRadius: 20, spreadRadius: 2, offset: const Offset(0, 10))],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          imagePath,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            print('無法加載圖片: $imagePath, 使用臨時圖標替代');
-            // 如果圖片加載失敗，返回臨時圖標
-            return _buildPlaceholderWithIcons(iconData, iconColor, backgroundColor, supportIcons, index);
-          },
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          children: [
+            // 背景圓形裝飾
+            Positioned(
+              top: -40,
+              right: -40,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(color: _primaryColors[index].withAlpha(15), shape: BoxShape.circle),
+              ),
+            ),
+
+            Positioned(
+              bottom: -30,
+              left: -30,
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(color: _primaryColors[index].withAlpha(10), shape: BoxShape.circle),
+              ),
+            ),
+
+            // 浮動裝飾元素
+            ..._buildFloatingElements(index),
+
+            // 主圖片
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    print('無法加載圖片: $imagePath, 使用臨時圖標替代');
+                    return _buildFallbackImage(index);
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// 構建帶有多個圖標的臨時占位圖
-  ///
-  /// 顯示主圖標和輔助圖標，提供更豐富的視覺效果
-  Widget _buildPlaceholderWithIcons(IconData mainIcon, Color iconColor, Color backgroundColor, List<IconData> supportIcons, int index) {
-    // 根據頁面索引選擇不同的布局
-    switch (index) {
-      case 0: // 歡迎頁面 - 心臟和健康相關圖標
-        return _buildWelcomePlaceholder(mainIcon, iconColor, supportIcons);
-      case 1: // 記錄頁面 - 表單和輸入相關圖標
-        return _buildRecordPlaceholder(mainIcon, iconColor, supportIcons);
-      case 2: // 分析頁面 - 圖表和趨勢相關圖標
-        return _buildAnalysisPlaceholder(mainIcon, iconColor, supportIcons);
-      case 3: // 提醒頁面 - 通知和時間相關圖標
-        return _buildReminderPlaceholder(mainIcon, iconColor, supportIcons);
-      default:
-        return _buildDefaultPlaceholder(mainIcon, iconColor);
+  /// 構建浮動裝飾元素
+  List<Widget> _buildFloatingElements(int index) {
+    final List<Widget> elements = [];
+    final random = math.Random(index);
+
+    // 添加3-5個浮動元素
+    for (int i = 0; i < 4; i++) {
+      final size = 8.0 + random.nextDouble() * 12;
+      elements.add(
+        Positioned(
+          left: random.nextDouble() * 300,
+          top: random.nextDouble() * 300,
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(color: _primaryColors[index].withAlpha(100 + random.nextInt(155)), shape: BoxShape.circle),
+          ),
+        ),
+      );
     }
+
+    return elements;
   }
 
-  /// 構建歡迎頁面的臨時占位圖
-  Widget _buildWelcomePlaceholder(IconData mainIcon, Color iconColor, List<IconData> supportIcons) {
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // 背景圓形
-          Container(width: 240, height: 240, decoration: BoxDecoration(color: iconColor.withAlpha(15), shape: BoxShape.circle)),
+  /// 構建備用圖片（當無法加載圖片時）
+  Widget _buildFallbackImage(int index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // 3D 風格的圖標容器
+        Container(
+          width: 180,
+          height: 180,
+          decoration: BoxDecoration(color: _primaryColors[index].withAlpha(15), borderRadius: BorderRadius.circular(30)),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // 背景圓形
+              Container(width: 140, height: 140, decoration: BoxDecoration(color: _primaryColors[index].withAlpha(30), shape: BoxShape.circle)),
 
-          // 主圖標
-          Icon(mainIcon, size: 100, color: iconColor),
+              // 主圖標
+              Icon(_tempIcons[index], size: 80, color: _primaryColors[index]),
 
-          // 輔助圖標 - 圍繞主圖標排列
-          ...List.generate(supportIcons.length, (i) {
-            final double angle = i * (2 * math.pi / supportIcons.length);
-            return Positioned(
-              left: 120 + 90 * math.cos(angle),
-              top: 120 + 90 * math.sin(angle),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 2, offset: const Offset(0, 1))],
+              // 裝飾元素
+              Positioned(
+                top: 30,
+                right: 30,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(color: _primaryColors[index].withAlpha(80), shape: BoxShape.circle),
                 ),
-                child: Icon(supportIcons[i], size: 20, color: iconColor),
               ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
 
-  /// 構建記錄頁面的臨時占位圖
-  Widget _buildRecordPlaceholder(IconData mainIcon, Color iconColor, List<IconData> supportIcons) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // 手機框架
-          Container(
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: iconColor.withAlpha(40), width: 1.5),
-              boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 6, offset: const Offset(0, 2))],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 表單標題
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  width: double.infinity,
-                  color: iconColor.withAlpha(15),
-                  child: Icon(supportIcons[0], size: 28, color: iconColor),
+              Positioned(
+                bottom: 40,
+                left: 30,
+                child: Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(color: _primaryColors[index].withAlpha(120), shape: BoxShape.circle),
                 ),
-
-                const SizedBox(height: 20),
-
-                // 輸入欄位
-                ...List.generate(2, (i) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(color: Colors.grey.withAlpha(15), borderRadius: BorderRadius.circular(8)),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 10),
-                          Icon(supportIcons[i + 1], size: 20, color: iconColor),
-                          const SizedBox(width: 10),
-                          Expanded(child: Container(height: 1.5, color: iconColor.withAlpha(40))),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-
-                const SizedBox(height: 20),
-
-                // 提交按鈕
-                Container(
-                  width: 120,
-                  height: 40,
-                  decoration: BoxDecoration(color: iconColor, borderRadius: BorderRadius.circular(20)),
-                  child: const Icon(Icons.check, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 構建分析頁面的臨時占位圖
-  Widget _buildAnalysisPlaceholder(IconData mainIcon, Color iconColor, List<IconData> supportIcons) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // 圖表容器
-          Container(
-            width: 280,
-            height: 200,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 6, offset: const Offset(0, 2))],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 圖表標題
-                Row(
-                  children: [
-                    Icon(mainIcon, size: 22, color: iconColor),
-                    const SizedBox(width: 8),
-                    Text('血壓趨勢', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: iconColor)),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // 模擬圖表
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(7, (i) {
-                      final double height = 20.0 + (i % 3) * 15.0 + (i % 2) * 10.0;
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            width: 20,
-                            height: height,
-                            decoration: BoxDecoration(color: iconColor.withAlpha(80 + (i * 10)), borderRadius: BorderRadius.circular(4)),
-                          ),
-                          const SizedBox(height: 4),
-                          Text('${i + 1}', style: TextStyle(fontSize: 12, color: AppTheme.textSecondaryColor.withAlpha(140))),
-                        ],
-                      );
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // 數據卡片
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(supportIcons.length, (i) {
-              return Container(
-                width: 60,
-                height: 60,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(8), blurRadius: 3, offset: const Offset(0, 1))],
-                ),
-                child: Icon(supportIcons[i], size: 28, color: iconColor),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 構建提醒頁面的臨時占位圖
-  Widget _buildReminderPlaceholder(IconData mainIcon, Color iconColor, List<IconData> supportIcons) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // 通知圖標
-          Container(
-            width: 90,
-            height: 90,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: iconColor.withAlpha(40), blurRadius: 10, spreadRadius: 2)],
-            ),
-            child: Icon(mainIcon, size: 50, color: iconColor),
-          ),
-
-          const SizedBox(height: 30),
-
-          // 通知列表
-          ...List.generate(2, (i) {
-            return Container(
-              width: 280,
-              height: 70,
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black.withAlpha(8), blurRadius: 3, offset: const Offset(0, 1))],
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 46,
-                    height: 46,
-                    decoration: BoxDecoration(color: iconColor.withAlpha(15), shape: BoxShape.circle),
-                    child: Icon(supportIcons[i], size: 22, color: iconColor),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 14,
-                          width: 150,
-                          decoration: BoxDecoration(color: AppTheme.textPrimaryColor.withAlpha(140), borderRadius: BorderRadius.circular(2)),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 10,
-                          width: 100,
-                          decoration: BoxDecoration(color: AppTheme.textSecondaryColor.withAlpha(100), borderRadius: BorderRadius.circular(2)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  /// 構建默認的臨時占位圖
-  Widget _buildDefaultPlaceholder(IconData iconData, Color iconColor) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // 大圖標
-          Icon(iconData, size: 90, color: iconColor),
-
-          const SizedBox(height: 20),
-
-          // 圖片路徑提示
-          Text('圖片將顯示在此處', style: TextStyle(fontSize: 16, color: AppTheme.textSecondaryColor)),
-        ],
-      ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   /// 構建頁面指示器
-  ///
-  /// 當前頁面顯示為實心圓點，其他頁面顯示為空心圓點
-  Widget _buildPageIndicator(bool isActive) {
-    return Container(
+  Widget _buildPageIndicator(bool isActive, int index) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       height: 8,
       width: isActive ? 24 : 8,
       decoration: BoxDecoration(
-        color: isActive ? _iconColors[_currentPage] : _iconColors[_currentPage].withAlpha(40),
+        color: isActive ? _primaryColors[_currentPage] : _primaryColors[_currentPage].withAlpha(40),
         borderRadius: BorderRadius.circular(4),
       ),
     );
