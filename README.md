@@ -9,7 +9,9 @@
 「血壓管家」是一款專為需要定期監測血壓的用戶設計的健康管理應用程式。透過簡潔直觀的界面，幫助用戶記錄、追蹤和分析血壓數據，提供健康建議，促進心血管健康管理。
 
 <div align="center">
-  <img src="docs/imgs/simulator_screenshot_70BB70DD-8C4B-41F0-8662-80C757A5913B.png" alt="應用程式截圖" width="300">
+  <img src="docs/imgs/screenshot1.png" alt="應用程式截圖 - 主頁面" width="250">
+  <img src="docs/imgs/screenshot2.png" alt="應用程式截圖 - 數據分析" width="250">
+  <img src="docs/imgs/screenshot3.png" alt="應用程式截圖 - 記錄功能" width="250">
 </div>
 
 ## ✨ 主要功能
