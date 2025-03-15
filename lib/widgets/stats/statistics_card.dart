@@ -85,11 +85,14 @@ class StatisticsCard extends StatelessWidget {
             // 平均值區塊
             _buildSectionTitle(context, context.tr('平均值')),
             const SizedBox(height: 12),
-            _buildStatsGrid(context, [
-              StatsItem(label: context.tr('平均收縮壓'), value: '$avgSystolic', unit: 'mmHg', color: AppTheme.primaryColor, icon: Icons.arrow_upward),
-              StatsItem(label: context.tr('平均舒張壓'), value: '$avgDiastolic', unit: 'mmHg', color: AppTheme.successColor, icon: Icons.arrow_downward),
-              StatsItem(label: context.tr('平均心率'), value: '$avgPulse', unit: 'bpm', color: Colors.orange, icon: Icons.favorite),
-            ]),
+            SizedBox(
+              height: 150, // 增加高度以避免溢出
+              child: _buildStatsGrid(context, [
+                StatsItem(label: context.tr('平均收縮壓'), value: '$avgSystolic', unit: 'mmHg', color: AppTheme.primaryColor, icon: Icons.arrow_upward),
+                StatsItem(label: context.tr('平均舒張壓'), value: '$avgDiastolic', unit: 'mmHg', color: AppTheme.successColor, icon: Icons.arrow_downward),
+                StatsItem(label: context.tr('平均心率'), value: '$avgPulse', unit: 'bpm', color: Colors.orange, icon: Icons.favorite),
+              ]),
+            ),
 
             const SizedBox(height: 24),
 
@@ -173,21 +176,25 @@ class StatisticsCard extends StatelessWidget {
   Widget _buildStatCard(BuildContext context, StatsItem item) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: item.color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: item.color.withOpacity(0.3)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min, // 使用最小空間
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(item.icon, color: item.color, size: 24),
-          const SizedBox(height: 8),
-          Text(item.value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: item.color)),
-          Text(item.unit, style: TextStyle(fontSize: 14, color: item.color.withOpacity(0.8))),
-          const SizedBox(height: 8),
-          Text(item.label, textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+          Icon(item.icon, color: item.color, size: 22),
+          const SizedBox(height: 6),
+          Text(item.value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: item.color)),
+          Text(item.unit, style: TextStyle(fontSize: 12, color: item.color.withOpacity(0.8))),
+          const SizedBox(height: 6),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(item.label, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey[700])),
+          ),
         ],
       ),
     );
