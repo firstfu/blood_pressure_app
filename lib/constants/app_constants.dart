@@ -55,4 +55,26 @@ class AppConstants {
     '規律作息，保證充足睡眠有助於血壓穩定',
     '按時服藥，遵醫囑定期複診',
   ];
+
+  // OnBoarding 頁面文字
+  static const String onBoardingSkip = '跳過';
+  static const String onBoardingNext = '下一步';
+  static const String onBoardingStart = '開始使用';
+
+  // OnBoarding 頁面內容
+  static const List<String> onBoardingTitles = ['歡迎使用血壓管家', '輕鬆記錄血壓數據', '專業分析健康趨勢', '貼心提醒不遺漏'];
+
+  static const List<String> onBoardingDescriptions = [
+    '您的個人血壓管理助手，幫助您更好地了解和管理血壓健康',
+    '簡單快速地記錄您的血壓數據，支持手動輸入和智能設備同步',
+    '智能分析您的血壓趨勢，提供專業的健康建議和風險評估',
+    '設置測量提醒，確保您按時測量血壓，不錯過任何重要數據',
+  ];
+
+  static const List<String> onBoardingImages = [
+    'assets/images/onboarding_welcome.png',
+    'assets/images/onboarding_record.png',
+    'assets/images/onboarding_analysis.png',
+    'assets/images/onboarding_reminder.png',
+  ];
 }

@@ -1,27 +1,221 @@
-// @ Author: 1891_0982
-// @ Create Time: 2024-03-15 10:25:30
-// @ Description: 血壓管家 App 個人頁面，用於顯示和編輯用戶資料
+// @ Author: firstfu
+// @ Create Time: 2024-05-15 16:16:42
+// @ Description: 血壓管家 App 個人頁面，用於顯示和管理用戶個人資料和設置
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import '../constants/app_constants.dart';
+import '../services/shared_prefs_service.dart';
 import '../themes/app_theme.dart';
+import 'onboarding_page.dart';
 
-class ProfilePage extends StatelessWidget {
+/// ProfilePage 類
+///
+/// 實現應用程式的個人頁面，用於顯示和管理用戶個人資料和設置
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  // 開發者模式計數器
+  int _devModeCounter = 0;
+  // 是否顯示開發者選項
+  bool _showDevOptions = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor,
-        elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        title: const Text('個人中心', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+      appBar: AppBar(title: const Text(AppConstants.profileTab), centerTitle: true),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 用戶資料卡片
+            _buildUserProfileCard(),
+
+            const SizedBox(height: 24),
+
+            // 設置選項
+            _buildSettingsSection(),
+
+            const SizedBox(height: 24),
+
+            // 關於應用
+            _buildAboutSection(),
+
+            // 開發者選項（隱藏）
+            if (_showDevOptions) _buildDeveloperOptions(),
+          ],
+        ),
       ),
-      body: const Center(child: Text('個人頁面內容將在後續實現')),
     );
+  }
+
+  /// 構建用戶資料卡片
+  Widget _buildUserProfileCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            // 用戶頭像
+            GestureDetector(
+              onTap: _incrementDevModeCounter,
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: AppTheme.primaryColor.withAlpha(26),
+                child: const Icon(Icons.person, size: 40, color: AppTheme.primaryColor),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // 用戶信息
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('用戶名稱', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text('點擊編輯個人資料', style: TextStyle(color: AppTheme.textSecondaryColor)),
+                ],
+              ),
+            ),
+            // 編輯按鈕
+            IconButton(
+              icon: const Icon(Icons.edit, color: AppTheme.primaryColor),
+              onPressed: () {
+                // TODO: 實現編輯個人資料功能
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 構建設置選項
+  Widget _buildSettingsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('設置', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        _buildSettingItem(Icons.notifications, '提醒設置', '設置測量提醒時間'),
+        _buildSettingItem(Icons.language, '語言設置', '切換應用語言'),
+        _buildSettingItem(Icons.color_lens, '主題設置', '自定義應用外觀'),
+        _buildSettingItem(Icons.security, '隱私設置', '管理數據和隱私'),
+      ],
+    );
+  }
+
+  /// 構建關於應用部分
+  Widget _buildAboutSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('關於', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        _buildSettingItem(Icons.info, '關於應用', '版本信息和開發者'),
+        _buildSettingItem(Icons.help, '幫助與反饋', '獲取幫助或提交反饋'),
+        _buildSettingItem(Icons.star, '評分應用', '在應用商店評分'),
+        _buildSettingItem(Icons.share, '分享應用', '與朋友分享此應用'),
+      ],
+    );
+  }
+
+  /// 構建開發者選項
+  Widget _buildDeveloperOptions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(),
+        const SizedBox(height: 12),
+        const Text('開發者選項', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
+        const SizedBox(height: 12),
+        _buildDevSettingItem(Icons.refresh, '重置 OnBoarding', '重置引導頁面狀態', _resetOnboarding),
+        _buildDevSettingItem(Icons.delete, '清除所有數據', '刪除應用所有數據', () {
+          // TODO: 實現清除所有數據功能
+        }),
+      ],
+    );
+  }
+
+  /// 構建設置項
+  Widget _buildSettingItem(IconData icon, String title, String subtitle) {
+    return Card(
+      elevation: 0,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(icon, color: AppTheme.primaryColor),
+        title: Text(title),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+          // TODO: 實現設置項功能
+        },
+      ),
+    );
+  }
+
+  /// 構建開發者設置項
+  Widget _buildDevSettingItem(IconData icon, String title, String subtitle, VoidCallback onTap) {
+    return Card(
+      elevation: 0,
+      color: Colors.red.withAlpha(26),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.red),
+        title: Text(title, style: const TextStyle(color: Colors.red)),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.red),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  /// 增加開發者模式計數器
+  void _incrementDevModeCounter() {
+    setState(() {
+      _devModeCounter++;
+      if (_devModeCounter >= 7) {
+        _showDevOptions = true;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('開發者選項已啟用')));
+      }
+    });
+  }
+
+  /// 重置 OnBoarding 狀態
+  void _resetOnboarding() async {
+    // 顯示確認對話框
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('重置引導頁面'),
+            content: const Text('這將重置應用的引導頁面狀態，下次啟動時將顯示引導頁面。確定要繼續嗎？'),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('取消')),
+              TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('確定')),
+            ],
+          ),
+    );
+
+    // 如果用戶確認，重置 OnBoarding 狀態並導航到引導頁面
+    if (confirm == true) {
+      await SharedPrefsService.resetOnBoardingStatus();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('引導頁面狀態已重置')));
+
+        // 導航到引導頁面
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const OnboardingPage()));
+      }
+    }
   }
 }
