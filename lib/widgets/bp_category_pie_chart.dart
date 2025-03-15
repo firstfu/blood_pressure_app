@@ -9,17 +9,24 @@ import 'package:fl_chart/fl_chart.dart';
 import '../models/blood_pressure_record.dart';
 import '../constants/app_constants.dart';
 
-class BPCategoryPieChart extends StatelessWidget {
+class BPCategoryPieChart extends StatefulWidget {
   final List<BloodPressureRecord> records;
   final double size;
 
   const BPCategoryPieChart({super.key, required this.records, this.size = 200});
 
   @override
+  State<BPCategoryPieChart> createState() => _BPCategoryPieChartState();
+}
+
+class _BPCategoryPieChartState extends State<BPCategoryPieChart> {
+  int? touchedIndex;
+
+  @override
   Widget build(BuildContext context) {
-    if (records.isEmpty) {
+    if (widget.records.isEmpty) {
       return SizedBox(
-        height: size,
+        height: widget.size,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -40,7 +47,7 @@ class BPCategoryPieChart extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: size,
+          height: widget.size,
           child: PieChart(
             PieChartData(
               sections: sections,
@@ -48,8 +55,15 @@ class BPCategoryPieChart extends StatelessWidget {
               sectionsSpace: 2,
               pieTouchData: PieTouchData(
                 touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  // 可以在這裡處理點擊事件
+                  setState(() {
+                    if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                      touchedIndex = -1;
+                      return;
+                    }
+                    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                  });
                 },
+                enabled: true,
               ),
             ),
           ),
@@ -69,7 +83,7 @@ class BPCategoryPieChart extends StatelessWidget {
       AppConstants.hypertensionCrisisStatus: 0,
     };
 
-    for (final record in records) {
+    for (final record in widget.records) {
       final status = record.getBloodPressureStatus();
       categoryCounts[status] = (categoryCounts[status] ?? 0) + 1;
     }
@@ -82,7 +96,7 @@ class BPCategoryPieChart extends StatelessWidget {
 
   List<PieChartSectionData> _createPieChartSections(Map<String, int> categoryCounts) {
     final List<PieChartSectionData> sections = [];
-    final totalCount = records.length;
+    final totalCount = widget.records.length;
 
     // 定義各類別的顏色
     final Map<String, Color> categoryColors = {
@@ -93,19 +107,27 @@ class BPCategoryPieChart extends StatelessWidget {
       AppConstants.hypertensionCrisisStatus: const Color(0xFFB71C1C), // 更深的紅色
     };
 
+    int index = 0;
     categoryCounts.forEach((category, count) {
       final percentage = (count / totalCount * 100).toStringAsFixed(1);
       final color = categoryColors[category] ?? Colors.grey;
+      final isTouched = index == touchedIndex;
+      final radius = isTouched ? 70.0 : 60.0;
+      final fontSize = isTouched ? 16.0 : 14.0;
+      final fontWeight = isTouched ? FontWeight.bold : FontWeight.normal;
 
       sections.add(
         PieChartSectionData(
           value: count.toDouble(),
           title: '$percentage%',
           color: color,
-          radius: 60,
-          titleStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+          radius: radius,
+          titleStyle: TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: Colors.white),
+          badgeWidget: isTouched ? _Badge(category: category, count: count, percentage: percentage, color: color) : null,
+          badgePositionPercentageOffset: 1.2,
         ),
       );
+      index++;
     });
 
     return sections;
@@ -113,7 +135,7 @@ class BPCategoryPieChart extends StatelessWidget {
 
   List<Widget> _buildLegendItems(Map<String, int> categoryCounts) {
     final List<Widget> legendItems = [];
-    final totalCount = records.length;
+    final totalCount = widget.records.length;
 
     // 定義各類別的顏色
     final Map<String, Color> categoryColors = {
@@ -141,5 +163,35 @@ class BPCategoryPieChart extends StatelessWidget {
     });
 
     return legendItems;
+  }
+}
+
+class _Badge extends StatelessWidget {
+  final String category;
+  final int count;
+  final String percentage;
+  final Color color;
+
+  const _Badge({required this.category, required this.count, required this.percentage, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 4, offset: const Offset(0, 2))],
+        border: Border.all(color: color.withAlpha(51), width: 1),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(category, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14)),
+          const SizedBox(height: 4),
+          Text('$count 筆 ($percentage%)', style: const TextStyle(color: Colors.black87, fontSize: 12)),
+        ],
+      ),
+    );
   }
 }
