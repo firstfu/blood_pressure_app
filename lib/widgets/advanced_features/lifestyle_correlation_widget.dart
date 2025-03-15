@@ -41,8 +41,68 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       );
     }
 
-    final correlations = widget.correlationResults['correlations'] as Map<String, dynamic>;
-    final recommendations = widget.correlationResults['recommendations'] as List<dynamic>;
+    // 添加空值檢查
+    final correlations = widget.correlationResults['correlations'];
+    if (correlations == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text('無法載入相關性數據，請稍後再試', textAlign: TextAlign.center, style: TextStyle(color: Colors.red)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // 確保 correlations 是 Map<String, dynamic> 類型
+    final Map<String, dynamic> correlationsMap = correlations as Map<String, dynamic>;
+    final recommendations = widget.correlationResults['recommendations'];
+
+    // 檢查建議是否存在
+    final List<dynamic> recommendationsList = recommendations != null ? recommendations as List<dynamic> : [];
+
+    // 檢查選定的因素是否存在
+    final selectedFactorData = correlationsMap[_selectedFactor];
+    if (selectedFactorData == null) {
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 因素選擇器
+              _buildFactorSelector(),
+              const SizedBox(height: 24),
+
+              // 錯誤訊息
+              Center(
+                child: Column(
+                  children: [
+                    const Icon(Icons.error_outline, size: 48, color: Colors.orange),
+                    const SizedBox(height: 16),
+                    Text('無法載入 ${_factorNames[_selectedFactor]} 的相關性數據', textAlign: TextAlign.center, style: const TextStyle(color: Colors.orange)),
+                    const SizedBox(height: 8),
+                    const Text('請選擇其他因素或稍後再試', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // 改善建議
+              if (recommendationsList.isNotEmpty) ...[
+                const Text('改善建議', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                ...recommendationsList.map((recommendation) => _buildRecommendationItem(recommendation)),
+              ],
+            ],
+          ),
+        ),
+      );
+    }
 
     return SingleChildScrollView(
       child: Padding(
@@ -57,23 +117,26 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
             // 相關性圖表
             const Text('相關性分析', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            SizedBox(height: 250, child: _buildCorrelationChart(correlations[_selectedFactor])),
+            SizedBox(height: 250, child: _buildCorrelationChart(selectedFactorData)),
             const SizedBox(height: 24),
 
             // 相關性結果
-            _buildCorrelationResults(correlations[_selectedFactor]),
+            _buildCorrelationResults(selectedFactorData),
             const SizedBox(height: 24),
 
             // 改善建議
-            const Text('改善建議', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation)),
+            if (recommendationsList.isNotEmpty) ...[
+              const Text('改善建議', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              ...recommendationsList.map((recommendation) => _buildRecommendationItem(recommendation)),
+            ],
           ],
         ),
       ),
     );
   }
 
+  // =============================================
   // 構建因素選擇器
   Widget _buildFactorSelector() {
     return Container(
@@ -116,6 +179,20 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性圖表
   Widget _buildCorrelationChart(Map<String, dynamic> factorData) {
+    // 添加空值檢查
+    if (factorData['hasData'] != true) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.info_outline, size: 48, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text('無法載入 ${_factorNames[_selectedFactor]} 的相關性數據', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
     if (_selectedFactor == 'alcohol') {
       return _buildAlcoholComparisonChart(factorData);
     } else {
@@ -125,8 +202,22 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建組比較圖表
   Widget _buildGroupComparisonChart(Map<String, dynamic> factorData) {
-    final groups = factorData['groups'] as List<dynamic>;
-    final factorName = _factorNames[_selectedFactor] ?? _selectedFactor;
+    // 添加空值檢查
+    final groups = factorData['groups'];
+    if (groups == null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.orange),
+            const SizedBox(height: 16),
+            Text('無法載入 ${_factorNames[_selectedFactor]} 的相關性數據', textAlign: TextAlign.center, style: const TextStyle(color: Colors.orange)),
+          ],
+        ),
+      );
+    }
+
+    final List<dynamic> groupsList = groups as List<dynamic>;
 
     return BarChart(
       BarChartData(
@@ -137,7 +228,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           touchTooltipData: BarTouchTooltipData(
             tooltipBgColor: Colors.white.withOpacity(0.8),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              final groupData = groups[groupIndex];
+              final groupData = groupsList[groupIndex];
               final groupName = groupData['name'] as String;
               final systolic = groupData['avgSystolic'] as double;
               final diastolic = groupData['avgDiastolic'] as double;
@@ -157,10 +248,10 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value >= groups.length) return const Text('');
+                if (value >= groupsList.length) return const Text('');
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(groups[value.toInt()]['name'] as String, style: const TextStyle(fontSize: 12)),
+                  child: Text(groupsList[value.toInt()]['name'] as String, style: const TextStyle(fontSize: 12)),
                 );
               },
               reservedSize: 30,
@@ -176,8 +267,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
             return FlLine(color: Colors.grey.shade300, strokeWidth: 1);
           },
         ),
-        barGroups: List.generate(groups.length, (index) {
-          final groupData = groups[index];
+        barGroups: List.generate(groupsList.length, (index) {
+          final groupData = groupsList[index];
           final systolic = groupData['avgSystolic'] as double;
           final diastolic = groupData['avgDiastolic'] as double;
 
@@ -205,16 +296,35 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建酒精比較圖表
   Widget _buildAlcoholComparisonChart(Map<String, dynamic> factorData) {
-    final nonDrinkers = factorData['nonDrinkers'] as Map<String, dynamic>;
-    final lightDrinkers = factorData['lightDrinkers'] as Map<String, dynamic>;
-    final moderateDrinkers = factorData['moderateDrinkers'] as Map<String, dynamic>;
-    final heavyDrinkers = factorData['heavyDrinkers'] as Map<String, dynamic>;
+    // 添加空值檢查
+    final nonDrinkers = factorData['nonDrinkers'];
+    final lightDrinkers = factorData['lightDrinkers'];
+    final moderateDrinkers = factorData['moderateDrinkers'];
+    final heavyDrinkers = factorData['heavyDrinkers'];
+
+    if (nonDrinkers == null || lightDrinkers == null || moderateDrinkers == null || heavyDrinkers == null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.orange),
+            const SizedBox(height: 16),
+            const Text('無法載入酒精相關性數據', textAlign: TextAlign.center, style: TextStyle(color: Colors.orange)),
+          ],
+        ),
+      );
+    }
+
+    final Map<String, dynamic> nonDrinkersMap = nonDrinkers as Map<String, dynamic>;
+    final Map<String, dynamic> lightDrinkersMap = lightDrinkers as Map<String, dynamic>;
+    final Map<String, dynamic> moderateDrinkersMap = moderateDrinkers as Map<String, dynamic>;
+    final Map<String, dynamic> heavyDrinkersMap = heavyDrinkers as Map<String, dynamic>;
 
     final groups = [
-      {'name': '不飲酒', 'systolic': nonDrinkers['avgSystolic'], 'diastolic': nonDrinkers['avgDiastolic']},
-      {'name': '輕度飲酒', 'systolic': lightDrinkers['avgSystolic'], 'diastolic': lightDrinkers['avgDiastolic']},
-      {'name': '中度飲酒', 'systolic': moderateDrinkers['avgSystolic'], 'diastolic': moderateDrinkers['avgDiastolic']},
-      {'name': '重度飲酒', 'systolic': heavyDrinkers['avgSystolic'], 'diastolic': heavyDrinkers['avgDiastolic']},
+      {'name': '不飲酒', 'systolic': nonDrinkersMap['avgSystolic'], 'diastolic': nonDrinkersMap['avgDiastolic']},
+      {'name': '輕度飲酒', 'systolic': lightDrinkersMap['avgSystolic'], 'diastolic': lightDrinkersMap['avgDiastolic']},
+      {'name': '中度飲酒', 'systolic': moderateDrinkersMap['avgSystolic'], 'diastolic': moderateDrinkersMap['avgDiastolic']},
+      {'name': '重度飲酒', 'systolic': heavyDrinkersMap['avgSystolic'], 'diastolic': heavyDrinkersMap['avgDiastolic']},
     ];
 
     return BarChart(
@@ -306,31 +416,61 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性結果
   Widget _buildCorrelationResults(Map<String, dynamic> factorData) {
-    final correlation = factorData['correlation'] as double;
-    final description = factorData['description'] as String;
-    final impact = factorData['impact'] as String;
+    // 添加空值檢查
+    final correlation = factorData['correlation'];
+    final description = factorData['description'];
+    final impact = factorData['impact'];
+
+    if (correlation == null || description == null || impact == null) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.orange.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.orange.withOpacity(0.3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                const SizedBox(width: 8),
+                Text('${_factorNames[_selectedFactor]} 相關性數據不完整', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。'),
+          ],
+        ),
+      );
+    }
+
+    final double correlationValue = correlation as double;
+    final String descriptionText = description as String;
+    final String impactText = impact as String;
 
     IconData icon;
     Color color;
     String correlationText;
 
-    if (correlation > 0.7) {
+    if (correlationValue > 0.7) {
       icon = Icons.arrow_upward;
       color = Colors.red;
       correlationText = '強正相關';
-    } else if (correlation > 0.3) {
+    } else if (correlationValue > 0.3) {
       icon = Icons.arrow_upward;
       color = Colors.orange;
       correlationText = '中等正相關';
-    } else if (correlation > 0) {
+    } else if (correlationValue > 0) {
       icon = Icons.arrow_upward;
       color = Colors.yellow.shade800;
       correlationText = '弱正相關';
-    } else if (correlation > -0.3) {
+    } else if (correlationValue > -0.3) {
       icon = Icons.arrow_downward;
       color = Colors.green.shade300;
       correlationText = '弱負相關';
-    } else if (correlation > -0.7) {
+    } else if (correlationValue > -0.7) {
       icon = Icons.arrow_downward;
       color = Colors.green.shade600;
       correlationText = '中等負相關';
@@ -356,13 +496,13 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               const SizedBox(width: 8),
               Text('${_factorNames[_selectedFactor]} 與血壓: $correlationText', style: TextStyle(fontWeight: FontWeight.bold, color: color)),
               const SizedBox(width: 8),
-              Text('(${correlation.toStringAsFixed(2)})', style: TextStyle(color: color)),
+              Text('(${correlationValue.toStringAsFixed(2)})', style: TextStyle(color: color)),
             ],
           ),
           const SizedBox(height: 8),
-          Text(description),
+          Text(descriptionText),
           const SizedBox(height: 8),
-          Text('影響: $impact', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text('影響: $impactText', style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );

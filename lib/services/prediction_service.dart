@@ -132,14 +132,10 @@ class PredictionService {
     final n = x.length;
     double sumX = 0;
     double sumY = 0;
-    double sumXY = 0;
-    double sumX2 = 0;
 
     for (int i = 0; i < n; i++) {
       sumX += x[i];
       sumY += y[i];
-      sumXY += x[i] * y[i];
-      sumX2 += x[i] * x[i];
     }
 
     final xMean = sumX / n;

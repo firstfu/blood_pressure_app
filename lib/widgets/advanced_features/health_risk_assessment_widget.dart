@@ -47,7 +47,7 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
       _ageController.text = userInfo['age']?.toString() ?? '';
       _selectedGender = userInfo['gender'] ?? '男';
       _hasDiabetes = userInfo['hasDiabetes'] ?? false;
-      _isSmoking = userInfo['isSmoking'] ?? false;
+      _isSmoking = userInfo['isSmoker'] ?? false;
       _cholesterolController.text = userInfo['cholesterolLevel']?.toString() ?? '';
     }
   }
@@ -271,7 +271,7 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
         'age': int.parse(_ageController.text),
         'gender': _selectedGender,
         'hasDiabetes': _hasDiabetes,
-        'isSmoking': _isSmoking,
+        'isSmoker': _isSmoking,
         'cholesterolLevel': double.parse(_cholesterolController.text),
       };
 

@@ -135,49 +135,4 @@ class RecordService extends ChangeNotifier {
 
     return mockRecords;
   }
-
-  // 生成隨機標籤
-  List<String> _getRandomTags(DateTime date) {
-    final List<String> tags = [];
-
-    // 運動標籤
-    if (date.weekday < 6 && date.day % 3 == 0) {
-      tags.add('運動後');
-    }
-
-    // 飲食標籤
-    if (date.day % 7 == 0) {
-      tags.add('高鹽飲食');
-    } else if (date.day % 7 == 1) {
-      tags.add('低鹽飲食');
-    }
-
-    // 壓力標籤
-    if (date.weekday == 1) {
-      tags.add('工作壓力大');
-    } else if (date.weekday >= 6) {
-      tags.add('放鬆');
-    }
-
-    // 睡眠標籤
-    if (date.day % 5 == 0) {
-      tags.add('睡眠不足');
-    } else if (date.day % 5 == 1) {
-      tags.add('睡眠充足');
-    }
-
-    // 飲酒標籤
-    if (date.weekday >= 5) {
-      tags.add('飲酒');
-    }
-
-    // 飲水標籤
-    if (date.day % 4 == 0) {
-      tags.add('飲水充足');
-    } else if (date.day % 4 == 2) {
-      tags.add('飲水不足');
-    }
-
-    return tags;
-  }
 }

@@ -37,7 +37,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
   Map<String, dynamic> _correlationResults = {'hasData': false, 'message': '正在加載數據...'};
 
   // 用戶健康信息
-  Map<String, dynamic> _userInfo = {'age': 45, 'gender': '男', 'hasDiabetes': false, 'isSmoking': false, 'cholesterolLevel': 180.0};
+  Map<String, dynamic> _userInfo = {'age': 45, 'gender': '男', 'hasDiabetes': false, 'isSmoker': false, 'cholesterolLevel': 180.0};
 
   @override
   void initState() {
