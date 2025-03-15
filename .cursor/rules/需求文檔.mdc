@@ -1,7 +1,7 @@
 ---
 description: 專案分析
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # 要求
 1、專案分析的文檔一律寫在根目錄下的docs目錄下。

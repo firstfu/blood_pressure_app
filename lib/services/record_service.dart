@@ -92,6 +92,49 @@ class RecordService extends ChangeNotifier {
       // 測量時間
       final measureTime = DateTime(date.year, date.month, date.day, 8, 0);
 
+      // 生成生活習慣標籤
+      String note = '';
+
+      // 運動標籤 - 確保有足夠的運動相關記錄
+      if (i % 3 == 0) {
+        note = '早晨測量，運動後';
+        // 運動後血壓略低
+        baseSystolic -= 5;
+        baseDiastolic -= 3;
+      } else if (i % 7 == 0) {
+        note = '早晨測量，睡眠充足';
+      } else if (i % 7 == 1) {
+        note = '早晨測量，睡眠不足';
+        // 睡眠不足血壓略高
+        baseSystolic += 4;
+        baseDiastolic += 2;
+      } else if (i % 7 == 2) {
+        note = '早晨測量，低鹽飲食';
+        // 低鹽飲食血壓略低
+        baseSystolic -= 3;
+        baseDiastolic -= 2;
+      } else if (i % 7 == 3) {
+        note = '早晨測量，高鹽飲食';
+        // 高鹽飲食血壓略高
+        baseSystolic += 5;
+        baseDiastolic += 3;
+      } else if (i % 7 == 4) {
+        note = '早晨測量，壓力大';
+        // 壓力大血壓略高
+        baseSystolic += 6;
+        baseDiastolic += 4;
+      } else if (i % 7 == 5) {
+        note = '早晨測量，放鬆';
+        // 放鬆時血壓略低
+        baseSystolic -= 2;
+        baseDiastolic -= 1;
+      } else if (i % 7 == 6) {
+        note = '早晨測量，飲水充足';
+        // 飲水充足血壓略低
+        baseSystolic -= 1;
+        baseDiastolic -= 1;
+      }
+
       // 生成記錄
       mockRecords.add(
         BloodPressureRecord(
@@ -102,7 +145,7 @@ class RecordService extends ChangeNotifier {
           measureTime: measureTime,
           position: i % 2 == 0 ? '坐姿' : '臥姿',
           arm: i % 3 == 0 ? '左臂' : '右臂',
-          note: i % 5 == 0 ? '早晨測量' : '',
+          note: note,
           isMedicated: i % 7 == 0,
         ),
       );
@@ -114,6 +157,28 @@ class RecordService extends ChangeNotifier {
         final eveningDiastolic = diastolic + 3 + (date.second % 3);
         final eveningPulse = pulse + 5 + (date.second % 5);
 
+        // 生成晚上的生活習慣標籤
+        String eveningNote = '';
+
+        if (i % 4 == 0) {
+          eveningNote = '晚上測量，運動後';
+          // 運動後血壓略低
+          baseSystolic -= 5;
+          baseDiastolic -= 3;
+        } else if (i % 4 == 1) {
+          eveningNote = '晚上測量，飲酒';
+          // 飲酒後血壓略高
+          baseSystolic += 4;
+          baseDiastolic += 2;
+        } else if (i % 4 == 2) {
+          eveningNote = '晚上測量，飲水不足';
+          // 飲水不足血壓略高
+          baseSystolic += 2;
+          baseDiastolic += 1;
+        } else {
+          eveningNote = '晚上測量';
+        }
+
         mockRecords.add(
           BloodPressureRecord(
             id: 'mock_${eveningMeasureTime.millisecondsSinceEpoch}',
@@ -123,7 +188,7 @@ class RecordService extends ChangeNotifier {
             measureTime: eveningMeasureTime,
             position: i % 2 == 0 ? '坐姿' : '臥姿',
             arm: i % 3 == 0 ? '左臂' : '右臂',
-            note: '晚上測量',
+            note: eveningNote,
             isMedicated: i % 5 == 0,
           ),
         );
