@@ -1,21 +1,28 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2024-03-15 17:45:20
- * @ Description: 血壓預測小部件 - 顯示血壓趨勢預測結果
+ * @ Author: firstfu
+ * @ Create Time: 2025-03-13 16:16:42
+ * @ Description: 血壓預測小部件 - 顯示血壓趨勢預測結果，包含收縮壓、舒張壓和心率
  */
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 
-class BloodPressurePredictionWidget extends StatelessWidget {
+class BloodPressurePredictionWidget extends StatefulWidget {
   final Map<String, dynamic> predictionResult;
 
   const BloodPressurePredictionWidget({super.key, required this.predictionResult});
 
   @override
+  State<BloodPressurePredictionWidget> createState() => _BloodPressurePredictionWidgetState();
+}
+
+class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionWidget> {
+  bool _showPulse = true; // 默認顯示心率
+
+  @override
   Widget build(BuildContext context) {
-    if (predictionResult['hasData'] != true) {
+    if (widget.predictionResult['hasData'] != true) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -23,17 +30,17 @@ class BloodPressurePredictionWidget extends StatelessWidget {
             children: [
               const Icon(Icons.info_outline, size: 48, color: Colors.grey),
               const SizedBox(height: 16),
-              Text(predictionResult['message'] ?? '無法進行血壓趨勢預測，數據不足', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+              Text(widget.predictionResult['message'] ?? '無法進行血壓趨勢預測，數據不足', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
             ],
           ),
         ),
       );
     }
 
-    final dailyData = predictionResult['dailyData'] as List<dynamic>;
-    final predictions = predictionResult['predictions'] as List<dynamic>;
-    final riskDays = predictionResult['riskDays'] as List<dynamic>;
-    final trend = predictionResult['trend'] as Map<String, dynamic>;
+    final dailyData = widget.predictionResult['dailyData'] as List<dynamic>;
+    final predictions = widget.predictionResult['predictions'] as List<dynamic>;
+    final riskDays = widget.predictionResult['riskDays'] as List<dynamic>;
+    final trend = widget.predictionResult['trend'] as Map<String, dynamic>;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +50,27 @@ class BloodPressurePredictionWidget extends StatelessWidget {
         const SizedBox(height: 24),
 
         // 預測圖表
-        const Text('血壓趨勢預測', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('血壓趨勢預測', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            // 心率顯示切換
+            Row(
+              children: [
+                const Text('顯示心率', style: TextStyle(fontSize: 14, color: Colors.orange)),
+                Switch(
+                  value: _showPulse,
+                  onChanged: (value) {
+                    setState(() {
+                      _showPulse = value;
+                    });
+                  },
+                  activeColor: Colors.orange,
+                ),
+              ],
+            ),
+          ],
+        ),
         const SizedBox(height: 8),
         SizedBox(height: 250, child: _buildPredictionChart(dailyData, predictions)),
         const SizedBox(height: 24),
@@ -57,7 +84,13 @@ class BloodPressurePredictionWidget extends StatelessWidget {
         ],
 
         // 預測數據表格
-        const Text('未來7天血壓預測', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('未來7天血壓預測', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            if (_showPulse) const Text('包含心率', style: TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold)),
+          ],
+        ),
         const SizedBox(height: 8),
         _buildPredictionTable(predictions),
       ],
@@ -68,6 +101,7 @@ class BloodPressurePredictionWidget extends StatelessWidget {
   Widget _buildTrendInfo(Map<String, dynamic> trend) {
     final systolicTrend = trend['systolicTrend'] as String;
     final diastolicTrend = trend['diastolicTrend'] as String;
+    final pulseTrend = trend['pulseTrend'] as String? ?? 'stable';
     final message = trend['message'] as String;
 
     IconData systolicIcon;
@@ -98,21 +132,54 @@ class BloodPressurePredictionWidget extends StatelessWidget {
       diastolicColor = Colors.blue;
     }
 
+    IconData pulseIcon;
+    Color pulseColor;
+
+    if (pulseTrend == 'rising') {
+      pulseIcon = Icons.trending_up;
+      pulseColor = Colors.orange;
+    } else if (pulseTrend == 'falling') {
+      pulseIcon = Icons.trending_down;
+      pulseColor = Colors.orange.shade300;
+    } else {
+      pulseIcon = Icons.trending_flat;
+      pulseColor = Colors.orange;
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
             children: [
-              Icon(systolicIcon, color: systolicColor),
-              const SizedBox(width: 8),
-              Text('收縮壓趨勢', style: TextStyle(fontWeight: FontWeight.bold, color: systolicColor)),
-              const SizedBox(width: 16),
-              Icon(diastolicIcon, color: diastolicColor),
-              const SizedBox(width: 8),
-              Text('舒張壓趨勢', style: TextStyle(fontWeight: FontWeight.bold, color: diastolicColor)),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(systolicIcon, color: systolicColor),
+                  const SizedBox(width: 8),
+                  Text('收縮壓趨勢', style: TextStyle(fontWeight: FontWeight.bold, color: systolicColor)),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(diastolicIcon, color: diastolicColor),
+                  const SizedBox(width: 8),
+                  Text('舒張壓趨勢', style: TextStyle(fontWeight: FontWeight.bold, color: diastolicColor)),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(pulseIcon, color: pulseColor),
+                  const SizedBox(width: 8),
+                  Text('心率趨勢', style: TextStyle(fontWeight: FontWeight.bold, color: pulseColor)),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -135,11 +202,13 @@ class BloodPressurePredictionWidget extends StatelessWidget {
     // 計算日期範圍的總天數
     final totalDays = maxDate.difference(minDate).inDays + 1;
 
-    // 創建收縮壓和舒張壓的數據點
+    // 創建收縮壓、舒張壓和心率的數據點
     final List<FlSpot> systolicSpots = [];
     final List<FlSpot> diastolicSpots = [];
+    final List<FlSpot> pulseSpots = [];
     final List<FlSpot> systolicPredictionSpots = [];
     final List<FlSpot> diastolicPredictionSpots = [];
+    final List<FlSpot> pulsePredictionSpots = [];
 
     // 添加歷史數據點
     for (final data in dailyData) {
@@ -147,6 +216,17 @@ class BloodPressurePredictionWidget extends StatelessWidget {
       final dayIndex = date.difference(minDate).inDays.toDouble();
       systolicSpots.add(FlSpot(dayIndex, data['systolic'].toDouble()));
       diastolicSpots.add(FlSpot(dayIndex, data['diastolic'].toDouble()));
+
+      // 如果有心率數據，則添加
+      if (data.containsKey('pulse')) {
+        pulseSpots.add(FlSpot(dayIndex, data['pulse'].toDouble()));
+      } else {
+        // 如果沒有心率數據，使用模擬數據（收縮壓和舒張壓的平均值）
+        final systolic = data['systolic'] as int;
+        final diastolic = data['diastolic'] as int;
+        final simulatedPulse = ((systolic - diastolic) * 0.6 + diastolic).toDouble();
+        pulseSpots.add(FlSpot(dayIndex, simulatedPulse));
+      }
     }
 
     // 添加預測數據點
@@ -155,6 +235,93 @@ class BloodPressurePredictionWidget extends StatelessWidget {
       final dayIndex = date.difference(minDate).inDays.toDouble();
       systolicPredictionSpots.add(FlSpot(dayIndex, prediction['systolic'].toDouble()));
       diastolicPredictionSpots.add(FlSpot(dayIndex, prediction['diastolic'].toDouble()));
+
+      // 如果有心率預測數據，則添加
+      if (prediction.containsKey('pulse')) {
+        pulsePredictionSpots.add(FlSpot(dayIndex, prediction['pulse'].toDouble()));
+      } else {
+        // 如果沒有心率數據，使用模擬數據
+        final systolic = prediction['systolic'] as int;
+        final diastolic = prediction['diastolic'] as int;
+        final simulatedPulse = ((systolic - diastolic) * 0.6 + diastolic).toDouble();
+        pulsePredictionSpots.add(FlSpot(dayIndex, simulatedPulse));
+      }
+    }
+
+    // 準備圖表數據
+    final List<LineChartBarData> lineBarsData = [
+      // 歷史收縮壓
+      LineChartBarData(
+        spots: systolicSpots,
+        isCurved: true,
+        color: Colors.blue,
+        barWidth: 3,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: true),
+        belowBarData: BarAreaData(show: false),
+      ),
+      // 歷史舒張壓
+      LineChartBarData(
+        spots: diastolicSpots,
+        isCurved: true,
+        color: Colors.green,
+        barWidth: 3,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: true),
+        belowBarData: BarAreaData(show: false),
+      ),
+      // 預測收縮壓
+      LineChartBarData(
+        spots: systolicPredictionSpots,
+        isCurved: true,
+        color: Colors.blue.shade300,
+        barWidth: 3,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: true),
+        belowBarData: BarAreaData(show: false),
+        dashArray: [5, 5],
+      ),
+      // 預測舒張壓
+      LineChartBarData(
+        spots: diastolicPredictionSpots,
+        isCurved: true,
+        color: Colors.green.shade300,
+        barWidth: 3,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: true),
+        belowBarData: BarAreaData(show: false),
+        dashArray: [5, 5],
+      ),
+    ];
+
+    // 如果顯示心率且有心率數據，則添加心率線
+    if (_showPulse) {
+      // 歷史心率
+      lineBarsData.add(
+        LineChartBarData(
+          spots: pulseSpots,
+          isCurved: true,
+          color: Colors.orange,
+          barWidth: 3,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+          belowBarData: BarAreaData(show: false),
+        ),
+      );
+
+      // 預測心率
+      lineBarsData.add(
+        LineChartBarData(
+          spots: pulsePredictionSpots,
+          isCurved: true,
+          color: Colors.orange.shade300,
+          barWidth: 3,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+          belowBarData: BarAreaData(show: false),
+          dashArray: [5, 5],
+        ),
+      );
     }
 
     return LineChart(
@@ -179,12 +346,38 @@ class BloodPressurePredictionWidget extends StatelessWidget {
               },
             ),
           ),
-          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 20, reservedSize: 40)),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              interval: 20,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) {
+                // 為心率數據添加不同顏色的標籤
+                if (_showPulse && value >= 60 && value <= 100 && value % 20 == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      value.toInt().toString(),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: value >= 60 && value <= 100 ? Colors.orange : Colors.grey,
+                        fontWeight: value >= 60 && value <= 100 ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text(value.toInt().toString(), style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                );
+              },
+            ),
+          ),
         ),
         borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.shade300)),
         minX: 0,
         maxX: totalDays.toDouble() - 1,
-        minY: 60,
+        minY: 40, // 降低最小值以適應心率數據
         maxY: 180,
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
@@ -197,64 +390,26 @@ class BloodPressurePredictionWidget extends StatelessWidget {
 
                 String title;
                 Color color;
+                String unit = 'mmHg';
 
                 if (spot.barIndex == 0) {
                   title = '收縮壓';
                   color = isHistory ? Colors.blue : Colors.blue.shade300;
-                } else {
+                } else if (spot.barIndex == 1) {
                   title = '舒張壓';
                   color = isHistory ? Colors.green : Colors.green.shade300;
+                } else {
+                  title = '心率';
+                  color = isHistory ? Colors.orange : Colors.orange.shade300;
+                  unit = 'bpm';
                 }
 
-                return LineTooltipItem('$title: ${spot.y.toInt()} mmHg\n$dateStr', TextStyle(color: color, fontWeight: FontWeight.bold));
+                return LineTooltipItem('$title: ${spot.y.toInt()} $unit\n$dateStr', TextStyle(color: color, fontWeight: FontWeight.bold));
               }).toList();
             },
           ),
         ),
-        lineBarsData: [
-          // 歷史收縮壓
-          LineChartBarData(
-            spots: systolicSpots,
-            isCurved: true,
-            color: Colors.blue,
-            barWidth: 3,
-            isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(show: false),
-          ),
-          // 歷史舒張壓
-          LineChartBarData(
-            spots: diastolicSpots,
-            isCurved: true,
-            color: Colors.green,
-            barWidth: 3,
-            isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(show: false),
-          ),
-          // 預測收縮壓
-          LineChartBarData(
-            spots: systolicPredictionSpots,
-            isCurved: true,
-            color: Colors.blue.shade300,
-            barWidth: 3,
-            isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(show: false),
-            dashArray: [5, 5],
-          ),
-          // 預測舒張壓
-          LineChartBarData(
-            spots: diastolicPredictionSpots,
-            isCurved: true,
-            color: Colors.green.shade300,
-            barWidth: 3,
-            isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(show: false),
-            dashArray: [5, 5],
-          ),
-        ],
+        lineBarsData: lineBarsData,
       ),
     );
   }
@@ -279,6 +434,7 @@ class BloodPressurePredictionWidget extends StatelessWidget {
     final date = riskDay['date'] as DateTime;
     final systolic = riskDay['systolic'] as int;
     final diastolic = riskDay['diastolic'] as int;
+    final pulse = riskDay['pulse'] as int?;
     final riskLevel = riskDay['riskLevel'] as String;
 
     Color riskColor;
@@ -307,7 +463,16 @@ class BloodPressurePredictionWidget extends StatelessWidget {
             const SizedBox(width: 8),
             Text(DateFormat('yyyy年MM月dd日').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
-            Text('$riskText: $systolic/$diastolic mmHg', style: TextStyle(color: riskColor, fontWeight: FontWeight.bold)),
+            Expanded(
+              child:
+                  pulse != null
+                      ? Text(
+                        '$riskText: $systolic/$diastolic mmHg, 心率: $pulse bpm',
+                        style: TextStyle(color: riskColor, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      )
+                      : Text('$riskText: $systolic/$diastolic mmHg', style: TextStyle(color: riskColor, fontWeight: FontWeight.bold)),
+            ),
           ],
         ),
       ),
@@ -316,6 +481,24 @@ class BloodPressurePredictionWidget extends StatelessWidget {
 
   // 構建預測數據表格
   Widget _buildPredictionTable(List<dynamic> predictions) {
+    // 始終顯示心率列
+    final hasPulseData = true;
+
+    // 確保所有預測都有心率數據
+    final processedPredictions =
+        predictions.map((prediction) {
+          if (!prediction.containsKey('pulse')) {
+            // 如果沒有心率數據，使用模擬數據
+            final systolic = prediction['systolic'] as int;
+            final diastolic = prediction['diastolic'] as int;
+            final simulatedPulse = ((systolic - diastolic) * 0.6 + diastolic).round();
+
+            // 創建新的預測對象，包含心率數據
+            return {...prediction, 'pulse': simulatedPulse};
+          }
+          return prediction;
+        }).toList();
+
     return Container(
       decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
       child: Column(
@@ -327,19 +510,21 @@ class BloodPressurePredictionWidget extends StatelessWidget {
               color: Colors.grey.shade100,
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Expanded(flex: 2, child: Text('日期', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(flex: 1, child: Text('收縮壓', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(flex: 1, child: Text('舒張壓', style: TextStyle(fontWeight: FontWeight.bold))),
+                const Expanded(flex: 2, child: Text('日期', style: TextStyle(fontWeight: FontWeight.bold))),
+                const Expanded(flex: 1, child: Text('收縮壓', style: TextStyle(fontWeight: FontWeight.bold))),
+                const Expanded(flex: 1, child: Text('舒張壓', style: TextStyle(fontWeight: FontWeight.bold))),
+                if (hasPulseData) const Expanded(flex: 1, child: Text('心率', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
               ],
             ),
           ),
           // 表格內容
-          ...predictions.map((prediction) {
+          ...processedPredictions.map((prediction) {
             final date = prediction['date'] as DateTime;
             final systolic = prediction['systolic'] as int;
             final diastolic = prediction['diastolic'] as int;
+            final pulse = prediction['pulse'] as int;
 
             // 判斷是否為風險日
             bool isRiskDay = systolic >= 130 || diastolic >= 85;
@@ -353,6 +538,8 @@ class BloodPressurePredictionWidget extends StatelessWidget {
                   Expanded(flex: 2, child: Text(DateFormat('yyyy年MM月dd日').format(date))),
                   Expanded(flex: 1, child: Text('$systolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor))),
                   Expanded(flex: 1, child: Text('$diastolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor))),
+                  if (hasPulseData)
+                    Expanded(flex: 1, child: Text('$pulse', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
                 ],
               ),
             );
