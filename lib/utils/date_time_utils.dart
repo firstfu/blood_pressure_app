@@ -14,7 +14,7 @@ class DateTimeUtils {
     final dateStr = formatter.format(now);
 
     if (context == null) {
-      return '$dateStr';
+      return dateStr;
     }
 
     final locale = Localizations.localeOf(context);
