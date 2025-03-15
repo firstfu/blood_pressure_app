@@ -15,7 +15,6 @@ import '../services/mock_data_service.dart';
 import '../services/report_service.dart';
 import '../themes/app_theme.dart';
 import '../utils/stats_utils.dart';
-import '../views/advanced_analysis_page.dart';
 import '../views/advanced_features_page.dart';
 import '../widgets/stats/time_range_selector.dart';
 import '../widgets/stats/date_range_selector.dart';
@@ -144,14 +143,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
             },
           ),
-          // 添加高級分析按鈕
-          IconButton(
-            icon: const Icon(Icons.analytics),
-            tooltip: '高級分析',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AdvancedAnalysisPage(records: _records)));
-            },
-          ),
           IconButton(icon: const Icon(Icons.picture_as_pdf), tooltip: '生成報告', onPressed: () => _generateReport(context)),
         ],
         bottom: TabBar(
@@ -161,7 +152,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
           labelColor: Colors.white,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           unselectedLabelColor: Colors.white.withAlpha(179),
-          tabs: const [Tab(text: '趨勢圖'), Tab(text: '數據表')],
+          tabs: const [Tab(text: '趨勢圖'), Tab(text: '歷史記錄')],
         ),
       ),
       body: Column(

@@ -1,7 +1,7 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2024-03-15 17:00:45
- * @ Description: 血壓預測服務 - 提供血壓趨勢預測功能
+ * @ Author: firstfu
+ * @ Create Time: 2025-03-13 16:16:42
+ * @ Description: 血壓預測服務 - 提供血壓趨勢預測功能，包含收縮壓、舒張壓和心率
  */
 
 import 'dart:math';
@@ -33,23 +33,36 @@ class PredictionService {
           'date': DateTime(record.measureTime.year, record.measureTime.month, record.measureTime.day),
           'systolicSum': 0,
           'diastolicSum': 0,
+          'pulseSum': 0,
           'count': 0,
+          'hasPulse': false,
         };
       }
 
       dailyAverages[dateKey]!['systolicSum'] += record.systolic;
       dailyAverages[dateKey]!['diastolicSum'] += record.diastolic;
+
+      // 檢查是否有心率數據
+      if (record.pulse > 0) {
+        dailyAverages[dateKey]!['pulseSum'] += record.pulse;
+        dailyAverages[dateKey]!['hasPulse'] = true;
+      } else {
+        // 如果沒有心率數據，使用模擬數據（收縮壓和舒張壓的差值的60%加上舒張壓）
+        final simulatedPulse = ((record.systolic - record.diastolic) * 0.6 + record.diastolic).round();
+        dailyAverages[dateKey]!['pulseSum'] += simulatedPulse;
+      }
+
       dailyAverages[dateKey]!['count'] += 1;
     }
 
     // 轉換為列表並計算平均值
     final List<Map<String, dynamic>> dailyData =
         dailyAverages.values.map((data) {
-          return {
-            'date': data['date'],
-            'systolic': (data['systolicSum'] / data['count']).round(),
-            'diastolic': (data['diastolicSum'] / data['count']).round(),
-          };
+          final systolicAvg = (data['systolicSum'] / data['count']).round();
+          final diastolicAvg = (data['diastolicSum'] / data['count']).round();
+          final pulseAvg = (data['pulseSum'] / data['count']).round();
+
+          return {'date': data['date'], 'systolic': systolicAvg, 'diastolic': diastolicAvg, 'pulse': pulseAvg};
         }).toList();
 
     // 按日期排序（從舊到新）
@@ -84,11 +97,13 @@ class PredictionService {
     final List<double> xValues = [];
     final List<double> ySystolic = [];
     final List<double> yDiastolic = [];
+    final List<double> yPulse = [];
 
     for (int i = 0; i < dailyData.length; i++) {
       xValues.add(i.toDouble());
       ySystolic.add((dailyData[i]['systolic'] as int).toDouble());
       yDiastolic.add((dailyData[i]['diastolic'] as int).toDouble());
+      yPulse.add((dailyData[i]['pulse'] as int).toDouble());
     }
 
     // 計算收縮壓的線性回歸係數
@@ -101,6 +116,11 @@ class PredictionService {
     final diastolicSlope = diastolicCoefficients[0];
     final diastolicIntercept = diastolicCoefficients[1];
 
+    // 計算心率的線性回歸係數
+    final pulseCoefficients = _calculateLinearRegression(xValues, yPulse);
+    final pulseSlope = pulseCoefficients[0];
+    final pulseIntercept = pulseCoefficients[1];
+
     // 生成未來7天的預測
     final List<Map<String, dynamic>> predictions = [];
 
@@ -111,16 +131,19 @@ class PredictionService {
       // 預測值
       final predictedSystolic = (systolicSlope * xValue + systolicIntercept).round();
       final predictedDiastolic = (diastolicSlope * xValue + diastolicIntercept).round();
+      final predictedPulse = (pulseSlope * xValue + pulseIntercept).round();
 
       // 添加一些隨機變化，使預測更自然
       final random = Random();
       final systolicVariation = random.nextInt(5) - 2;
       final diastolicVariation = random.nextInt(3) - 1;
+      final pulseVariation = random.nextInt(5) - 2;
 
       predictions.add({
         'date': predictDate,
         'systolic': max(90, min(200, predictedSystolic + systolicVariation)),
         'diastolic': max(60, min(120, predictedDiastolic + diastolicVariation)),
+        'pulse': max(50, min(120, predictedPulse + pulseVariation)),
       });
     }
 
@@ -163,18 +186,19 @@ class PredictionService {
     for (final prediction in predictions) {
       final systolic = prediction['systolic'] as int;
       final diastolic = prediction['diastolic'] as int;
+      final pulse = prediction['pulse'] as int;
 
       // 判斷風險等級
       String riskLevel = 'normal';
-      if (systolic >= 140 || diastolic >= 90) {
+      if (systolic >= 140 || diastolic >= 90 || pulse >= 100 || pulse <= 55) {
         riskLevel = 'high';
-      } else if (systolic >= 130 || diastolic >= 85) {
+      } else if (systolic >= 130 || diastolic >= 85 || pulse >= 90 || pulse <= 60) {
         riskLevel = 'elevated';
       }
 
       // 如果是高風險或風險升高，添加到風險日列表
       if (riskLevel != 'normal') {
-        riskDays.add({'date': prediction['date'], 'systolic': systolic, 'diastolic': diastolic, 'riskLevel': riskLevel});
+        riskDays.add({'date': prediction['date'], 'systolic': systolic, 'diastolic': diastolic, 'pulse': pulse, 'riskLevel': riskLevel});
       }
     }
 
@@ -185,40 +209,48 @@ class PredictionService {
   Map<String, dynamic> _analyzeTrend(List<Map<String, dynamic>> dailyData, List<Map<String, dynamic>> predictions) {
     // 如果數據不足，無法分析趨勢
     if (dailyData.length < 5 || predictions.isEmpty) {
-      return {'systolicTrend': 'stable', 'diastolicTrend': 'stable', 'message': '數據不足，無法確定趨勢'};
+      return {'systolicTrend': 'stable', 'diastolicTrend': 'stable', 'pulseTrend': 'stable', 'message': '數據不足，無法確定趨勢'};
     }
 
     // 計算過去數據的平均值
     double pastSystolicSum = 0;
     double pastDiastolicSum = 0;
+    double pastPulseSum = 0;
 
     for (final data in dailyData) {
       pastSystolicSum += data['systolic'] as int;
       pastDiastolicSum += data['diastolic'] as int;
+      pastPulseSum += data['pulse'] as int;
     }
 
     final pastSystolicAvg = pastSystolicSum / dailyData.length;
     final pastDiastolicAvg = pastDiastolicSum / dailyData.length;
+    final pastPulseAvg = pastPulseSum / dailyData.length;
 
     // 計算預測數據的平均值
     double futureSystolicSum = 0;
     double futureDiastolicSum = 0;
+    double futurePulseSum = 0;
 
     for (final prediction in predictions) {
       futureSystolicSum += prediction['systolic'] as int;
       futureDiastolicSum += prediction['diastolic'] as int;
+      futurePulseSum += prediction['pulse'] as int;
     }
 
     final futureSystolicAvg = futureSystolicSum / predictions.length;
     final futureDiastolicAvg = futureDiastolicSum / predictions.length;
+    final futurePulseAvg = futurePulseSum / predictions.length;
 
     // 計算變化百分比
     final systolicChangePercent = ((futureSystolicAvg - pastSystolicAvg) / pastSystolicAvg * 100).round();
     final diastolicChangePercent = ((futureDiastolicAvg - pastDiastolicAvg) / pastDiastolicAvg * 100).round();
+    final pulseChangePercent = ((futurePulseAvg - pastPulseAvg) / pastPulseAvg * 100).round();
 
     // 確定趨勢
     String systolicTrend = 'stable';
     String diastolicTrend = 'stable';
+    String pulseTrend = 'stable';
     String message = '';
 
     if (systolicChangePercent > 5) {
@@ -241,11 +273,23 @@ class PredictionService {
       message += '，舒張壓趨勢穩定';
     }
 
+    if (pulseChangePercent > 5) {
+      pulseTrend = 'rising';
+      message += '，心率呈上升趨勢，預計增加約 $pulseChangePercent%';
+    } else if (pulseChangePercent < -5) {
+      pulseTrend = 'falling';
+      message += '，心率呈下降趨勢，預計減少約 ${-pulseChangePercent}%';
+    } else {
+      message += '，心率趨勢穩定';
+    }
+
     return {
       'systolicTrend': systolicTrend,
       'diastolicTrend': diastolicTrend,
+      'pulseTrend': pulseTrend,
       'systolicChangePercent': systolicChangePercent,
       'diastolicChangePercent': diastolicChangePercent,
+      'pulseChangePercent': pulseChangePercent,
       'message': message,
     };
   }
