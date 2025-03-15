@@ -43,7 +43,7 @@ class PositionArmEffectWidget extends StatelessWidget {
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: Colors.green.withAlpha(26), borderRadius: BorderRadius.circular(8)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -132,7 +132,7 @@ class PositionArmEffectWidget extends StatelessWidget {
                   show: true,
                   horizontalInterval: 40,
                   getDrawingHorizontalLine: (value) {
-                    return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+                    return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                   },
                 ),
                 borderData: FlBorderData(show: false),
@@ -191,7 +191,7 @@ class PositionArmEffectWidget extends StatelessWidget {
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: Colors.blue.withAlpha(26), borderRadius: BorderRadius.circular(8)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -280,7 +280,7 @@ class PositionArmEffectWidget extends StatelessWidget {
                   show: true,
                   horizontalInterval: 40,
                   getDrawingHorizontalLine: (value) {
-                    return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+                    return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                   },
                 ),
                 borderData: FlBorderData(show: false),
@@ -338,7 +338,7 @@ class PositionArmEffectWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: Colors.grey.withAlpha(26), borderRadius: BorderRadius.circular(8)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

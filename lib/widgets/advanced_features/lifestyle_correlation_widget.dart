@@ -77,7 +77,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: isSelected ? Colors.blue.shade800 : Colors.grey.shade300, width: isSelected ? 2 : 1),
                         boxShadow:
-                            isSelected ? [BoxShadow(color: Colors.blue.shade200.withOpacity(0.5), blurRadius: 4, offset: const Offset(0, 2))] : null,
+                            isSelected ? [BoxShadow(color: Colors.blue.shade200.withAlpha(128), blurRadius: 4, offset: const Offset(0, 2))] : null,
                       ),
                       child: Center(
                         child: Row(
@@ -115,9 +115,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.1),
+          color: Colors.grey.withAlpha(26),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+          border: Border.all(color: Colors.grey.withAlpha(77)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -138,9 +138,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.1),
+          color: Colors.grey.withAlpha(26),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+          border: Border.all(color: Colors.grey.withAlpha(77)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +172,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                  tooltipBgColor: Colors.blueGrey.withAlpha(204),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     String title = '';
                     if (rodIndex == 0) {
@@ -217,11 +217,11 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                 topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
-              borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.withOpacity(0.2))),
+              borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.withAlpha(51))),
               gridData: FlGridData(
                 show: true,
                 getDrawingHorizontalLine: (value) {
-                  return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+                  return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                 },
                 drawVerticalLine: false,
               ),
@@ -235,13 +235,13 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                   barRods: [
                     BarChartRodData(
                       toY: systolic.toDouble(),
-                      color: Colors.red.withOpacity(0.7),
+                      color: Colors.red.withAlpha(179),
                       width: 16,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
                     BarChartRodData(
                       toY: diastolic.toDouble(),
-                      color: Colors.blue.withOpacity(0.7),
+                      color: Colors.blue.withAlpha(179),
                       width: 16,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
@@ -255,11 +255,11 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(width: 12, height: 12, color: Colors.red.withOpacity(0.7)),
+            Container(width: 12, height: 12, color: Colors.red.withAlpha(179)),
             const SizedBox(width: 4),
             const Text('收縮壓', style: TextStyle(fontSize: 12)),
             const SizedBox(width: 16),
-            Container(width: 12, height: 12, color: Colors.blue.withOpacity(0.7)),
+            Container(width: 12, height: 12, color: Colors.blue.withAlpha(179)),
             const SizedBox(width: 4),
             const Text('舒張壓', style: TextStyle(fontSize: 12)),
           ],
@@ -281,9 +281,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.orange.withOpacity(0.1),
+          color: Colors.orange.withAlpha(26),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.orange.withOpacity(0.3)),
+          border: Border.all(color: Colors.orange.withAlpha(77)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,11 +345,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
+      decoration: BoxDecoration(color: color.withAlpha(26), borderRadius: BorderRadius.circular(8), border: Border.all(color: color.withAlpha(77))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -381,9 +377,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.05),
+          color: Colors.blue.withAlpha(13),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue.withOpacity(0.2)),
+          border: Border.all(color: Colors.blue.withAlpha(51)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,7 +406,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       children: [
         const Padding(padding: EdgeInsets.only(bottom: 12.0), child: Text('健康建議', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
         if (recommendations is List)
-          ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation)).toList()
+          ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation))
         else if (recommendations is String)
           _buildRecommendationItem(recommendations),
       ],

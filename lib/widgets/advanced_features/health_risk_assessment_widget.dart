@@ -330,9 +330,9 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: riskColor.withOpacity(0.1),
+        color: riskColor.withAlpha(26),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: riskColor.withOpacity(0.3)),
+        border: Border.all(color: riskColor.withAlpha(77)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,7 +389,7 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 4, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.grey.withAlpha(26), spreadRadius: 1, blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,9 +450,9 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.05),
+          color: Colors.blue.withAlpha(13),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue.withOpacity(0.2)),
+          border: Border.all(color: Colors.blue.withAlpha(51)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
