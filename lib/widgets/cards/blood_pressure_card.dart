@@ -1,10 +1,14 @@
-// 血壓記錄 App 血壓卡片元件
-// 用於顯示血壓記錄
+/*
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
+ * @ Description: 血壓記錄 App 血壓卡片組件 - 用於顯示血壓記錄
+ */
 
 import 'package:flutter/material.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../utils/date_time_utils.dart';
 import '../common/status_badge.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class BloodPressureCard extends StatelessWidget {
   final BloodPressureRecord record;
@@ -47,17 +51,15 @@ class BloodPressureCard extends StatelessWidget {
                 _buildValueColumn(context, '${record.pulse}', 'PULSE', 'bpm'),
               ],
             ),
-            if (record.note != null && record.note!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Text('備註: ${record.note}', style: theme.textTheme.bodyMedium),
-            ],
-            const SizedBox(height: 8),
-            Row(
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                _buildInfoChip(context, record.position),
-                const SizedBox(width: 8),
-                _buildInfoChip(context, record.arm),
-                if (record.isMedicated) ...[const SizedBox(width: 8), _buildInfoChip(context, '服藥後')],
+                _buildInfoChip(context, context.tr(record.position)),
+                _buildInfoChip(context, context.tr(record.arm)),
+                if (record.isMedicated) _buildInfoChip(context, context.tr('測量前是否服用降壓藥物')),
+                if (record.note != null && record.note!.isNotEmpty) _buildInfoChip(context, '${context.tr('備註')}: ${record.note}'),
               ],
             ),
           ],

@@ -9,6 +9,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../utils/date_time_utils.dart';
 import '../../themes/app_theme.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class TrendChart extends StatelessWidget {
   final List<BloodPressureRecord> records;
@@ -26,7 +27,7 @@ class TrendChart extends StatelessWidget {
           children: [
             Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
             const SizedBox(height: 16),
-            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
           ],
         ),
       );
@@ -109,15 +110,15 @@ class TrendChart extends StatelessWidget {
                   Color color;
 
                   if (barSpot.barIndex == 0) {
-                    title = '收縮壓';
+                    title = context.tr('收縮壓');
                     value = record.systolic;
                     color = AppTheme.primaryColor;
                   } else if (barSpot.barIndex == 1) {
-                    title = '舒張壓';
+                    title = context.tr('舒張壓');
                     value = record.diastolic;
                     color = AppTheme.successColor;
                   } else {
-                    title = '心率';
+                    title = context.tr('心率');
                     value = record.pulse;
                     color = Colors.orange;
                   }
@@ -226,7 +227,7 @@ class TrendChart extends StatelessWidget {
                   alignment: Alignment.topRight,
                   padding: const EdgeInsets.only(right: 8, bottom: 2),
                   style: TextStyle(color: AppTheme.successColor, fontSize: 9, fontWeight: FontWeight.w500),
-                  labelResolver: (line) => '正常上限',
+                  labelResolver: (line) => context.tr('正常上限'),
                 ),
               ),
               // 高血壓參考線
@@ -240,7 +241,7 @@ class TrendChart extends StatelessWidget {
                   alignment: Alignment.topRight,
                   padding: const EdgeInsets.only(right: 8, bottom: 2),
                   style: TextStyle(color: AppTheme.warningColor, fontSize: 9, fontWeight: FontWeight.w500),
-                  labelResolver: (line) => '高血壓',
+                  labelResolver: (line) => context.tr('高血壓'),
                 ),
               ),
             ],

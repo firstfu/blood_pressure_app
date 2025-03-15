@@ -140,12 +140,14 @@ class LastMeasurementCard extends StatelessWidget {
             const SizedBox(height: 16),
             const Divider(height: 1),
             const SizedBox(height: 16),
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                _buildMeasurementTag(context, '${context.tr('備註')}: ${record.note}'),
-                const SizedBox(width: 8),
-                _buildMeasurementTag(context, record.position),
-                if (record.arm.isNotEmpty) ...[const SizedBox(width: 8), _buildMeasurementTag(context, record.arm)],
+                if (record.position.isNotEmpty) _buildInfoChip(context, context.tr(record.position)),
+                if (record.arm.isNotEmpty) _buildInfoChip(context, context.tr(record.arm)),
+                if (record.isMedicated) _buildInfoChip(context, context.tr('測量前是否服用降壓藥物')),
+                if (record.note != null && record.note!.isNotEmpty) _buildInfoChip(context, '${context.tr('備註')}: ${record.note}'),
               ],
             ),
           ],
@@ -204,7 +206,7 @@ class LastMeasurementCard extends StatelessWidget {
     }
   }
 
-  Widget _buildMeasurementTag(BuildContext context, String text) {
+  Widget _buildInfoChip(BuildContext context, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(color: AppTheme.backgroundColor, borderRadius: BorderRadius.circular(16)),
