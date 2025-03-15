@@ -15,6 +15,11 @@ const Map<String, String> enUS = {
   '選擇開始日期': 'Select Start Date',
   '選擇結束日期': 'Select End Date',
   '至': 'to',
+  '共': 'Total',
+  '清除篩選': 'Clear Filter',
+  '已篩選': 'Filtered',
+  '原': 'Original',
+  '範圍': 'Range',
 
   // App Name
   '血壓管家': 'Blood Pressure Manager',
@@ -240,6 +245,4 @@ const Map<String, String> enUS = {
   '高血壓二級': 'Stage 2 Hypertension',
   '高血壓危象': 'Hypertensive Crisis',
   '筆': 'records',
-  '已篩選': 'filtered',
-  '原': 'original',
 };

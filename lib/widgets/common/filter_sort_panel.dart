@@ -211,7 +211,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
         children: [
           // 收縮壓範圍
           _buildRangeSlider(
-            title: '${context.tr('收縮壓')}範圍 (mmHg)',
+            title: '${context.tr('收縮壓')} ${context.tr('範圍')} (mmHg)',
             min: 70,
             max: 200,
             divisions: 130,
@@ -225,7 +225,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           const SizedBox(height: 16),
           // 舒張壓範圍
           _buildRangeSlider(
-            title: '${context.tr('舒張壓')}範圍 (mmHg)',
+            title: '${context.tr('舒張壓')} ${context.tr('範圍')} (mmHg)',
             min: 40,
             max: 130,
             divisions: 90,
@@ -239,7 +239,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           const SizedBox(height: 16),
           // 心率範圍
           _buildRangeSlider(
-            title: '${context.tr('心率')}範圍 (bpm)',
+            title: '${context.tr('心率')} ${context.tr('範圍')} (bpm)',
             min: 40,
             max: 160,
             divisions: 120,

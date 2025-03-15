@@ -9,6 +9,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
 import '../../utils/date_time_utils.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class BloodPressureBarChart extends StatelessWidget {
   final List<BloodPressureRecord> records;
@@ -25,7 +26,7 @@ class BloodPressureBarChart extends StatelessWidget {
           children: [
             Icon(Icons.bar_chart, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
             const SizedBox(height: 16),
-            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
           ],
         ),
       );

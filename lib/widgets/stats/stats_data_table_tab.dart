@@ -56,7 +56,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
   @override
   Widget build(BuildContext context) {
     if (widget.filteredRecords.isEmpty) {
-      return const Center(child: Text('暫無數據', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey)));
+      return Center(child: Text(context.tr('暫無數據'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey)));
     }
 
     return Column(
@@ -71,7 +71,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
               OutlinedButton.icon(
                 onPressed: _showFilterSortPanel,
                 icon: Icon(Icons.filter_list, color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[600]),
-                label: Text('篩選與排序', style: TextStyle(color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[600])),
+                label: Text(context.tr('篩選與排序'), style: TextStyle(color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[600])),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[400]!),
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -84,7 +84,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
                 IconButton(
                   onPressed: widget.onResetFiltersAndSort,
                   icon: const Icon(Icons.clear),
-                  tooltip: '清除篩選',
+                  tooltip: context.tr('清除篩選'),
                   color: Colors.grey[600],
                   iconSize: 20,
                 ),
@@ -98,7 +98,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
           child: Row(
             children: [
               Text(
-                '共 ${widget.filteredRecords.length} ${context.tr('筆')}${context.tr('記錄')}',
+                '${context.tr('共')} ${widget.filteredRecords.length} ${context.tr('筆')}${context.tr('記錄')}',
                 style: TextStyle(color: Colors.grey[600], fontSize: 14),
               ),
               if (widget.isFiltered && widget.filteredRecords.length != widget.records.length) ...[
