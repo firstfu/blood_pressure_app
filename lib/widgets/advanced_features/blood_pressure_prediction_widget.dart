@@ -159,7 +159,7 @@ class BloodPressurePredictionWidget extends StatelessWidget {
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true, drawVerticalLine: true, horizontalInterval: 20, verticalInterval: 1),
+        gridData: FlGridData(show: true, drawVerticalLine: true, horizontalInterval: 20, verticalInterval: _calculateXAxisInterval(totalDays)),
         titlesData: FlTitlesData(
           show: true,
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -168,7 +168,7 @@ class BloodPressurePredictionWidget extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
-              interval: totalDays > 14 ? 2 : 1,
+              interval: _calculateXAxisInterval(totalDays),
               getTitlesWidget: (value, meta) {
                 if (value % 1 != 0) return const Text('');
                 final date = minDate.add(Duration(days: value.toInt()));
@@ -257,6 +257,21 @@ class BloodPressurePredictionWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // 根據總天數計算 x 軸顯示間隔
+  double _calculateXAxisInterval(int totalDays) {
+    if (totalDays <= 7) {
+      return 1; // 7天內顯示每一天
+    } else if (totalDays <= 14) {
+      return 2; // 8-14天顯示每隔一天
+    } else if (totalDays <= 30) {
+      return 3; // 15-30天顯示每隔兩天
+    } else if (totalDays <= 60) {
+      return 5; // 31-60天顯示每隔四天
+    } else {
+      return 7; // 超過60天顯示每隔六天
+    }
   }
 
   // 構建風險日項目
