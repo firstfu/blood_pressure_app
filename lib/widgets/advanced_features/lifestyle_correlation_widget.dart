@@ -41,9 +41,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       );
     }
 
-    // 安全地獲取數據，提供默認值
-    final correlations = widget.correlationResults['correlations'] as Map<String, dynamic>? ?? {};
-    final recommendations = widget.correlationResults['recommendations'] as List<dynamic>? ?? [];
+    final correlations = widget.correlationResults['correlations'] as Map<String, dynamic>;
+    final recommendations = widget.correlationResults['recommendations'] as List<dynamic>;
 
     return SingleChildScrollView(
       child: Padding(
@@ -58,39 +57,20 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
             // 相關性圖表
             const Text('相關性分析', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            SizedBox(
-              height: 250,
-              child:
-                  correlations[_selectedFactor] != null
-                      ? _buildCorrelationChart(correlations[_selectedFactor] as Map<String, dynamic>)
-                      : _buildNoDataWidget('無法顯示相關性圖表，該因素的數據不足'),
-            ),
+            SizedBox(height: 250, child: _buildCorrelationChart(correlations[_selectedFactor])),
             const SizedBox(height: 24),
 
             // 相關性結果
-            correlations[_selectedFactor] != null
-                ? _buildCorrelationResults(correlations[_selectedFactor] as Map<String, dynamic>)
-                : _buildNoDataWidget('無法顯示相關性結果，該因素的數據不足'),
+            _buildCorrelationResults(correlations[_selectedFactor]),
             const SizedBox(height: 24),
 
             // 改善建議
             const Text('改善建議', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            recommendations.isNotEmpty
-                ? Column(children: recommendations.map((recommendation) => _buildRecommendationItem(recommendation)).toList())
-                : _buildNoDataWidget('暫無改善建議'),
+            ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation)),
           ],
         ),
       ),
-    );
-  }
-
-  // 構建無數據小部件
-  Widget _buildNoDataWidget(String message) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
-      child: Center(child: Text(message, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600))),
     );
   }
 
@@ -145,12 +125,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建組比較圖表
   Widget _buildGroupComparisonChart(Map<String, dynamic> factorData) {
-    // 安全地獲取數據，提供默認值
-    final groups = factorData['groups'] as List<dynamic>? ?? [];
-    if (groups.isEmpty) {
-      return _buildNoDataWidget('無法顯示圖表，該因素的分組數據不足');
-    }
-
+    final groups = factorData['groups'] as List<dynamic>;
     final factorName = _factorNames[_selectedFactor] ?? _selectedFactor;
 
     return BarChart(
@@ -162,12 +137,10 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           touchTooltipData: BarTouchTooltipData(
             tooltipBgColor: Colors.white.withOpacity(0.8),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              if (groupIndex >= groups.length) return null;
-
               final groupData = groups[groupIndex];
-              final groupName = groupData['name'] as String? ?? '未知組別';
-              final systolic = groupData['avgSystolic'] as double? ?? 0.0;
-              final diastolic = groupData['avgDiastolic'] as double? ?? 0.0;
+              final groupName = groupData['name'] as String;
+              final systolic = groupData['avgSystolic'] as double;
+              final diastolic = groupData['avgDiastolic'] as double;
 
               return BarTooltipItem(
                 '$groupName\n收縮壓: ${systolic.toStringAsFixed(1)} mmHg\n舒張壓: ${diastolic.toStringAsFixed(1)} mmHg',
@@ -187,7 +160,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                 if (value >= groups.length) return const Text('');
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(groups[value.toInt()]['name'] as String? ?? '未知', style: const TextStyle(fontSize: 12)),
+                  child: Text(groups[value.toInt()]['name'] as String, style: const TextStyle(fontSize: 12)),
                 );
               },
               reservedSize: 30,
@@ -205,8 +178,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
         ),
         barGroups: List.generate(groups.length, (index) {
           final groupData = groups[index];
-          final systolic = (groupData['avgSystolic'] as num?)?.toDouble() ?? 120.0;
-          final diastolic = (groupData['avgDiastolic'] as num?)?.toDouble() ?? 80.0;
+          final systolic = groupData['avgSystolic'] as double;
+          final diastolic = groupData['avgDiastolic'] as double;
 
           return BarChartGroupData(
             x: index,
@@ -232,17 +205,16 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建酒精比較圖表
   Widget _buildAlcoholComparisonChart(Map<String, dynamic> factorData) {
-    // 安全地獲取數據，提供默認值
-    final nonDrinkers = factorData['nonDrinkers'] as Map<String, dynamic>? ?? {'avgSystolic': 120.0, 'avgDiastolic': 80.0};
-    final lightDrinkers = factorData['lightDrinkers'] as Map<String, dynamic>? ?? {'avgSystolic': 120.0, 'avgDiastolic': 80.0};
-    final moderateDrinkers = factorData['moderateDrinkers'] as Map<String, dynamic>? ?? {'avgSystolic': 120.0, 'avgDiastolic': 80.0};
-    final heavyDrinkers = factorData['heavyDrinkers'] as Map<String, dynamic>? ?? {'avgSystolic': 120.0, 'avgDiastolic': 80.0};
+    final nonDrinkers = factorData['nonDrinkers'] as Map<String, dynamic>;
+    final lightDrinkers = factorData['lightDrinkers'] as Map<String, dynamic>;
+    final moderateDrinkers = factorData['moderateDrinkers'] as Map<String, dynamic>;
+    final heavyDrinkers = factorData['heavyDrinkers'] as Map<String, dynamic>;
 
     final groups = [
-      {'name': '不飲酒', 'systolic': nonDrinkers['avgSystolic'] ?? 120.0, 'diastolic': nonDrinkers['avgDiastolic'] ?? 80.0},
-      {'name': '輕度飲酒', 'systolic': lightDrinkers['avgSystolic'] ?? 120.0, 'diastolic': lightDrinkers['avgDiastolic'] ?? 80.0},
-      {'name': '中度飲酒', 'systolic': moderateDrinkers['avgSystolic'] ?? 120.0, 'diastolic': moderateDrinkers['avgDiastolic'] ?? 80.0},
-      {'name': '重度飲酒', 'systolic': heavyDrinkers['avgSystolic'] ?? 120.0, 'diastolic': heavyDrinkers['avgDiastolic'] ?? 80.0},
+      {'name': '不飲酒', 'systolic': nonDrinkers['avgSystolic'], 'diastolic': nonDrinkers['avgDiastolic']},
+      {'name': '輕度飲酒', 'systolic': lightDrinkers['avgSystolic'], 'diastolic': lightDrinkers['avgDiastolic']},
+      {'name': '中度飲酒', 'systolic': moderateDrinkers['avgSystolic'], 'diastolic': moderateDrinkers['avgDiastolic']},
+      {'name': '重度飲酒', 'systolic': heavyDrinkers['avgSystolic'], 'diastolic': heavyDrinkers['avgDiastolic']},
     ];
 
     return BarChart(
@@ -254,12 +226,10 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           touchTooltipData: BarTouchTooltipData(
             tooltipBgColor: Colors.white.withOpacity(0.8),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              if (groupIndex >= groups.length) return null;
-
               final groupData = groups[groupIndex];
-              final groupName = groupData['name'] as String? ?? '未知組別';
-              final systolic = (groupData['systolic'] as num?)?.toDouble() ?? 0.0;
-              final diastolic = (groupData['diastolic'] as num?)?.toDouble() ?? 0.0;
+              final groupName = groupData['name'] as String;
+              final systolic = groupData['systolic'] as double;
+              final diastolic = groupData['diastolic'] as double;
 
               return BarTooltipItem(
                 '$groupName\n收縮壓: ${systolic.toStringAsFixed(1)} mmHg\n舒張壓: ${diastolic.toStringAsFixed(1)} mmHg',
@@ -279,7 +249,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                 if (value >= groups.length) return const Text('');
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(groups[value.toInt()]['name'] as String? ?? '未知', style: const TextStyle(fontSize: 12)),
+                  child: Text(groups[value.toInt()]['name'] as String, style: const TextStyle(fontSize: 12)),
                 );
               },
               reservedSize: 30,
@@ -297,8 +267,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
         ),
         barGroups: List.generate(groups.length, (index) {
           final groupData = groups[index];
-          final systolic = (groupData['systolic'] as num?)?.toDouble() ?? 120.0;
-          final diastolic = (groupData['diastolic'] as num?)?.toDouble() ?? 80.0;
+          final systolic = groupData['systolic'] as double;
+          final diastolic = groupData['diastolic'] as double;
 
           // 顏色根據飲酒程度變化
           Color barColor;
@@ -336,10 +306,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性結果
   Widget _buildCorrelationResults(Map<String, dynamic> factorData) {
-    // 安全地獲取數據，提供默認值
-    final correlation = factorData['correlation'] as double? ?? 0.0;
-    final description = factorData['description'] as String? ?? '暫無相關性描述';
-    final impact = factorData['impact'] as String? ?? '暫無影響描述';
+    final correlation = factorData['correlation'] as double;
+    final description = factorData['description'] as String;
+    final impact = factorData['impact'] as String;
 
     IconData icon;
     Color color;

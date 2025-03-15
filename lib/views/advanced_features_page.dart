@@ -5,8 +5,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-import '../models/blood_pressure_record.dart';
 import '../services/record_service.dart';
 import '../services/prediction_service.dart';
 import '../services/risk_assessment_service.dart';
@@ -59,15 +57,12 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
     setState(() {
       _isLoading = true;
       _errorMessage = null;
-      // 初始化結果為默認值
-      _predictionResults = {'hasData': false, 'message': '正在加載數據...'};
-      _riskAssessmentResults = {'hasData': false, 'message': '正在加載數據...'};
-      _correlationResults = {'hasData': false, 'message': '正在加載數據...'};
     });
 
     try {
       // 加載血壓記錄
-      final records = await _recordService.getRecords();
+      await _recordService.getRecords();
+      final records = _recordService.records;
 
       if (records.isEmpty) {
         setState(() {
@@ -78,49 +73,25 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
       }
 
       // 進行血壓趨勢預測
-      Map<String, dynamic> predictionResults = {'hasData': false, 'message': '血壓趨勢預測失敗'};
-      try {
-        predictionResults = await _predictionService.predictBloodPressureTrend(records);
-      } catch (e) {
-        print('血壓趨勢預測錯誤: $e');
-        predictionResults = {'hasData': false, 'message': '血壓趨勢預測失敗: ${e.toString().substring(0, math.min(100, e.toString().length))}'};
-      }
+      final predictionResults = await _predictionService.predictBloodPressureTrend(records);
 
       // 進行健康風險評估
-      Map<String, dynamic> riskAssessmentResults = {'hasData': false, 'message': '健康風險評估失敗'};
-      try {
-        riskAssessmentResults = await _riskAssessmentService.assessHealthRisk(records, userInfo: _userInfo);
-      } catch (e) {
-        print('健康風險評估錯誤: $e');
-        riskAssessmentResults = {'hasData': false, 'message': '健康風險評估失敗: ${e.toString().substring(0, math.min(100, e.toString().length))}'};
-      }
+      final riskAssessmentResults = await _riskAssessmentService.assessHealthRisk(records, userInfo: _userInfo);
 
       // 進行生活方式相關性分析
-      Map<String, dynamic> correlationResults = {'hasData': false, 'message': '生活方式相關性分析失敗'};
-      try {
-        correlationResults = await _lifestyleAnalysisService.analyzeLifestyleCorrelation(records);
-      } catch (e) {
-        print('生活方式相關性分析錯誤: $e');
-        correlationResults = {'hasData': false, 'message': '生活方式相關性分析失敗: ${e.toString().substring(0, math.min(100, e.toString().length))}'};
-      }
+      final correlationResults = await _lifestyleAnalysisService.analyzeLifestyleCorrelation(records);
 
-      // 更新狀態
-      if (mounted) {
-        setState(() {
-          _predictionResults = predictionResults;
-          _riskAssessmentResults = riskAssessmentResults;
-          _correlationResults = correlationResults;
-          _isLoading = false;
-        });
-      }
+      setState(() {
+        _predictionResults = predictionResults;
+        _riskAssessmentResults = riskAssessmentResults;
+        _correlationResults = correlationResults;
+        _isLoading = false;
+      });
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = '加載數據時發生錯誤: ${e.toString().substring(0, math.min(100, e.toString().length))}';
-        });
-      }
-      print('加載數據錯誤: $e');
+      setState(() {
+        _isLoading = false;
+        _errorMessage = '加載數據時發生錯誤: $e';
+      });
     }
   }
 
@@ -188,15 +159,22 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
                 controller: _tabController,
                 children: [
                   // 血壓預測
-                  SingleChildScrollView(child: BloodPressurePredictionWidget(predictionResult: _predictionResults)),
+                  SingleChildScrollView(
+                    child: Padding(padding: const EdgeInsets.all(16.0), child: BloodPressurePredictionWidget(predictionResult: _predictionResults)),
+                  ),
 
                   // 健康風險評估
                   SingleChildScrollView(
-                    child: HealthRiskAssessmentWidget(riskAssessmentResults: _riskAssessmentResults, onUpdateUserInfo: _updateUserInfo),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: HealthRiskAssessmentWidget(riskAssessmentResults: _riskAssessmentResults, onUpdateUserInfo: _updateUserInfo),
+                    ),
                   ),
 
                   // 生活方式相關性分析
-                  SingleChildScrollView(child: LifestyleCorrelationWidget(correlationResults: _correlationResults)),
+                  SingleChildScrollView(
+                    child: Padding(padding: const EdgeInsets.all(16.0), child: LifestyleCorrelationWidget(correlationResults: _correlationResults)),
+                  ),
                 ],
               ),
     );

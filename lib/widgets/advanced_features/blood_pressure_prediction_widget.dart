@@ -30,11 +30,10 @@ class BloodPressurePredictionWidget extends StatelessWidget {
       );
     }
 
-    // 安全地獲取數據，提供默認值
-    final dailyData = predictionResult['dailyData'] as List<dynamic>? ?? [];
-    final predictions = predictionResult['predictions'] as List<dynamic>? ?? [];
-    final riskDays = predictionResult['riskDays'] as List<dynamic>? ?? [];
-    final trend = predictionResult['trend'] as Map<String, dynamic>? ?? {};
+    final dailyData = predictionResult['dailyData'] as List<dynamic>;
+    final predictions = predictionResult['predictions'] as List<dynamic>;
+    final riskDays = predictionResult['riskDays'] as List<dynamic>;
+    final trend = predictionResult['trend'] as Map<String, dynamic>;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,39 +45,30 @@ class BloodPressurePredictionWidget extends StatelessWidget {
         // 預測圖表
         const Text('血壓趨勢預測', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 8),
-        SizedBox(
-          height: 250,
-          child:
-              dailyData.isNotEmpty || predictions.isNotEmpty
-                  ? _buildPredictionChart(dailyData, predictions)
-                  : Center(child: Text('無法生成預測圖表，數據不足', style: TextStyle(color: Colors.grey.shade600))),
-        ),
+        SizedBox(height: 250, child: _buildPredictionChart(dailyData, predictions)),
         const SizedBox(height: 24),
 
         // 風險日提示
         if (riskDays.isNotEmpty) ...[
           const Text('潛在風險日', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 8),
-          ...riskDays.map((day) => _buildRiskDayItem(day as Map<String, dynamic>)),
+          ...riskDays.map((day) => _buildRiskDayItem(day)),
           const SizedBox(height: 24),
         ],
 
         // 預測數據表格
         const Text('未來7天血壓預測', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 8),
-        predictions.isNotEmpty
-            ? _buildPredictionTable(predictions)
-            : Center(child: Text('無法生成預測數據，數據不足', style: TextStyle(color: Colors.grey.shade600))),
+        _buildPredictionTable(predictions),
       ],
     );
   }
 
   // 構建趨勢信息
   Widget _buildTrendInfo(Map<String, dynamic> trend) {
-    // 安全地獲取數據，提供默認值
-    final systolicTrend = trend['systolicTrend'] as String? ?? 'stable';
-    final diastolicTrend = trend['diastolicTrend'] as String? ?? 'stable';
-    final message = trend['message'] as String? ?? '血壓趨勢穩定';
+    final systolicTrend = trend['systolicTrend'] as String;
+    final diastolicTrend = trend['diastolicTrend'] as String;
+    final message = trend['message'] as String;
 
     IconData systolicIcon;
     Color systolicColor;
@@ -134,20 +124,11 @@ class BloodPressurePredictionWidget extends StatelessWidget {
 
   // 構建預測圖表
   Widget _buildPredictionChart(List<dynamic> dailyData, List<dynamic> predictions) {
-    // 如果沒有數據，顯示提示信息
-    if (dailyData.isEmpty && predictions.isEmpty) {
-      return Center(child: Text('無法生成預測圖表，數據不足', style: TextStyle(color: Colors.grey.shade600)));
-    }
-
     // 合併歷史數據和預測數據
     final allData = [...dailyData, ...predictions];
 
     // 獲取所有數據的日期範圍
-    final dates = allData.map((data) => data['date'] as DateTime? ?? DateTime.now()).toList();
-    if (dates.isEmpty) {
-      return Center(child: Text('無法生成預測圖表，日期數據不足', style: TextStyle(color: Colors.grey.shade600)));
-    }
-
+    final dates = allData.map((data) => data['date'] as DateTime).toList();
     final minDate = dates.reduce((a, b) => a.isBefore(b) ? a : b);
     final maxDate = dates.reduce((a, b) => a.isAfter(b) ? a : b);
 
@@ -162,24 +143,18 @@ class BloodPressurePredictionWidget extends StatelessWidget {
 
     // 添加歷史數據點
     for (final data in dailyData) {
-      final date = data['date'] as DateTime? ?? DateTime.now();
+      final date = data['date'] as DateTime;
       final dayIndex = date.difference(minDate).inDays.toDouble();
-      final systolic = (data['systolic'] as num?)?.toDouble() ?? 120.0;
-      final diastolic = (data['diastolic'] as num?)?.toDouble() ?? 80.0;
-
-      systolicSpots.add(FlSpot(dayIndex, systolic));
-      diastolicSpots.add(FlSpot(dayIndex, diastolic));
+      systolicSpots.add(FlSpot(dayIndex, data['systolic'].toDouble()));
+      diastolicSpots.add(FlSpot(dayIndex, data['diastolic'].toDouble()));
     }
 
     // 添加預測數據點
     for (final prediction in predictions) {
-      final date = prediction['date'] as DateTime? ?? DateTime.now();
+      final date = prediction['date'] as DateTime;
       final dayIndex = date.difference(minDate).inDays.toDouble();
-      final systolic = (prediction['systolic'] as num?)?.toDouble() ?? 120.0;
-      final diastolic = (prediction['diastolic'] as num?)?.toDouble() ?? 80.0;
-
-      systolicPredictionSpots.add(FlSpot(dayIndex, systolic));
-      diastolicPredictionSpots.add(FlSpot(dayIndex, diastolic));
+      systolicPredictionSpots.add(FlSpot(dayIndex, prediction['systolic'].toDouble()));
+      diastolicPredictionSpots.add(FlSpot(dayIndex, prediction['diastolic'].toDouble()));
     }
 
     return LineChart(
@@ -195,7 +170,7 @@ class BloodPressurePredictionWidget extends StatelessWidget {
               reservedSize: 30,
               interval: totalDays > 14 ? 2 : 1,
               getTitlesWidget: (value, meta) {
-                if (value % 1 != 0 || value < 0 || value >= totalDays) return const Text('');
+                if (value % 1 != 0) return const Text('');
                 final date = minDate.add(Duration(days: value.toInt()));
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -216,8 +191,6 @@ class BloodPressurePredictionWidget extends StatelessWidget {
             tooltipBgColor: Colors.white.withAlpha(204),
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                if (spot.x < 0 || spot.x >= totalDays) return null;
-
                 final date = minDate.add(Duration(days: spot.x.toInt()));
                 final dateStr = DateFormat('MM/dd').format(date);
                 final isHistory = spot.x < dailyData.length;
@@ -288,11 +261,10 @@ class BloodPressurePredictionWidget extends StatelessWidget {
 
   // 構建風險日項目
   Widget _buildRiskDayItem(Map<String, dynamic> riskDay) {
-    // 安全地獲取數據，提供默認值
-    final date = riskDay['date'] as DateTime? ?? DateTime.now();
-    final systolic = riskDay['systolic'] as int? ?? 0;
-    final diastolic = riskDay['diastolic'] as int? ?? 0;
-    final riskLevel = riskDay['riskLevel'] as String? ?? 'medium';
+    final date = riskDay['date'] as DateTime;
+    final systolic = riskDay['systolic'] as int;
+    final diastolic = riskDay['diastolic'] as int;
+    final riskLevel = riskDay['riskLevel'] as String;
 
     Color riskColor;
     String riskText;
@@ -350,10 +322,9 @@ class BloodPressurePredictionWidget extends StatelessWidget {
           ),
           // 表格內容
           ...predictions.map((prediction) {
-            // 安全地獲取數據，提供默認值
-            final date = prediction['date'] as DateTime? ?? DateTime.now();
-            final systolic = prediction['systolic'] as int? ?? 0;
-            final diastolic = prediction['diastolic'] as int? ?? 0;
+            final date = prediction['date'] as DateTime;
+            final systolic = prediction['systolic'] as int;
+            final diastolic = prediction['diastolic'] as int;
 
             // 判斷是否為風險日
             bool isRiskDay = systolic >= 130 || diastolic >= 85;

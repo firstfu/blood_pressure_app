@@ -44,18 +44,11 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
   void _initUserInfoControllers() {
     final userInfo = widget.riskAssessmentResults['userInfo'] as Map<String, dynamic>?;
     if (userInfo != null) {
-      _ageController.text = userInfo['age']?.toString() ?? '45';
+      _ageController.text = userInfo['age']?.toString() ?? '';
       _selectedGender = userInfo['gender'] ?? '男';
       _hasDiabetes = userInfo['hasDiabetes'] ?? false;
       _isSmoking = userInfo['isSmoking'] ?? false;
-      _cholesterolController.text = userInfo['cholesterolLevel']?.toString() ?? '180.0';
-    } else {
-      // 設置默認值
-      _ageController.text = '45';
-      _selectedGender = '男';
-      _hasDiabetes = false;
-      _isSmoking = false;
-      _cholesterolController.text = '180.0';
+      _cholesterolController.text = userInfo['cholesterolLevel']?.toString() ?? '';
     }
   }
 
@@ -80,13 +73,12 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
       );
     }
 
-    // 安全地獲取數據，提供默認值
-    final averageSystolic = widget.riskAssessmentResults['averageSystolic'] as int? ?? 120;
-    final averageDiastolic = widget.riskAssessmentResults['averageDiastolic'] as int? ?? 80;
-    final bpRiskLevel = widget.riskAssessmentResults['bpRiskLevel'] as String? ?? '正常';
-    final cvdRiskScore = widget.riskAssessmentResults['cvdRiskScore'] as double? ?? 0.0;
-    final strokeRiskScore = widget.riskAssessmentResults['strokeRiskScore'] as double? ?? 0.0;
-    final recommendations = widget.riskAssessmentResults['recommendations'] as List<dynamic>? ?? [];
+    final averageSystolic = widget.riskAssessmentResults['avgSystolic'] as int;
+    final averageDiastolic = widget.riskAssessmentResults['avgDiastolic'] as int;
+    final bpRiskLevel = widget.riskAssessmentResults['bpRiskLevel'] as String;
+    final cvdRiskScore = widget.riskAssessmentResults['cvdRiskScore'] as double;
+    final strokeRiskScore = widget.riskAssessmentResults['strokeRiskScore'] as double;
+    final recommendations = widget.riskAssessmentResults['recommendations'] as List<dynamic>;
 
     return SingleChildScrollView(
       child: Padding(
@@ -135,10 +127,7 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
               // 健康建議
               const Text('健康建議', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              if (recommendations.isNotEmpty)
-                ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation as String))
-              else
-                _buildNoDataWidget('暫無健康建議'),
+              ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation)),
             ],
           ],
         ),
@@ -474,15 +463,6 @@ class _HealthRiskAssessmentWidgetState extends State<HealthRiskAssessmentWidget>
           ],
         ),
       ),
-    );
-  }
-
-  // 構建無數據小部件
-  Widget _buildNoDataWidget(String message) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
-      child: Center(child: Text(message, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600))),
     );
   }
 }
