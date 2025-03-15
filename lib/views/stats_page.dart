@@ -131,7 +131,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white), onPressed: () => Navigator.of(context).pop()),
         title: const Text('血壓統計', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
         actions: [
