@@ -13,12 +13,15 @@ import 'dart:math';
 import '../constants/app_constants.dart';
 import '../models/blood_pressure_record.dart';
 import '../services/mock_data_service.dart';
-import '../utils/date_time_utils.dart';
-import '../widgets/trend_chart.dart';
 import '../widgets/health_tip_card.dart';
 import '../themes/app_theme.dart';
 import '../views/record_page.dart';
 import '../views/stats_page.dart';
+import '../widgets/home/greeting_header.dart';
+import '../widgets/home/measurement_status_card.dart';
+import '../widgets/home/last_measurement_card.dart';
+import '../widgets/home/trend_chart_card.dart';
+import '../widgets/home/time_range_selector.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,7 +34,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   late AnimationController _animationController;
   TimeRange _selectedTimeRange = TimeRange.week; // 默認選擇7天
   List<BloodPressureRecord> _records = [];
-  bool _showPulse = true; // 默認顯示心率
 
   @override
   void initState() {
@@ -68,10 +70,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(context),
+              const GreetingHeader(),
               const SizedBox(height: 16),
               if (!isMeasuredToday)
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildMeasurementStatus(context, isMeasuredToday)),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: MeasurementStatusCard(isMeasuredToday: isMeasuredToday)),
               const SizedBox(height: 24),
               if (lastRecord != null) ...[
                 Padding(
@@ -79,7 +81,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   child: Text(AppConstants.lastMeasurement, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 12),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildLastMeasurementCard(context, lastRecord)),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: LastMeasurementCard(record: lastRecord)),
                 const SizedBox(height: 24),
               ],
               Padding(
@@ -88,12 +90,33 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(_getTrendTitle(), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
-                    _buildTimeRangeSelector(context),
+                    HomeTimeRangeSelector(
+                      selectedTimeRange: _selectedTimeRange,
+                      onTimeRangeChanged: (timeRange) {
+                        setState(() {
+                          _selectedTimeRange = timeRange;
+                          _loadRecords();
+                        });
+                      },
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
-              _buildTrendCard(context, _records),
+              TrendChartCard(
+                records: _records,
+                selectedTimeRange: _selectedTimeRange,
+                onViewDetails: () {
+                  // 導航到統計頁面，並傳遞當前選擇的時間範圍
+                  HapticFeedback.lightImpact();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange))).then((_) {
+                    // 返回時刷新數據
+                    setState(() {
+                      _loadRecords();
+                    });
+                  });
+                },
+              ),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -124,54 +147,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     }
   }
 
-  // 構建時間範圍選擇器
-  Widget _buildTimeRangeSelector(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.dividerColor),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildTimeRangeButton(context, TimeRange.week, '7天'),
-          _buildTimeRangeButton(context, TimeRange.twoWeeks, '2週'),
-          _buildTimeRangeButton(context, TimeRange.month, '1月'),
-        ],
-      ),
-    );
-  }
-
-  // 構建時間範圍按鈕
-  Widget _buildTimeRangeButton(BuildContext context, TimeRange timeRange, String label) {
-    final isSelected = _selectedTimeRange == timeRange;
-
-    return GestureDetector(
-      onTap: () {
-        if (_selectedTimeRange != timeRange) {
-          HapticFeedback.lightImpact();
-          setState(() {
-            _selectedTimeRange = timeRange;
-            _loadRecords();
-          });
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(color: isSelected ? AppTheme.primaryColor : Colors.transparent, borderRadius: BorderRadius.circular(14)),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : AppTheme.textSecondaryColor,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            fontSize: 12,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
@@ -188,409 +163,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: const Icon(Icons.add, color: Colors.white, size: 28),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    final greeting = DateTimeUtils.getGreeting();
-    final currentDate = DateTimeUtils.getFullCurrentDate();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 1))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$greeting，用戶', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 26)),
-          const SizedBox(height: 4),
-          Text(currentDate, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryColor, fontSize: 15)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMeasurementStatus(BuildContext context, bool isMeasuredToday) {
-    final successColorLight = AppTheme.successColor.withAlpha(20);
-    final alertColorLight = AppTheme.alertColor.withAlpha(20);
-    final successColorBorder = AppTheme.successColor.withAlpha(77);
-    final alertColorBorder = AppTheme.alertColor.withAlpha(77);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        color: isMeasuredToday ? successColorLight : alertColorLight,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isMeasuredToday ? successColorBorder : alertColorBorder, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: isMeasuredToday ? AppTheme.successColor.withAlpha(38) : AppTheme.alertColor.withAlpha(38),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              isMeasuredToday ? Icons.check_circle : Icons.notifications_none,
-              color: isMeasuredToday ? AppTheme.successColor : AppTheme.alertColor,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isMeasuredToday ? '已完成今日測量' : '今日尚未測量',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600, color: isMeasuredToday ? AppTheme.successColor : AppTheme.alertColor),
-                ),
-                if (!isMeasuredToday)
-                  Text('建議每日測量血壓以保持健康追蹤', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLastMeasurementCard(BuildContext context, BloodPressureRecord record) {
-    final isBPHigh = record.systolic >= 140 || record.diastolic >= 90;
-    final isBPNormal = record.systolic < 120 && record.diastolic < 80;
-    final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
-    final statusText = isBPHigh ? '偏高' : (isBPNormal ? '正常' : '臨界');
-
-    // 獲取心率狀態顏色
-    final pulseColor = _getPulseStatusColor(record.pulse);
-
-    // 根據血壓狀態選擇圖標
-    IconData statusIcon;
-    if (isBPHigh) {
-      statusIcon = Icons.warning_amber_rounded;
-    } else if (isBPNormal) {
-      statusIcon = Icons.check_circle_outline;
-    } else {
-      statusIcon = Icons.info_outline;
-    }
-
-    return Card(
-      elevation: 1,
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '今天 ${DateTimeUtils.formatTimeHHMM(record.measureTime)}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryColor),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (statusText == '臨界') {
-                      _showBorderlineExplanation(context);
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(color: statusColor.withAlpha(26), borderRadius: BorderRadius.circular(16)),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(statusIcon, color: statusColor, size: 16),
-                        const SizedBox(width: 4),
-                        Text(statusText, style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 14)),
-                        if (statusText == '臨界') ...[const SizedBox(width: 4), Icon(Icons.help_outline, color: statusColor, size: 14)],
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildBPValueColumn(
-                  context,
-                  record.systolic.toString(),
-                  'SYS',
-                  'mmHg',
-                  isBPHigh ? (record.systolic >= 140 ? AppTheme.warningColor : AppTheme.alertColor) : AppTheme.textPrimaryColor,
-                ),
-                Container(height: 50, width: 1, color: AppTheme.dividerColor),
-                _buildBPValueColumn(
-                  context,
-                  record.diastolic.toString(),
-                  'DIA',
-                  'mmHg',
-                  isBPHigh ? (record.diastolic >= 90 ? AppTheme.warningColor : AppTheme.alertColor) : AppTheme.textPrimaryColor,
-                ),
-                Container(height: 50, width: 1, color: AppTheme.dividerColor),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          record.pulse.toString(),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: pulseColor, fontSize: 36),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 2, top: 4),
-                          child: Icon(
-                            record.pulse > 100 ? Icons.arrow_upward : (record.pulse < 60 ? Icons.arrow_downward : Icons.favorite),
-                            color: pulseColor,
-                            size: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'PULSE',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor, fontWeight: FontWeight.w500),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('bpm', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-                        const SizedBox(width: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                          decoration: BoxDecoration(color: pulseColor.withAlpha(26), borderRadius: BorderRadius.circular(4)),
-                          child: Text(
-                            _getPulseStatusText(record.pulse),
-                            style: TextStyle(color: pulseColor, fontSize: 10, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Divider(height: 1),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                _buildMeasurementTag(context, '備註: ${record.note}'),
-                const SizedBox(width: 8),
-                _buildMeasurementTag(context, record.position),
-                if (record.arm.isNotEmpty) ...[const SizedBox(width: 8), _buildMeasurementTag(context, record.arm)],
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBPValueColumn(BuildContext context, String value, String label, String unit, Color valueColor) {
-    // 根據數值顏色選擇適當的圖標
-    IconData? valueIcon;
-    if (valueColor == AppTheme.warningColor) {
-      valueIcon = Icons.arrow_upward;
-    } else if (valueColor == AppTheme.alertColor) {
-      valueIcon = Icons.arrow_upward;
-    } else if (valueColor == AppTheme.successColor) {
-      valueIcon = Icons.check;
-    }
-
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: valueColor, fontSize: 36)),
-            if (valueIcon != null) Padding(padding: const EdgeInsets.only(left: 2, top: 4), child: Icon(valueIcon, color: valueColor, size: 16)),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor, fontWeight: FontWeight.w500)),
-        Text(unit, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-      ],
-    );
-  }
-
-  // 獲取心率狀態顏色
-  Color _getPulseStatusColor(int pulse) {
-    if (pulse < 60) {
-      return Colors.blue; // 心率過低
-    } else if (pulse > 100) {
-      return AppTheme.warningColor; // 心率過高
-    } else {
-      return AppTheme.successColor; // 心率正常
-    }
-  }
-
-  // 獲取心率狀態文字
-  String _getPulseStatusText(int pulse) {
-    if (pulse < 60) {
-      return '偏低';
-    } else if (pulse > 100) {
-      return '偏高';
-    } else {
-      return '正常';
-    }
-  }
-
-  Widget _buildMeasurementTag(BuildContext context, String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: AppTheme.backgroundColor, borderRadius: BorderRadius.circular(16)),
-      child: Text(text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-    );
-  }
-
-  Widget _buildTrendCard(BuildContext context, List<BloodPressureRecord> records) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(_getTrendTitle(), style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
-                Row(
-                  children: [
-                    Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 13)),
-                    Transform.scale(
-                      scale: 0.8,
-                      child: Switch(
-                        value: _showPulse,
-                        onChanged: (value) {
-                          setState(() {
-                            _showPulse = value;
-                          });
-                        },
-                        activeColor: Colors.orange,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Container(height: 220, padding: const EdgeInsets.only(top: 8), child: TrendChart(records: records, showPulse: _showPulse)),
-            const SizedBox(height: 16),
-            const Divider(height: 1),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Wrap(
-                    spacing: 16,
-                    runSpacing: 8,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(6)),
-                          ),
-                          const SizedBox(width: 4),
-                          Text('收縮壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(color: AppTheme.successColor, borderRadius: BorderRadius.circular(6)),
-                          ),
-                          const SizedBox(width: 4),
-                          Text('舒張壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(6))),
-                          const SizedBox(width: 4),
-                          Text('心率', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // 導航到統計頁面，並傳遞當前選擇的時間範圍
-                    HapticFeedback.lightImpact();
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange))).then((_) {
-                      // 返回時刷新數據
-                      setState(() {
-                        _loadRecords();
-                      });
-                    });
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [Text('查看詳情'), const SizedBox(width: 4), const Icon(Icons.arrow_forward, size: 16)],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 顯示臨界狀態的解釋
-  void _showBorderlineExplanation(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('什麼是臨界血壓？', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('臨界血壓是指血壓值處於正常值和高血壓之間的狀態：'),
-              SizedBox(height: 8),
-              Text('• 收縮壓在 120-139 mmHg 之間'),
-              Text('• 舒張壓在 80-89 mmHg 之間'),
-              SizedBox(height: 12),
-              Text('處於臨界狀態時，雖然尚未達到高血壓標準，但已有發展為高血壓的風險。建議：'),
-              SizedBox(height: 8),
-              Text('• 定期監測血壓變化'),
-              Text('• 保持健康的生活方式'),
-              Text('• 適當控制鹽分攝入'),
-              Text('• 規律運動'),
-            ],
-          ),
-          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('了解了'))],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        );
-      },
     );
   }
 }

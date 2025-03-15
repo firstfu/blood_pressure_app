@@ -5,7 +5,6 @@
  */
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,7 +13,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import '../models/blood_pressure_record.dart';
 import '../constants/app_constants.dart';
-import '../utils/date_time_utils.dart';
 
 class ReportService {
   /// 生成健康報告 PDF
@@ -296,7 +294,7 @@ class ReportService {
                   _buildTableCell(ttf, record.note ?? '-'),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ),
       ],
@@ -333,7 +331,7 @@ class ReportService {
       // 分享文件
       await Share.shareXFiles([XFile(file.path)], text: '血壓健康報告');
     } catch (e) {
-      print('保存或分享報告時出錯: $e');
+      // print('保存或分享報告時出錯: $e');
       rethrow;
     }
   }
