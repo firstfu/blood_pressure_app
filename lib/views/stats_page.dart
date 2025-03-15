@@ -161,7 +161,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
           labelColor: Colors.white,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           unselectedLabelColor: Colors.white.withAlpha(179),
-          tabs: const [Tab(text: '趨勢圖'), Tab(text: '數據表')],
+          tabs: const [Tab(text: '趨勢圖'), Tab(text: '歷史記錄')],
         ),
       ),
       body: Column(

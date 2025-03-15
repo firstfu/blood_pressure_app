@@ -103,7 +103,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
             ],
           ),
         ),
-        // 數據表
+        // 歷史記錄
         Expanded(
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
