@@ -1,7 +1,7 @@
 /*
  * @ Author: 1891_0982
  * @ Create Time: 2024-03-15 20:00:30
- * @ Description: 高級功能頁面 - 顯示深度血壓分析、血壓預測、健康風險評估和生活方式相關性分析
+ * @ Description: 高級功能頁面 - 顯示深度分析、血壓預測、健康風險評估和生活方式相關性分析
  */
 
 import 'package:flutter/material.dart';
@@ -90,7 +90,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
       // 進行生活方式相關性分析
       final correlationResults = await _lifestyleAnalysisService.analyzeLifestyleCorrelation(records);
 
-      // 執行深度血壓分析
+      // 執行深度分析
       final medicationAnalysis = AnalysisService.analyzeMedicationEffect(records);
       final positionArmAnalysis = AnalysisService.analyzePositionArmEffect(records);
       final morningEveningAnalysis = AnalysisService.analyzeMorningEveningEffect(records);
@@ -143,7 +143,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.analytics), text: '深度血壓分析'),
+            Tab(icon: Icon(Icons.analytics), text: '深度分析'),
             Tab(icon: Icon(Icons.trending_up), text: '血壓預測'),
             Tab(icon: Icon(Icons.favorite), text: '風險評估'),
             Tab(icon: Icon(Icons.bar_chart), text: '生活方式分析'),
@@ -181,13 +181,13 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
               : TabBarView(
                 controller: _tabController,
                 children: [
-                  // 深度血壓分析
+                  // 深度分析
                   SingleChildScrollView(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('深度血壓分析', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        const Text('深度分析', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 8),
                         const Text('基於您的血壓記錄進行深度分析，幫助您更好地了解血壓變化規律。', style: TextStyle(fontSize: 14, color: Colors.grey)),
                         const SizedBox(height: 24),

@@ -55,7 +55,7 @@ class _AdvancedAnalysisPageState extends State<AdvancedAnalysisPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('深度血壓分析', style: TextStyle(fontSize: 18)), elevation: 0),
+      appBar: AppBar(title: const Text('深度分析', style: TextStyle(fontSize: 18)), elevation: 0),
       body:
           _isLoading
               ? const Center(child: CircularProgressIndicator())
