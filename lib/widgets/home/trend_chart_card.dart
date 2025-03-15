@@ -1,6 +1,6 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-16 14:40:30
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 首頁趨勢圖卡片組件 - 顯示血壓和心率趨勢圖
  */
 
@@ -10,6 +10,7 @@ import '../../themes/app_theme.dart';
 import '../../widgets/charts/trend_chart.dart';
 import '../../widgets/charts/bar_chart.dart';
 import '../../services/mock_data_service.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 // 圖表類型枚舉
 enum ChartType {
@@ -45,22 +46,24 @@ class _TrendChartCardState extends State<TrendChartCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            // 控制項行 - 移到下一行以避免水平溢出
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            // 控制項行 - 使用 Wrap 避免水平溢出
+            Wrap(
+              spacing: 16,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 // 圖表類型切換
                 SegmentedButton<ChartType>(
-                  segments: const [
+                  segments: [
                     ButtonSegment<ChartType>(
                       value: ChartType.line,
-                      icon: Icon(Icons.show_chart, size: 16),
-                      label: Text('折線圖', style: TextStyle(fontSize: 12)),
+                      icon: const Icon(Icons.show_chart, size: 16),
+                      label: Text(context.tr('折線圖'), style: const TextStyle(fontSize: 12)),
                     ),
                     ButtonSegment<ChartType>(
                       value: ChartType.bar,
-                      icon: Icon(Icons.bar_chart, size: 16),
-                      label: Text('長條圖', style: TextStyle(fontSize: 12)),
+                      icon: const Icon(Icons.bar_chart, size: 16),
+                      label: Text(context.tr('長條圖'), style: const TextStyle(fontSize: 12)),
                     ),
                   ],
                   selected: {_chartType},
@@ -71,20 +74,24 @@ class _TrendChartCardState extends State<TrendChartCard> {
                   },
                   style: ButtonStyle(visualDensity: VisualDensity.compact, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                 ),
-                const SizedBox(width: 16),
                 // 在兩種圖表模式下都顯示心率切換
-                Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 13)),
-                Transform.scale(
-                  scale: 0.8,
-                  child: Switch(
-                    value: _showPulse,
-                    onChanged: (value) {
-                      setState(() {
-                        _showPulse = value;
-                      });
-                    },
-                    activeColor: Colors.orange,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(context.tr('顯示心率'), style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 13)),
+                    Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: _showPulse,
+                        onChanged: (value) {
+                          setState(() {
+                            _showPulse = value;
+                          });
+                        },
+                        activeColor: Colors.orange,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -101,7 +108,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
                   onPressed: widget.onViewDetails,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Text('查看詳情'), const SizedBox(width: 4), const Icon(Icons.arrow_forward, size: 16)],
+                    children: [Text(context.tr('查看詳情')), const SizedBox(width: 4), const Icon(Icons.arrow_forward, size: 16)],
                   ),
                 ),
               ],
@@ -121,7 +128,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
           children: [
             Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
             const SizedBox(height: 16),
-            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
           ],
         ),
       );
@@ -146,7 +153,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
         children: [
           Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(6))),
           const SizedBox(width: 4),
-          Text('收縮壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+          Text(context.tr('收縮壓'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
         ],
       ),
     );
@@ -157,7 +164,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
         children: [
           Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.successColor, borderRadius: BorderRadius.circular(6))),
           const SizedBox(width: 4),
-          Text('舒張壓', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+          Text(context.tr('舒張壓'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
         ],
       ),
     );
@@ -169,7 +176,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
           children: [
             Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(6))),
             const SizedBox(width: 4),
-            Text('心率', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+            Text(context.tr('心率'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
           ],
         ),
       );

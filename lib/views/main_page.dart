@@ -1,8 +1,9 @@
-// 血壓管家 App 主頁面
-// 包含底部導航欄，用於切換不同頁面
+// @ Author: firstfu
+// @ Create Time: 2024-05-15 16:16:42
+// @ Description: 血壓管家 App 主頁面，包含底部導航欄，用於切換不同頁面
 
 import 'package:flutter/material.dart';
-import '../constants/app_constants.dart';
+import '../l10n/app_localizations_extension.dart';
 import 'home_page.dart';
 import 'record_page.dart';
 import 'stats_page.dart';
@@ -32,11 +33,11 @@ class _MainPageState extends State<MainPage> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: AppConstants.homeTab),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline), label: AppConstants.recordTab),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: AppConstants.statsTab),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: AppConstants.profileTab),
+        items: [
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('首頁')),
+          BottomNavigationBarItem(icon: const Icon(Icons.add_circle_outline), label: context.tr('記錄')),
+          BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('統計')),
+          BottomNavigationBarItem(icon: const Icon(Icons.person), label: context.tr('我的')),
         ],
       ),
     );

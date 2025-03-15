@@ -1,11 +1,12 @@
 /*
  * @ Author: firstfu
- * @ Create Time: 2025-03-16 16:16:42
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 健康建議卡片元件 - 用於顯示健康建議
  */
 
 import 'package:flutter/material.dart';
 import '../../themes/app_theme.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class HealthTipCard extends StatelessWidget {
   final String tip;
@@ -33,9 +34,12 @@ class HealthTipCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('健康小貼士', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                  Text(
+                    context.tr('健康小貼士'),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                  ),
                   const SizedBox(height: 4),
-                  Text(tip, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textPrimaryColor)),
+                  Text(context.tr(tip), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textPrimaryColor)),
                 ],
               ),
             ),

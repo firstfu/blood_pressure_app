@@ -1,6 +1,6 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-15 17:25:30
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 首頁 - 顯示用戶的血壓記錄、健康狀態和趨勢圖表
  */
 
@@ -22,6 +22,7 @@ import '../widgets/home/measurement_status_card.dart';
 import '../widgets/home/last_measurement_card.dart';
 import '../widgets/home/trend_chart_card.dart';
 import '../widgets/home/time_range_selector.dart';
+import '../l10n/app_localizations_extension.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               if (lastRecord != null) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(AppConstants.lastMeasurement, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                  child: Text(context.tr('最近一次測量'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 12),
                 Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: LastMeasurementCard(record: lastRecord)),
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(AppConstants.healthTips, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                child: Text(context.tr('健康建議'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
               ),
               const SizedBox(height: 12),
               ...selectedTips.map((tip) => Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: HealthTipCard(tip: tip))),
@@ -137,13 +138,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   String _getTrendTitle() {
     switch (_selectedTimeRange) {
       case TimeRange.week:
-        return AppConstants.weeklyTrend;
+        return context.tr('近 7 天趨勢');
       case TimeRange.twoWeeks:
-        return AppConstants.twoWeeksTrend;
+        return context.tr('近 2 週趨勢');
       case TimeRange.month:
-        return AppConstants.monthlyTrend;
+        return context.tr('近 1 個月趨勢');
       default:
-        return AppConstants.weeklyTrend;
+        return context.tr('近 7 天趨勢');
     }
   }
 

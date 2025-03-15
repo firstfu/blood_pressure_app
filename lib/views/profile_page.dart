@@ -3,9 +3,10 @@
 // @ Description: 血壓管家 App 個人頁面，用於顯示和管理用戶個人資料和設置
 
 import 'package:flutter/material.dart';
-import '../constants/app_constants.dart';
+import '../l10n/app_localizations_extension.dart';
 import '../services/shared_prefs_service.dart';
 import '../themes/app_theme.dart';
+import 'language_settings_page.dart';
 import 'onboarding_page.dart';
 
 /// ProfilePage 類
@@ -27,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.profileTab), centerTitle: true),
+      appBar: AppBar(title: Text(context.tr('我的')), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -74,13 +75,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(width: 16),
             // 用戶信息
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('用戶名稱', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 4),
-                  Text('點擊編輯個人資料', style: TextStyle(color: AppTheme.textSecondaryColor)),
+                  Text(context.tr('姓名'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text(context.tr('點擊編輯個人資料'), style: const TextStyle(color: AppTheme.textSecondaryColor)),
                 ],
               ),
             ),
@@ -102,12 +103,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('設置', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(context.tr('設定'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
-        _buildSettingItem(Icons.notifications, '提醒設置', '設置測量提醒時間'),
-        _buildSettingItem(Icons.language, '語言設置', '切換應用語言'),
-        _buildSettingItem(Icons.color_lens, '主題設置', '自定義應用外觀'),
-        _buildSettingItem(Icons.security, '隱私設置', '管理數據和隱私'),
+        _buildSettingItem(Icons.notifications, context.tr('提醒設定'), context.tr('設置測量提醒時間'), () {}),
+        _buildSettingItem(Icons.language, context.tr('語言設定'), context.tr('切換應用語言'), _navigateToLanguageSettings),
+        _buildSettingItem(Icons.color_lens, context.tr('主題設定'), context.tr('自定義應用外觀'), () {}),
+        _buildSettingItem(Icons.security, context.tr('隱私設定'), context.tr('管理數據和隱私'), () {}),
       ],
     );
   }
@@ -117,12 +118,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('關於', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(context.tr('關於我們'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
-        _buildSettingItem(Icons.info, '關於應用', '版本信息和開發者'),
-        _buildSettingItem(Icons.help, '幫助與反饋', '獲取幫助或提交反饋'),
-        _buildSettingItem(Icons.star, '評分應用', '在應用商店評分'),
-        _buildSettingItem(Icons.share, '分享應用', '與朋友分享此應用'),
+        _buildSettingItem(Icons.info, context.tr('關於應用'), context.tr('版本信息和開發者'), () {}),
+        _buildSettingItem(Icons.help, context.tr('幫助與反饋'), context.tr('獲取幫助或提交反饋'), () {}),
+        _buildSettingItem(Icons.star, context.tr('評分應用'), context.tr('在應用商店評分'), () {}),
+        _buildSettingItem(Icons.share, context.tr('分享應用'), context.tr('與朋友分享此應用'), () {}),
       ],
     );
   }
@@ -134,10 +135,10 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         const Divider(),
         const SizedBox(height: 12),
-        const Text('開發者選項', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
+        Text(context.tr('開發者選項'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
         const SizedBox(height: 12),
-        _buildDevSettingItem(Icons.refresh, '重置 OnBoarding', '重置引導頁面狀態', _resetOnboarding),
-        _buildDevSettingItem(Icons.delete, '清除所有數據', '刪除應用所有數據', () {
+        _buildDevSettingItem(Icons.refresh, context.tr('重置 OnBoarding'), context.tr('重置引導頁面狀態'), _resetOnboarding),
+        _buildDevSettingItem(Icons.delete, context.tr('清除所有數據'), context.tr('刪除應用所有數據'), () {
           // TODO: 實現清除所有數據功能
         }),
       ],
@@ -145,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   /// 構建設置項
-  Widget _buildSettingItem(IconData icon, String title, String subtitle) {
+  Widget _buildSettingItem(IconData icon, String title, String subtitle, VoidCallback onTap) {
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -156,9 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text(title),
         subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          // TODO: 實現設置項功能
-        },
+        onTap: onTap,
       ),
     );
   }
@@ -186,9 +185,14 @@ class _ProfilePageState extends State<ProfilePage> {
       _devModeCounter++;
       if (_devModeCounter >= 7) {
         _showDevOptions = true;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('開發者選項已啟用')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('開發者選項已啟用'))));
       }
     });
+  }
+
+  /// 導航到語言設定頁面
+  void _navigateToLanguageSettings() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguageSettingsPage()));
   }
 
   /// 重置 OnBoarding 狀態
@@ -198,11 +202,11 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('重置引導頁面'),
-            content: const Text('這將重置應用的引導頁面狀態，下次啟動時將顯示引導頁面。確定要繼續嗎？'),
+            title: Text(context.tr('重置引導頁面')),
+            content: Text(context.tr('這將重置應用的引導頁面狀態，下次啟動時將顯示引導頁面。確定要繼續嗎？')),
             actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('取消')),
-              TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('確定')),
+              TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(context.tr('取消'))),
+              TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(context.tr('確定'))),
             ],
           ),
     );
@@ -211,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (confirm == true) {
       await SharedPrefsService.resetOnBoardingStatus();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('引導頁面狀態已重置')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('引導頁面狀態已重置'))));
 
         // 導航到引導頁面
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const OnboardingPage()));

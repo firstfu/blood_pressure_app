@@ -5,7 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'constants/app_constants.dart';
+import 'l10n/app_localizations.dart';
+import 'providers/locale_provider.dart';
 import 'services/shared_prefs_service.dart';
 import 'themes/app_theme.dart';
 import 'views/main_page.dart';
@@ -21,7 +24,11 @@ void main() async {
   final bool onBoardingCompleted = await SharedPrefsService.isOnBoardingCompleted();
   print('onBoarding 狀態: ${onBoardingCompleted ? '已完成' : '未完成'}');
 
-  runApp(MyApp(onBoardingCompleted: onBoardingCompleted));
+  // 初始化語系提供者
+  final localeProvider = LocaleProvider();
+  await localeProvider.init();
+
+  runApp(MultiProvider(providers: [ChangeNotifierProvider(create: (_) => localeProvider)], child: MyApp(onBoardingCompleted: onBoardingCompleted)));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,6 +38,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 獲取當前語系
+    final localeProvider = Provider.of<LocaleProvider>(context);
+
     return MaterialApp(
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
@@ -38,16 +48,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // 添加本地化支持
       localizationsDelegates: const [
+        AppLocalizationsDelegate(), // 自定義語系代理
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('zh', 'TW'), // 繁體中文
-        Locale('zh', 'CN'), // 簡體中文
-        Locale('en', 'US'), // 英文
-      ],
-      locale: const Locale('zh', 'TW'), // 設置默認語言為繁體中文
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: localeProvider.locale, // 使用 Provider 管理的語系
     );
   }
 }

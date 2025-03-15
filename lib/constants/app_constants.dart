@@ -1,6 +1,8 @@
 // 血壓管家 App 常數檔案
 // 定義應用程式中使用的常數
 
+import 'package:flutter/material.dart';
+
 class AppConstants {
   // 應用程式名稱
   static const String appName = '血壓管家';
@@ -44,16 +46,18 @@ class AppConstants {
   static const String hypertension2Status = '高血壓二級';
   static const String hypertensionCrisisStatus = '高血壓危象';
 
-  // 健康建議文字
+  // 健康建議列表 - 使用鍵值而非完整文本，以便於翻譯
   static const List<String> healthTipsList = [
-    '保持規律測量，每天固定時間測量血壓',
-    '適量運動有助於控制血壓，每天30分鐘中等強度運動',
-    '減少鹽分攝入，每日鹽分攝入量控制在5克以下',
-    '保持健康體重，減輕體重有助於降低血壓',
-    '戒煙限酒，吸煙和過量飲酒會升高血壓',
-    '保持心情愉快，壓力是血壓升高的重要因素',
-    '規律作息，保證充足睡眠有助於血壓穩定',
-    '按時服藥，遵醫囑定期複診',
+    '健康建議_低鹽飲食',
+    '健康建議_規律運動',
+    '健康建議_充足睡眠',
+    '健康建議_戒菸限酒',
+    '健康建議_體重控制',
+    '健康建議_減少壓力',
+    '健康建議_定期檢查',
+    '健康建議_藥物遵從',
+    '健康建議_飲食均衡',
+    '健康建議_水分攝取',
   ];
 
   // OnBoarding 頁面文字
@@ -77,4 +81,27 @@ class AppConstants {
     'assets/images/onboarding_analysis.png',
     'assets/images/onboarding_reminder.png',
   ];
+
+  // 血壓狀態顏色
+  static const Color highBloodPressureColor = Color(0xFFE57373);
+  static const Color normalBloodPressureColor = Color(0xFF81C784);
+  static const Color borderlineBloodPressureColor = Color(0xFFFFD54F);
+  static const Color lowBloodPressureColor = Color(0xFF64B5F6);
+
+  // 心率狀態顏色
+  static const Color highPulseColor = Color(0xFFE57373);
+  static const Color normalPulseColor = Color(0xFF81C784);
+  static const Color lowPulseColor = Color(0xFF64B5F6);
+
+  // 血壓分類閾值
+  static const int highSystolicThreshold = 140;
+  static const int highDiastolicThreshold = 90;
+  static const int lowSystolicThreshold = 90;
+  static const int lowDiastolicThreshold = 60;
+  static const int borderlineSystolicThreshold = 130;
+  static const int borderlineDiastolicThreshold = 85;
+
+  // 心率分類閾值
+  static const int highPulseThreshold = 100;
+  static const int lowPulseThreshold = 60;
 }

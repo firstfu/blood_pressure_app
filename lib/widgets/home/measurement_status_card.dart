@@ -1,11 +1,12 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-16 14:32:30
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 首頁測量狀態卡片組件 - 顯示用戶當日測量狀態
  */
 
 import 'package:flutter/material.dart';
 import '../../themes/app_theme.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class MeasurementStatusCard extends StatelessWidget {
   final bool isMeasuredToday;
@@ -46,13 +47,13 @@ class MeasurementStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isMeasuredToday ? '已完成今日測量' : '今日尚未測量',
+                  isMeasuredToday ? context.tr('已完成今日測量') : context.tr('今日尚未測量'),
                   style: Theme.of(
                     context,
                   ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600, color: isMeasuredToday ? AppTheme.successColor : AppTheme.alertColor),
                 ),
                 if (!isMeasuredToday)
-                  Text('建議每日測量血壓以保持健康追蹤', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                  Text(context.tr('建議每日測量血壓以保持健康追蹤'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
               ],
             ),
           ),

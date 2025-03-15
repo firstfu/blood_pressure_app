@@ -1,6 +1,6 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-16 14:45:30
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 首頁時間範圍選擇器組件 - 用於選擇趨勢圖的時間範圍
  */
 
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../themes/app_theme.dart';
 import '../../services/mock_data_service.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class HomeTimeRangeSelector extends StatelessWidget {
   final TimeRange selectedTimeRange;
@@ -26,9 +27,9 @@ class HomeTimeRangeSelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildTimeRangeButton(context, TimeRange.week, '7天'),
-          _buildTimeRangeButton(context, TimeRange.twoWeeks, '2週'),
-          _buildTimeRangeButton(context, TimeRange.month, '1月'),
+          _buildTimeRangeButton(context, TimeRange.week, context.tr('7天')),
+          _buildTimeRangeButton(context, TimeRange.twoWeeks, context.tr('2週')),
+          _buildTimeRangeButton(context, TimeRange.month, context.tr('1月')),
         ],
       ),
     );

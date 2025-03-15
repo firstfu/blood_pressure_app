@@ -1,6 +1,6 @@
 /*
- * @ Author: 1891_0982
- * @ Create Time: 2025-03-16 14:35:30
+ * @ Author: firstfu
+ * @ Create Time: 2024-05-15 16:16:42
  * @ Description: 血壓記錄 App 首頁最近測量記錄卡片組件 - 顯示最近一次血壓測量記錄
  */
 
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
 import '../../utils/date_time_utils.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class LastMeasurementCard extends StatelessWidget {
   final BloodPressureRecord record;
@@ -19,7 +20,7 @@ class LastMeasurementCard extends StatelessWidget {
     final isBPHigh = record.systolic >= 140 || record.diastolic >= 90;
     final isBPNormal = record.systolic < 120 && record.diastolic < 80;
     final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
-    final statusText = isBPHigh ? '偏高' : (isBPNormal ? '正常' : '臨界');
+    final statusText = isBPHigh ? context.tr('偏高') : (isBPNormal ? context.tr('正常') : context.tr('臨界'));
 
     // 獲取心率狀態顏色
     final pulseColor = _getPulseStatusColor(record.pulse);
@@ -47,12 +48,12 @@ class LastMeasurementCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '今天 ${DateTimeUtils.formatTimeHHMM(record.measureTime)}',
+                  DateTimeUtils.getRelativeTimeDescription(context, record.measureTime),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryColor),
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (statusText == '臨界') {
+                    if (statusText == context.tr('臨界')) {
                       _showBorderlineExplanation(context);
                     }
                   },
@@ -65,7 +66,7 @@ class LastMeasurementCard extends StatelessWidget {
                         Icon(statusIcon, color: statusColor, size: 16),
                         const SizedBox(width: 4),
                         Text(statusText, style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 14)),
-                        if (statusText == '臨界') ...[const SizedBox(width: 4), Icon(Icons.help_outline, color: statusColor, size: 14)],
+                        if (statusText == context.tr('臨界')) ...[const SizedBox(width: 4), Icon(Icons.help_outline, color: statusColor, size: 14)],
                       ],
                     ),
                   ),
@@ -126,7 +127,7 @@ class LastMeasurementCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                           decoration: BoxDecoration(color: pulseColor.withAlpha(26), borderRadius: BorderRadius.circular(4)),
                           child: Text(
-                            _getPulseStatusText(record.pulse),
+                            _getPulseStatusText(context, record.pulse),
                             style: TextStyle(color: pulseColor, fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -141,7 +142,7 @@ class LastMeasurementCard extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                _buildMeasurementTag(context, '備註: ${record.note}'),
+                _buildMeasurementTag(context, '${context.tr('備註')}: ${record.note}'),
                 const SizedBox(width: 8),
                 _buildMeasurementTag(context, record.position),
                 if (record.arm.isNotEmpty) ...[const SizedBox(width: 8), _buildMeasurementTag(context, record.arm)],
@@ -193,13 +194,13 @@ class LastMeasurementCard extends StatelessWidget {
   }
 
   // 獲取心率狀態文字
-  String _getPulseStatusText(int pulse) {
+  String _getPulseStatusText(BuildContext context, int pulse) {
     if (pulse < 60) {
-      return '偏低';
+      return context.tr('偏低');
     } else if (pulse > 100) {
-      return '偏高';
+      return context.tr('偏高');
     } else {
-      return '正常';
+      return context.tr('正常');
     }
   }
 
@@ -217,25 +218,25 @@ class LastMeasurementCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('什麼是臨界血壓？', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(context.tr('什麼是臨界血壓？'), style: const TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('臨界血壓是指血壓值處於正常值和高血壓之間的狀態：'),
-              SizedBox(height: 8),
-              Text('• 收縮壓在 120-139 mmHg 之間'),
-              Text('• 舒張壓在 80-89 mmHg 之間'),
-              SizedBox(height: 12),
-              Text('處於臨界狀態時，雖然尚未達到高血壓標準，但已有發展為高血壓的風險。建議：'),
-              SizedBox(height: 8),
-              Text('• 定期監測血壓變化'),
-              Text('• 保持健康的生活方式'),
-              Text('• 適當控制鹽分攝入'),
-              Text('• 規律運動'),
+              Text(context.tr('臨界血壓是指血壓值處於正常值和高血壓之間的狀態：')),
+              const SizedBox(height: 8),
+              Text(context.tr('• 收縮壓在 120-139 mmHg 之間')),
+              Text(context.tr('• 舒張壓在 80-89 mmHg 之間')),
+              const SizedBox(height: 12),
+              Text(context.tr('處於臨界狀態時，雖然尚未達到高血壓標準，但已有發展為高血壓的風險。建議：')),
+              const SizedBox(height: 8),
+              Text(context.tr('• 定期監測血壓變化')),
+              Text(context.tr('• 保持健康的生活方式')),
+              Text(context.tr('• 適當控制鹽分攝入')),
+              Text(context.tr('• 規律運動')),
             ],
           ),
-          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('了解了'))],
+          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(context.tr('了解了')))],
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         );
       },
