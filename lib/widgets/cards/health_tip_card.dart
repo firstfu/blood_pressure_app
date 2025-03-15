@@ -1,8 +1,11 @@
-// 血壓記錄 App 健康建議卡片元件
-// 用於顯示健康建議
+/*
+ * @ Author: firstfu
+ * @ Create Time: 2025-03-16 16:16:42
+ * @ Description: 血壓記錄 App 健康建議卡片元件 - 用於顯示健康建議
+ */
 
 import 'package:flutter/material.dart';
-import '../themes/app_theme.dart';
+import '../../themes/app_theme.dart';
 
 class HealthTipCard extends StatelessWidget {
   final String tip;

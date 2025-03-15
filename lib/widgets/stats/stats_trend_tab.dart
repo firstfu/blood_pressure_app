@@ -7,9 +7,9 @@
 import 'package:flutter/material.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
-import '../../widgets/trend_chart.dart';
-import '../../widgets/bar_chart.dart';
-import '../../widgets/bp_category_pie_chart.dart';
+import '../../widgets/charts/trend_chart.dart';
+import '../../widgets/charts/bar_chart.dart';
+import '../../widgets/charts/bp_category_pie_chart.dart';
 import '../../widgets/stats/statistics_card.dart';
 import '../../services/mock_data_service.dart';
 
@@ -141,8 +141,6 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
         return TrendChart(records: widget.records, showPulse: _showPulse);
       case ChartType.bar:
         return BloodPressureBarChart(records: widget.records, showPulse: _showPulse);
-      default:
-        return TrendChart(records: widget.records, showPulse: _showPulse);
     }
   }
 

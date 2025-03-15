@@ -6,8 +6,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../models/blood_pressure_record.dart';
-import '../themes/app_theme.dart';
+import '../../models/blood_pressure_record.dart';
+import '../../themes/app_theme.dart';
 
 class BloodPressurePieChart extends StatelessWidget {
   final List<BloodPressureRecord> records;

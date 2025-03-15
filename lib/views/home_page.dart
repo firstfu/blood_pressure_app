@@ -13,7 +13,7 @@ import 'dart:math';
 import '../constants/app_constants.dart';
 import '../models/blood_pressure_record.dart';
 import '../services/mock_data_service.dart';
-import '../widgets/health_tip_card.dart';
+import '../widgets/cards/health_tip_card.dart';
 import '../themes/app_theme.dart';
 import '../views/record_page.dart';
 import '../views/stats_page.dart';

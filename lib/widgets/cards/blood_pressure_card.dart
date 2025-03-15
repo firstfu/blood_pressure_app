@@ -2,9 +2,9 @@
 // 用於顯示血壓記錄
 
 import 'package:flutter/material.dart';
-import '../models/blood_pressure_record.dart';
-import '../utils/date_time_utils.dart';
-import 'status_badge.dart';
+import '../../models/blood_pressure_record.dart';
+import '../../utils/date_time_utils.dart';
+import '../common/status_badge.dart';
 
 class BloodPressureCard extends StatelessWidget {
   final BloodPressureRecord record;

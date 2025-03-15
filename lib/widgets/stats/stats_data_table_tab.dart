@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
 import '../../utils/date_time_utils.dart';
-import '../../widgets/filter_sort_panel.dart';
+import '../../widgets/common/filter_sort_panel.dart';
 
 class StatsDataTableTab extends StatefulWidget {
   final List<BloodPressureRecord> records;

@@ -6,8 +6,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../models/blood_pressure_record.dart';
-import '../constants/app_constants.dart';
+import '../../models/blood_pressure_record.dart';
+import '../../constants/app_constants.dart';
 
 class BPCategoryPieChart extends StatefulWidget {
   final List<BloodPressureRecord> records;

@@ -7,8 +7,8 @@
 import 'package:flutter/material.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
-import '../../widgets/trend_chart.dart';
-import '../../widgets/bar_chart.dart';
+import '../../widgets/charts/trend_chart.dart';
+import '../../widgets/charts/bar_chart.dart';
 import '../../services/mock_data_service.dart';
 
 // 圖表類型枚舉
@@ -132,8 +132,6 @@ class _TrendChartCardState extends State<TrendChartCard> {
         return TrendChart(records: widget.records, showPulse: _showPulse);
       case ChartType.bar:
         return BloodPressureBarChart(records: widget.records, showPulse: _showPulse);
-      default:
-        return TrendChart(records: widget.records, showPulse: _showPulse);
     }
   }
 

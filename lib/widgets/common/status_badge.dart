@@ -1,5 +1,8 @@
-// 血壓記錄 App 狀態標籤元件
-// 用於顯示血壓狀態
+/*
+ * @ Author: firstfu
+ * @ Create Time: 2025-03-16 16:16:42
+ * @ Description: 血壓記錄 App 狀態標籤元件 - 用於顯示血壓狀態
+ */
 
 import 'package:flutter/material.dart';
 

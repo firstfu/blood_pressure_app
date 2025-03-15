@@ -20,7 +20,7 @@ import '../widgets/stats/time_range_selector.dart';
 import '../widgets/stats/date_range_selector.dart';
 import '../widgets/stats/stats_trend_tab.dart';
 import '../widgets/stats/stats_data_table_tab.dart';
-import '../widgets/filter_sort_panel.dart';
+import '../widgets/common/filter_sort_panel.dart';
 
 class StatsPage extends StatefulWidget {
   final TimeRange initialTimeRange;

@@ -1,11 +1,14 @@
-// 血壓記錄 App 趨勢圖表元件
-// 用於顯示血壓趨勢
+/*
+ * @ Author: firstfu
+ * @ Create Time: 2025-03-16 16:16:42
+ * @ Description: 血壓記錄 App 趨勢圖表元件 - 用於顯示血壓趨勢
+ */
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../models/blood_pressure_record.dart';
-import '../utils/date_time_utils.dart';
-import '../themes/app_theme.dart';
+import '../../models/blood_pressure_record.dart';
+import '../../utils/date_time_utils.dart';
+import '../../themes/app_theme.dart';
 
 class TrendChart extends StatelessWidget {
   final List<BloodPressureRecord> records;
