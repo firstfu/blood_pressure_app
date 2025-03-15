@@ -42,7 +42,7 @@ class MedicationEffectWidget extends StatelessWidget {
         // 服藥效果摘要
         Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: Colors.blue.withAlpha(26), borderRadius: BorderRadius.circular(8)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -151,7 +151,7 @@ class MedicationEffectWidget extends StatelessWidget {
                 show: true,
                 horizontalInterval: 50,
                 getDrawingHorizontalLine: (value) {
-                  return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+                  return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                 },
               ),
               borderData: FlBorderData(show: false),
@@ -225,7 +225,7 @@ class MedicationEffectWidget extends StatelessWidget {
         const Text('詳細數據', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Table(
-          border: TableBorder.all(color: Colors.grey.withOpacity(0.3)),
+          border: TableBorder.all(color: Colors.grey.withAlpha(77)),
           columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(3), 2: FlexColumnWidth(3)},
           children: [
             const TableRow(

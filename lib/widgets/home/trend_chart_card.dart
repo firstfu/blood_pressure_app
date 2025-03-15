@@ -5,12 +5,10 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
 import '../../widgets/trend_chart.dart';
 import '../../services/mock_data_service.dart';
-import '../../views/stats_page.dart';
 
 class TrendChartCard extends StatefulWidget {
   final List<BloodPressureRecord> records;

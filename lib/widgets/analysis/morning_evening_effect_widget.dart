@@ -44,7 +44,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
         // 晨峰血壓摘要
         Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: Colors.orange.withAlpha(26), borderRadius: BorderRadius.circular(8)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -151,7 +151,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
                 show: true,
                 horizontalInterval: 50,
                 getDrawingHorizontalLine: (value) {
-                  return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+                  return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                 },
               ),
               borderData: FlBorderData(show: false),
@@ -162,13 +162,13 @@ class MorningEveningEffectWidget extends StatelessWidget {
                   barRods: [
                     BarChartRodData(
                       toY: morningAvg['systolic'],
-                      color: Colors.orange,
+                      color: Colors.orange.withAlpha(128),
                       width: 15,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
                     BarChartRodData(
                       toY: eveningAvg['systolic'],
-                      color: Colors.indigo,
+                      color: Colors.indigo.withAlpha(128),
                       width: 15,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
@@ -180,13 +180,13 @@ class MorningEveningEffectWidget extends StatelessWidget {
                   barRods: [
                     BarChartRodData(
                       toY: morningAvg['diastolic'],
-                      color: Colors.orange,
+                      color: Colors.orange.withAlpha(128),
                       width: 15,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
                     BarChartRodData(
                       toY: eveningAvg['diastolic'],
-                      color: Colors.indigo,
+                      color: Colors.indigo.withAlpha(128),
                       width: 15,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
@@ -198,13 +198,13 @@ class MorningEveningEffectWidget extends StatelessWidget {
                   barRods: [
                     BarChartRodData(
                       toY: morningAvg['pulse'],
-                      color: Colors.orange,
+                      color: Colors.orange.withAlpha(128),
                       width: 15,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
                     BarChartRodData(
                       toY: eveningAvg['pulse'],
-                      color: Colors.indigo,
+                      color: Colors.indigo.withAlpha(128),
                       width: 15,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
@@ -231,7 +231,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
         const Text('詳細數據', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Table(
-          border: TableBorder.all(color: Colors.grey.withOpacity(0.3)),
+          border: TableBorder.all(color: Colors.grey.withAlpha(77)),
           columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(3), 2: FlexColumnWidth(3), 3: FlexColumnWidth(3)},
           children: [
             const TableRow(
@@ -292,7 +292,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
         // 健康建議
         Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: Colors.grey.withAlpha(26), borderRadius: BorderRadius.circular(8)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -425,10 +425,10 @@ class MorningEveningEffectWidget extends StatelessWidget {
           horizontalInterval: 20,
           verticalInterval: 1,
           getDrawingHorizontalLine: (value) {
-            return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+            return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
           },
           getDrawingVerticalLine: (value) {
-            return FlLine(color: Colors.grey.withOpacity(0.2), strokeWidth: 1);
+            return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
           },
         ),
         titlesData: FlTitlesData(
@@ -468,7 +468,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
-        borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.withOpacity(0.2))),
+        borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.withAlpha(51))),
         minX: 0,
         maxX: (morningRecords.length > eveningRecords.length ? morningRecords.length : eveningRecords.length) - 1.0,
         minY: 40,
@@ -478,7 +478,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
           LineChartBarData(
             spots: morningSystolicSpots,
             isCurved: true,
-            color: Colors.orange,
+            color: Colors.orange.withAlpha(128),
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: true),
@@ -488,7 +488,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
           LineChartBarData(
             spots: eveningSystolicSpots,
             isCurved: true,
-            color: Colors.indigo,
+            color: Colors.indigo.withAlpha(128),
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: true),
@@ -498,7 +498,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
           LineChartBarData(
             spots: morningDiastolicSpots,
             isCurved: true,
-            color: Colors.orange.withOpacity(0.5),
+            color: Colors.orange.withAlpha(64),
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: true),
@@ -509,7 +509,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
           LineChartBarData(
             spots: eveningDiastolicSpots,
             isCurved: true,
-            color: Colors.indigo.withOpacity(0.5),
+            color: Colors.indigo.withAlpha(64),
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: true),

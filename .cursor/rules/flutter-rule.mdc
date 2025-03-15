@@ -5,7 +5,16 @@ alwaysApply: true
 ---
 
 # 要求
-1、withOpacity 方法已被棄用, 改用 flutter 建議的新方式，請不要自己擴展。
+1、withOpacity 方法已被棄用，請使用 flutter 內建的 .withAlpha() 方法替代。具體轉換方式: 
+   eg:
+   - 將 `Colors.color.withOpacity(0.1)` 替換為 `Colors.color.withAlpha(26)`
+   - 將 `Colors.color.withOpacity(0.2)` 替換為 `Colors.color.withAlpha(51)`
+   - 將 `Colors.color.withOpacity(0.3)` 替換為 `Colors.color.withAlpha(77)`
+   - 將 `Colors.color.withOpacity(0.5)` 替換為 `Colors.color.withAlpha(128)`
+   - 將 `Colors.color.withOpacity(0.7)` 替換為 `Colors.color.withAlpha(179)`
+   - 將 `Colors.color.withOpacity(0.8)` 替換為 `Colors.color.withAlpha(204)`
+   - 將 `Colors.color.withOpacity(0.05)` 替換為 `Colors.color.withAlpha(13)`
+   - 其他透明度值請按照 opacity * 255 的公式轉換為 alpha 值
 2、http請求用Dio
 3、頁面的風格要保持一致性。
 4、頁面程式碼大於600行時請自行拆分組件。
