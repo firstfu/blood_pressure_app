@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../constants/app_constants.dart';
 import '../models/blood_pressure_record.dart';
 import '../themes/app_theme.dart';
+import '../l10n/app_localizations_extension.dart';
 
 class RecordPage extends StatefulWidget {
   final BloodPressureRecord? recordToEdit;
@@ -28,13 +29,16 @@ class _RecordPageState extends State<RecordPage> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  String _selectedPosition = '坐姿';
-  String _selectedArm = '左臂';
+  // 使用語言無關的鍵來存儲選擇的值
+  String _selectedPositionKey = 'sitting';
+  String _selectedArmKey = 'left_arm';
   bool _isMedicated = false;
   bool _isEditing = false;
 
-  final List<String> _positionOptions = ['坐姿', '臥姿', '站姿'];
-  final List<String> _armOptions = ['左臂', '右臂'];
+  // 定義選項的鍵值對
+  final Map<String, String> _positionKeys = {'sitting': '坐姿', 'lying': '臥姿', 'standing': '站姿'};
+
+  final Map<String, String> _armKeys = {'left_arm': '左臂', 'right_arm': '右臂'};
 
   // 定義現代化設計常量
   final double _borderRadius = 16.0;
@@ -70,10 +74,31 @@ class _RecordPageState extends State<RecordPage> {
       _noteController.text = widget.recordToEdit!.note ?? '';
       _selectedDate = widget.recordToEdit!.measureTime;
       _selectedTime = TimeOfDay.fromDateTime(widget.recordToEdit!.measureTime);
-      _selectedPosition = widget.recordToEdit!.position;
-      _selectedArm = widget.recordToEdit!.arm;
+
+      // 根據記錄中的姿勢和部位找到對應的鍵
+      final position = widget.recordToEdit!.position;
+      final arm = widget.recordToEdit!.arm;
+
+      _selectedPositionKey = _positionKeys.entries.firstWhere((entry) => entry.value == position, orElse: () => MapEntry('sitting', '坐姿')).key;
+
+      _selectedArmKey = _armKeys.entries.firstWhere((entry) => entry.value == arm, orElse: () => MapEntry('left_arm', '左臂')).key;
+
       _isMedicated = widget.recordToEdit!.isMedicated;
     }
+  }
+
+  // 獲取當前語系的姿勢選項
+  List<DropdownMenuItem<String>> _getPositionItems() {
+    return _positionKeys.entries.map((entry) {
+      return DropdownMenuItem<String>(value: entry.key, child: Text(context.tr(entry.value)));
+    }).toList();
+  }
+
+  // 獲取當前語系的測量部位選項
+  List<DropdownMenuItem<String>> _getArmItems() {
+    return _armKeys.entries.map((entry) {
+      return DropdownMenuItem<String>(value: entry.key, child: Text(context.tr(entry.value)));
+    }).toList();
   }
 
   @override
@@ -101,13 +126,13 @@ class _RecordPageState extends State<RecordPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CupertinoButton(
-                    child: const Text('取消'),
+                    child: Text(context.tr('取消')),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   CupertinoButton(
-                    child: const Text('確定'),
+                    child: Text(context.tr('確定')),
                     onPressed: () {
                       Navigator.of(context).pop(pickedDate);
                     },
@@ -159,13 +184,13 @@ class _RecordPageState extends State<RecordPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CupertinoButton(
-                    child: const Text('取消'),
+                    child: Text(context.tr('取消')),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   CupertinoButton(
-                    child: const Text('確定'),
+                    child: Text(context.tr('確定')),
                     onPressed: () {
                       Navigator.of(context).pop(pickedDateTime);
                     },
@@ -210,8 +235,8 @@ class _RecordPageState extends State<RecordPage> {
         diastolic: int.parse(_diastolicController.text),
         pulse: int.parse(_pulseController.text),
         measureTime: measureTime,
-        position: _selectedPosition,
-        arm: _selectedArm,
+        position: _positionKeys[_selectedPositionKey]!,
+        arm: _armKeys[_selectedArmKey]!,
         note: _noteController.text.isEmpty ? null : _noteController.text,
         isMedicated: _isMedicated,
       );
@@ -219,7 +244,7 @@ class _RecordPageState extends State<RecordPage> {
       // 顯示成功消息
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_isEditing ? '記錄已更新' : '記錄已保存', style: TextStyle(fontSize: _contentFontSize)),
+          content: Text(_isEditing ? context.tr('記錄已更新') : context.tr('記錄已保存'), style: TextStyle(fontSize: _contentFontSize)),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -247,8 +272,8 @@ class _RecordPageState extends State<RecordPage> {
     setState(() {
       _selectedDate = DateTime.now();
       _selectedTime = TimeOfDay.now();
-      _selectedPosition = '坐姿';
-      _selectedArm = '左臂';
+      _selectedPositionKey = 'sitting';
+      _selectedArmKey = 'left_arm';
       _isMedicated = false;
     });
   }
@@ -409,19 +434,36 @@ class _RecordPageState extends State<RecordPage> {
 
   // 將日期格式化為中文顯示
   String _formatDateInChinese(DateTime date) {
-    final List<String> chineseMonths = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-    return '${date.year}年${chineseMonths[date.month - 1]}${date.day}日';
+    // 根據當前語系決定日期格式
+    final locale = Localizations.localeOf(context).toString();
+
+    if (locale == 'zh_TW') {
+      final List<String> chineseMonths = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+      return '${date.year}年${chineseMonths[date.month - 1]}${date.day}日';
+    } else {
+      // 英文格式
+      final List<String> englishMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return '${englishMonths[date.month - 1]} ${date.day}, ${date.year}';
+    }
   }
 
-  // 將時間格式化為中文顯示
+  // 將時間格式化為顯示
   String _formatTimeInChinese(TimeOfDay time) {
     final hour = time.hour;
     final minute = time.minute.toString().padLeft(2, '0');
+    final locale = Localizations.localeOf(context).toString();
 
-    if (hour < 12) {
-      return '上午 ${hour == 0 ? 12 : hour}:$minute';
+    if (locale == 'zh_TW') {
+      if (hour < 12) {
+        return '上午 ${hour == 0 ? 12 : hour}:$minute';
+      } else {
+        return '下午 ${hour == 12 ? 12 : hour - 12}:$minute';
+      }
     } else {
-      return '下午 ${hour == 12 ? 12 : hour - 12}:$minute';
+      // 英文格式
+      final period = hour < 12 ? 'AM' : 'PM';
+      final hour12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+      return '$hour12:$minute $period';
     }
   }
 
@@ -492,8 +534,8 @@ class _RecordPageState extends State<RecordPage> {
       diastolic: diastolic,
       pulse: int.tryParse(_pulseController.text) ?? 0,
       measureTime: DateTime.now(),
-      position: _selectedPosition,
-      arm: _selectedArm,
+      position: _positionKeys[_selectedPositionKey]!,
+      arm: _armKeys[_selectedArmKey]!,
     );
 
     final status = tempRecord.getBloodPressureStatus();
@@ -512,12 +554,12 @@ class _RecordPageState extends State<RecordPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('血壓狀態預覽', Icons.health_and_safety),
+          _buildSectionTitle(context.tr('血壓狀態預覽'), Icons.health_and_safety),
           Row(
             children: [
               Container(width: 16, height: 16, decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle)),
               SizedBox(width: _spacing),
-              Text(status, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: statusColor)),
+              Text(context.tr(status), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: statusColor)),
             ],
           ),
           SizedBox(height: _spacing),
@@ -528,7 +570,7 @@ class _RecordPageState extends State<RecordPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '收縮壓: $systolic mmHg, 舒張壓: $diastolic mmHg',
+                  '${context.tr('收縮壓')}: $systolic mmHg, ${context.tr('舒張壓')}: $diastolic mmHg',
                   style: TextStyle(fontSize: _contentFontSize, color: _textColor, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: _smallSpacing),
@@ -546,15 +588,15 @@ class _RecordPageState extends State<RecordPage> {
     String description = '';
 
     if (status == AppConstants.normalStatus) {
-      description = '您的血壓處於正常範圍，繼續保持健康的生活方式。';
+      description = context.tr('您的血壓處於正常範圍，繼續保持健康的生活方式。');
     } else if (status == AppConstants.elevatedStatus) {
-      description = '您的血壓略高於正常範圍，建議增加運動並減少鹽分攝入。';
+      description = context.tr('您的血壓略高於正常範圍，建議增加運動並減少鹽分攝入。');
     } else if (status == AppConstants.hypertension1Status) {
-      description = '您的血壓處於高血壓一級，建議諮詢醫生並調整生活方式。';
+      description = context.tr('您的血壓處於高血壓一級，建議諮詢醫生並調整生活方式。');
     } else if (status == AppConstants.hypertension2Status) {
-      description = '您的血壓處於高血壓二級，請盡快諮詢醫生並遵循治療方案。';
+      description = context.tr('您的血壓處於高血壓二級，請盡快諮詢醫生並遵循治療方案。');
     } else if (status == AppConstants.hypertensionCrisisStatus) {
-      description = '您的血壓處於危險水平，請立即就醫！';
+      description = context.tr('您的血壓處於危險水平，請立即就醫！');
     }
 
     return Text(description, style: TextStyle(fontSize: _smallFontSize, height: 1.5, color: _textColor));
@@ -568,9 +610,14 @@ class _RecordPageState extends State<RecordPage> {
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        title: Text(_isEditing ? '編輯血壓記錄' : '新增血壓記錄', style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(
+          _isEditing ? context.tr('編輯記錄') : context.tr('新增記錄'),
+          style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         iconTheme: const IconThemeData(color: Colors.white),
-        actions: [if (!_isEditing) IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: '重置表單')],
+        actions: [
+          if (!_isEditing) IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: context.tr('重置表單')),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(_spacing),
@@ -586,23 +633,23 @@ class _RecordPageState extends State<RecordPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('血壓數值', Icons.favorite_border),
+                    _buildSectionTitle(context.tr('血壓數值'), Icons.favorite_border),
                     Row(
                       children: [
                         Expanded(
                           child: _buildTextField(
                             controller: _systolicController,
-                            label: '收縮壓 (mmHg)',
+                            label: "${context.tr('收縮壓')} (mmHg)",
                             icon: Icons.arrow_upward,
                             keyboardType: TextInputType.number,
                             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return '請輸入收縮壓';
+                                return context.tr('請輸入收縮壓');
                               }
                               final systolic = int.tryParse(value);
                               if (systolic == null || systolic < 60 || systolic > 250) {
-                                return '收縮壓應在60-250之間';
+                                return context.tr('收縮壓應在60-250之間');
                               }
                               return null;
                             },
@@ -612,17 +659,17 @@ class _RecordPageState extends State<RecordPage> {
                         Expanded(
                           child: _buildTextField(
                             controller: _diastolicController,
-                            label: '舒張壓 (mmHg)',
+                            label: "${context.tr('舒張壓')} (mmHg)",
                             icon: Icons.arrow_downward,
                             keyboardType: TextInputType.number,
                             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return '請輸入舒張壓';
+                                return context.tr('請輸入舒張壓');
                               }
                               final diastolic = int.tryParse(value);
                               if (diastolic == null || diastolic < 40 || diastolic > 150) {
-                                return '舒張壓應在40-150之間';
+                                return context.tr('舒張壓應在40-150之間');
                               }
                               return null;
                             },
@@ -632,17 +679,17 @@ class _RecordPageState extends State<RecordPage> {
                     ),
                     _buildTextField(
                       controller: _pulseController,
-                      label: '心率 (bpm)',
+                      label: "${context.tr('心率')} (bpm)",
                       icon: Icons.favorite,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '請輸入心率';
+                          return context.tr('請輸入心率');
                         }
                         final pulse = int.tryParse(value);
                         if (pulse == null || pulse < 40 || pulse > 200) {
-                          return '心率應在40-200之間';
+                          return context.tr('心率應在40-200之間');
                         }
                         return null;
                       },
@@ -659,7 +706,7 @@ class _RecordPageState extends State<RecordPage> {
                 decoration: BoxDecoration(color: _cardColor, borderRadius: BorderRadius.circular(_borderRadius)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [_buildSectionTitle('測量時間', Icons.access_time), _buildDateTimePicker()],
+                  children: [_buildSectionTitle(context.tr('測量時間'), Icons.access_time), _buildDateTimePicker()],
                 ),
               ),
 
@@ -672,22 +719,19 @@ class _RecordPageState extends State<RecordPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('測量條件', Icons.settings),
+                    _buildSectionTitle(context.tr('測量條件'), Icons.settings),
                     Row(
                       children: [
                         Expanded(
                           child: _buildDropdown<String>(
-                            label: '測量姿勢',
+                            label: context.tr('測量姿勢'),
                             icon: Icons.accessibility,
-                            value: _selectedPosition,
-                            items:
-                                _positionOptions.map((position) {
-                                  return DropdownMenuItem<String>(value: position, child: Text(position));
-                                }).toList(),
+                            value: _selectedPositionKey,
+                            items: _getPositionItems(),
                             onChanged: (value) {
                               if (value != null) {
                                 setState(() {
-                                  _selectedPosition = value;
+                                  _selectedPositionKey = value;
                                 });
                               }
                             },
@@ -696,17 +740,14 @@ class _RecordPageState extends State<RecordPage> {
                         SizedBox(width: _smallSpacing),
                         Expanded(
                           child: _buildDropdown<String>(
-                            label: '測量部位',
+                            label: context.tr('測量部位'),
                             icon: Icons.pan_tool,
-                            value: _selectedArm,
-                            items:
-                                _armOptions.map((arm) {
-                                  return DropdownMenuItem<String>(value: arm, child: Text(arm));
-                                }).toList(),
+                            value: _selectedArmKey,
+                            items: _getArmItems(),
                             onChanged: (value) {
                               if (value != null) {
                                 setState(() {
-                                  _selectedArm = value;
+                                  _selectedArmKey = value;
                                 });
                               }
                             },
@@ -715,8 +756,8 @@ class _RecordPageState extends State<RecordPage> {
                       ],
                     ),
                     _buildSwitchOption(
-                      title: '是否服藥',
-                      subtitle: '測量前是否服用降壓藥物',
+                      title: context.tr('是否服藥'),
+                      subtitle: context.tr('測量前是否服用降壓藥物'),
                       value: _isMedicated,
                       onChanged: (value) {
                         setState(() {
@@ -737,8 +778,14 @@ class _RecordPageState extends State<RecordPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('備註', Icons.note_alt),
-                    _buildTextField(controller: _noteController, label: '備註（選填）', icon: Icons.note, hint: '例如：飯後測量、運動後測量等', maxLines: 3),
+                    _buildSectionTitle(context.tr('備註'), Icons.note_alt),
+                    _buildTextField(
+                      controller: _noteController,
+                      label: context.tr('備註（選填）'),
+                      icon: Icons.note,
+                      hint: context.tr('例如：飯後測量、運動後測量等'),
+                      maxLines: 3,
+                    ),
                   ],
                 ),
               ),
@@ -749,7 +796,7 @@ class _RecordPageState extends State<RecordPage> {
               if (_systolicController.text.isNotEmpty && _diastolicController.text.isNotEmpty) _buildBloodPressureStatusPreview(),
 
               // 保存按鈕
-              _buildButton(text: _isEditing ? '更新記錄' : '保存記錄', onPressed: _saveRecord),
+              _buildButton(text: _isEditing ? context.tr('更新記錄') : context.tr('保存記錄'), onPressed: _saveRecord),
 
               SizedBox(height: _spacing),
             ],

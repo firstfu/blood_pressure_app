@@ -3,7 +3,6 @@
 // @ Description: 血壓管家 App 引導頁面，用於首次啟動時向用戶介紹應用功能
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../constants/app_constants.dart';
 import '../services/shared_prefs_service.dart';
 import '../themes/app_theme.dart';
