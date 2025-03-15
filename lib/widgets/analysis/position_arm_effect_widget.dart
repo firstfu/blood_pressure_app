@@ -177,6 +177,7 @@ class PositionArmEffectWidget extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [_buildLegendItem('坐姿', Colors.green), const SizedBox(width: 24), _buildLegendItem('臥姿', Colors.purple)],
@@ -324,6 +325,7 @@ class PositionArmEffectWidget extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [_buildLegendItem('左臂', Colors.blue), const SizedBox(width: 24), _buildLegendItem('右臂', Colors.orange)],
