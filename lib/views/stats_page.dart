@@ -21,6 +21,7 @@ import '../widgets/stats/date_range_selector.dart';
 import '../widgets/stats/stats_trend_tab.dart';
 import '../widgets/stats/stats_data_table_tab.dart';
 import '../widgets/common/filter_sort_panel.dart';
+import '../l10n/app_localizations_extension.dart';
 
 class StatsPage extends StatefulWidget {
   final TimeRange initialTimeRange;
@@ -132,18 +133,18 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        title: const Text('血壓統計', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+        title: Text(context.tr('血壓統計'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
         actions: [
           // 添加進階功能按鈕
           IconButton(
             icon: const Icon(Icons.auto_graph),
-            tooltip: '高級功能',
+            tooltip: context.tr('高級功能'),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
             },
           ),
-          IconButton(icon: const Icon(Icons.picture_as_pdf), tooltip: '生成報告', onPressed: () => _generateReport(context)),
+          IconButton(icon: const Icon(Icons.picture_as_pdf), tooltip: context.tr('生成報告'), onPressed: () => _generateReport(context)),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -152,7 +153,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
           labelColor: Colors.white,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           unselectedLabelColor: Colors.white.withAlpha(179),
-          tabs: const [Tab(text: '趨勢圖'), Tab(text: '歷史記錄')],
+          tabs: [Tab(text: context.tr('趨勢圖')), Tab(text: context.tr('歷史記錄'))],
         ),
       ),
       body: Column(
@@ -199,12 +200,16 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
   // 生成健康報告
   Future<void> _generateReport(BuildContext context) async {
     if (_filteredRecords.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('暫無數據，無法生成報告')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法生成報告'))));
       return;
     }
 
     // 保存當前 context 的引用
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    // 提前獲取並保存需要的翻譯文本
+    final reportTitleText = context.tr('血壓健康報告');
+    final reportFailedText = context.tr('生成報告失敗');
 
     // 顯示加載對話框
     final loadingDialog = _showLoadingDialog(context);
@@ -241,7 +246,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 生成文件名
       final dateFormat = DateFormat('yyyyMMdd');
-      final fileName = '血壓健康報告_${dateFormat.format(DateTime.now())}.pdf';
+      final fileName = '${reportTitleText}_${dateFormat.format(DateTime.now())}.pdf';
 
       // 保存並分享報告
       await ReportService.saveAndShareReport(pdfData, fileName);
@@ -253,7 +258,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       loadingDialog.dismiss();
 
       // 使用之前保存的 scaffoldMessenger 顯示錯誤訊息，避免使用異步操作後的 context
-      scaffoldMessenger.showSnackBar(SnackBar(content: Text('生成報告失敗: $e')));
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text('$reportFailedText: $e')));
     }
   }
 
@@ -274,19 +279,21 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
   }
 
   String _getTimeRangeText() {
+    final localContext = context; // 保存當前 context 的引用
+
     switch (_selectedTimeRange) {
       case TimeRange.week:
-        return '最近 7 天';
+        return localContext.tr('最近 7 天');
       case TimeRange.twoWeeks:
-        return '最近 2 週';
+        return localContext.tr('最近 2 週');
       case TimeRange.month:
-        return '最近 1 個月';
+        return localContext.tr('最近 1 個月');
       case TimeRange.custom:
         if (_startDate != null && _endDate != null) {
           final dateFormat = DateFormat('yyyy/MM/dd');
           return '${dateFormat.format(_startDate!)} 至 ${dateFormat.format(_endDate!)}';
         }
-        return '自定義日期範圍';
+        return localContext.tr('自定義日期範圍');
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../themes/app_theme.dart';
 import '../../services/mock_data_service.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class TimeRangeSelector extends StatelessWidget {
   final TimeRange selectedTimeRange;
@@ -24,15 +25,14 @@ class TimeRangeSelector extends StatelessWidget {
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildTimeRangeButton(context, TimeRange.week, '7天'),
-          const SizedBox(width: 12),
-          _buildTimeRangeButton(context, TimeRange.twoWeeks, '2週'),
-          const SizedBox(width: 12),
-          _buildTimeRangeButton(context, TimeRange.month, '1月'),
-          const SizedBox(width: 12),
-          _buildTimeRangeButton(context, TimeRange.custom, '自訂'),
+          Expanded(child: _buildTimeRangeButton(context, TimeRange.week, context.tr('7天'))),
+          const SizedBox(width: 8),
+          Expanded(child: _buildTimeRangeButton(context, TimeRange.twoWeeks, context.tr('2週'))),
+          const SizedBox(width: 8),
+          Expanded(child: _buildTimeRangeButton(context, TimeRange.month, context.tr('1月'))),
+          const SizedBox(width: 8),
+          Expanded(child: _buildTimeRangeButton(context, TimeRange.custom, context.tr('自訂'))),
         ],
       ),
     );
@@ -50,7 +50,8 @@ class TimeRangeSelector extends StatelessWidget {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.primaryColor : Colors.white,
           borderRadius: BorderRadius.circular(24),

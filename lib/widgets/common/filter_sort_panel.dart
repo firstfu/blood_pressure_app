@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import '../../themes/app_theme.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 enum SortField { time, systolic, diastolic, pulse }
 
@@ -109,7 +110,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('篩選與排序', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[800])),
+                Text(context.tr('篩選與排序'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[800])),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.of(context).pop(),
@@ -130,7 +131,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
               unselectedLabelColor: Colors.grey[600],
               indicatorWeight: 3,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              tabs: const [Tab(text: '篩選'), Tab(text: '排序')],
+              tabs: [Tab(text: context.tr('篩選')), Tab(text: context.tr('排序'))],
             ),
           ),
           // 標籤頁內容
@@ -168,7 +169,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text('重置'),
+                      child: Text(context.tr('重置')),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -190,7 +191,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                         elevation: 2,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text('應用'),
+                      child: Text(context.tr('應用')),
                     ),
                   ),
                 ],
@@ -210,7 +211,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
         children: [
           // 收縮壓範圍
           _buildRangeSlider(
-            title: '收縮壓範圍 (mmHg)',
+            title: '${context.tr('收縮壓')}範圍 (mmHg)',
             min: 70,
             max: 200,
             divisions: 130,
@@ -224,7 +225,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           const SizedBox(height: 16),
           // 舒張壓範圍
           _buildRangeSlider(
-            title: '舒張壓範圍 (mmHg)',
+            title: '${context.tr('舒張壓')}範圍 (mmHg)',
             min: 40,
             max: 130,
             divisions: 90,
@@ -238,7 +239,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           const SizedBox(height: 16),
           // 心率範圍
           _buildRangeSlider(
-            title: '心率範圍 (bpm)',
+            title: '${context.tr('心率')}範圍 (bpm)',
             min: 40,
             max: 160,
             divisions: 120,
@@ -321,17 +322,17 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('排序依據', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
+            Text(context.tr('排序依據'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
             const SizedBox(height: 4),
-            _buildSortFieldRadio(SortField.time, '測量時間'),
-            _buildSortFieldRadio(SortField.systolic, '收縮壓'),
-            _buildSortFieldRadio(SortField.diastolic, '舒張壓'),
-            _buildSortFieldRadio(SortField.pulse, '心率'),
+            _buildSortFieldRadio(SortField.time, context.tr('測量時間')),
+            _buildSortFieldRadio(SortField.systolic, context.tr('收縮壓')),
+            _buildSortFieldRadio(SortField.diastolic, context.tr('舒張壓')),
+            _buildSortFieldRadio(SortField.pulse, context.tr('心率')),
             const SizedBox(height: 12),
-            Text('排序方式', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
+            Text(context.tr('排序方式'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
             const SizedBox(height: 4),
-            _buildSortOrderRadio(SortOrder.descending, '從高到低'),
-            _buildSortOrderRadio(SortOrder.ascending, '從低到高'),
+            _buildSortOrderRadio(SortOrder.descending, context.tr('從高到低')),
+            _buildSortOrderRadio(SortOrder.ascending, context.tr('從低到高')),
           ],
         ),
       ),

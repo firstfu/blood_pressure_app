@@ -12,6 +12,7 @@ import '../../widgets/charts/bar_chart.dart';
 import '../../widgets/charts/bp_category_pie_chart.dart';
 import '../../widgets/stats/statistics_card.dart';
 import '../../services/mock_data_service.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 // 圖表類型枚舉
 enum ChartType {
@@ -65,53 +66,62 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
           children: [
             // 標題行
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
-                const SizedBox(width: 8),
-                Text('最近2週趨勢', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                Row(
+                  children: [
+                    Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
+                    const SizedBox(width: 8),
+                    Text(context.tr('近 2 週趨勢'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                  ],
+                ),
+                // 心率切換開關
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(context.tr('顯示心率'), style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 14)),
+                    const SizedBox(width: 4),
+                    Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: _showPulse,
+                        onChanged: (value) {
+                          setState(() {
+                            _showPulse = value;
+                          });
+                        },
+                        activeColor: Colors.orange,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            // 控制項行 - 移到下一行以避免水平溢出
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // 圖表類型切換
-                SegmentedButton<ChartType>(
-                  segments: const [
-                    ButtonSegment<ChartType>(
-                      value: ChartType.line,
-                      icon: Icon(Icons.show_chart, size: 16),
-                      label: Text('折線圖', style: TextStyle(fontSize: 12)),
-                    ),
-                    ButtonSegment<ChartType>(
-                      value: ChartType.bar,
-                      icon: Icon(Icons.bar_chart, size: 16),
-                      label: Text('長條圖', style: TextStyle(fontSize: 12)),
-                    ),
-                  ],
-                  selected: {_chartType},
-                  onSelectionChanged: (Set<ChartType> newSelection) {
-                    setState(() {
-                      _chartType = newSelection.first;
-                    });
-                  },
-                  style: ButtonStyle(visualDensity: VisualDensity.compact, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                ),
-                const SizedBox(width: 16),
-                // 在兩種圖表模式下都顯示心率切換
-                Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 14)),
-                const SizedBox(width: 8),
-                Switch(
-                  value: _showPulse,
-                  onChanged: (value) {
-                    setState(() {
-                      _showPulse = value;
-                    });
-                  },
-                  activeColor: Colors.orange,
-                ),
-              ],
+            // 圖表類型切換 - 單獨一行
+            Align(
+              alignment: Alignment.centerRight,
+              child: SegmentedButton<ChartType>(
+                segments: [
+                  ButtonSegment<ChartType>(
+                    value: ChartType.line,
+                    icon: const Icon(Icons.show_chart, size: 16),
+                    label: Text(context.tr('折線圖'), style: const TextStyle(fontSize: 12)),
+                  ),
+                  ButtonSegment<ChartType>(
+                    value: ChartType.bar,
+                    icon: const Icon(Icons.bar_chart, size: 16),
+                    label: Text(context.tr('長條圖'), style: const TextStyle(fontSize: 12)),
+                  ),
+                ],
+                selected: {_chartType},
+                onSelectionChanged: (Set<ChartType> newSelection) {
+                  setState(() {
+                    _chartType = newSelection.first;
+                  });
+                },
+                style: ButtonStyle(visualDensity: VisualDensity.compact, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+              ),
             ),
             const SizedBox(height: 16),
             SizedBox(height: 250, child: _buildChart()),
@@ -130,7 +140,7 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
           children: [
             Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
             const SizedBox(height: 16),
-            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
           ],
         ),
       );
@@ -158,7 +168,7 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
               children: [
                 Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
                 const SizedBox(width: 8),
-                Text('血壓分類統計', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                Text(context.tr('血壓分類統計'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
               ],
             ),
             const SizedBox(height: 20),
