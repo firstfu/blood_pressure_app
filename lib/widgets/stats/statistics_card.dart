@@ -44,6 +44,9 @@ class StatisticsCard extends StatelessWidget {
     final maxPulse = records.map((e) => e.pulse).reduce((a, b) => a > b ? a : b);
     final minPulse = records.map((e) => e.pulse).reduce((a, b) => a < b ? a : b);
 
+    // 獲取「筆」的翻譯
+    final recordUnit = context.tr('筆');
+
     return Card(
       elevation: 2,
       shadowColor: AppTheme.primaryColor.withAlpha(77),
@@ -72,7 +75,7 @@ class StatisticsCard extends StatelessWidget {
             _buildStatRow(context, context.tr('最高心率'), '$maxPulse bpm', Colors.orange),
             _buildStatRow(context, context.tr('最低心率'), '$minPulse bpm', Colors.orange),
             const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(height: 1)),
-            _buildStatRow(context, context.tr('記錄總數'), '${records.length} 筆', Colors.grey[700]!),
+            _buildStatRow(context, context.tr('記錄總數'), '${records.length} $recordUnit', Colors.grey[700]!),
             _buildStatRow(context, context.tr('記錄時間範圍'), _getTimeRangeText(context), Colors.grey[700]!),
           ],
         ),

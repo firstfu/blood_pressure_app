@@ -5,10 +5,12 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
 import '../../utils/date_time_utils.dart';
 import '../../widgets/common/filter_sort_panel.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class StatsDataTableTab extends StatefulWidget {
   final List<BloodPressureRecord> records;
@@ -95,10 +97,16 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: Row(
             children: [
-              Text('共 ${widget.filteredRecords.length} 筆記錄', style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+              Text(
+                '共 ${widget.filteredRecords.length} ${context.tr('筆')}${context.tr('記錄')}',
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              ),
               if (widget.isFiltered && widget.filteredRecords.length != widget.records.length) ...[
                 const SizedBox(width: 4),
-                Text('(已篩選，原 ${widget.records.length} 筆)', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                Text(
+                  '(${context.tr('已篩選')}，${context.tr('原')} ${widget.records.length} ${context.tr('筆')})',
+                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                ),
               ],
             ],
           ),

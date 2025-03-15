@@ -210,6 +210,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     // 提前獲取並保存需要的翻譯文本
     final reportTitleText = context.tr('血壓健康報告');
     final reportFailedText = context.tr('生成報告失敗');
+    final recordUnitText = context.tr('筆');
 
     // 顯示加載對話框
     final loadingDialog = _showLoadingDialog(context);
@@ -236,6 +237,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         categoryCounts: categoryCounts,
         statistics: statistics,
         timeRangeText: timeRangeText,
+        recordUnit: recordUnitText,
       );
 
       // 檢查 widget 是否仍然掛載在 widget 樹上

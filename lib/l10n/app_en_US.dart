@@ -239,4 +239,6 @@ const Map<String, String> enUS = {
   '高血壓二級': 'Stage 2 Hypertension',
   '高血壓危象': 'Hypertensive Crisis',
   '筆': 'records',
+  '已篩選': 'filtered',
+  '原': 'original',
 };

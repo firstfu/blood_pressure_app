@@ -23,6 +23,7 @@ class ReportService {
     required Map<String, int> categoryCounts,
     required Map<String, double> statistics,
     required String timeRangeText,
+    String recordUnit = '筆',
   }) async {
     // 加載字體
     final fontData = await rootBundle.load('assets/fonts/NotoSansTC-Regular.ttf');
@@ -43,10 +44,10 @@ class ReportService {
         build:
             (context) => [
               // 統計摘要
-              _buildStatisticsSummary(context, ttf, boldTtf, statistics, records.length),
+              _buildStatisticsSummary(context, ttf, boldTtf, statistics, records.length, recordUnit),
               pw.SizedBox(height: 20),
               // 血壓分類統計
-              _buildCategoryStatistics(context, ttf, boldTtf, categoryCounts, records.length),
+              _buildCategoryStatistics(context, ttf, boldTtf, categoryCounts, records.length, recordUnit),
               pw.SizedBox(height: 20),
               // 健康建議
               _buildHealthTips(context, ttf, boldTtf),
@@ -102,7 +103,14 @@ class ReportService {
   }
 
   /// 構建統計摘要
-  static pw.Widget _buildStatisticsSummary(pw.Context context, pw.Font ttf, pw.Font boldTtf, Map<String, double> statistics, int recordCount) {
+  static pw.Widget _buildStatisticsSummary(
+    pw.Context context,
+    pw.Font ttf,
+    pw.Font boldTtf,
+    Map<String, double> statistics,
+    int recordCount,
+    String recordUnit,
+  ) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -139,7 +147,7 @@ class ReportService {
               pw.SizedBox(height: 10),
               pw.Row(
                 children: [
-                  _buildStatItem(ttf, boldTtf, '記錄總數', '$recordCount 筆', PdfColors.blue800),
+                  _buildStatItem(ttf, boldTtf, '記錄總數', '$recordCount $recordUnit', PdfColors.blue800),
                   pw.Expanded(child: pw.Container()),
                   pw.Expanded(child: pw.Container()),
                 ],
@@ -166,7 +174,14 @@ class ReportService {
   }
 
   /// 構建血壓分類統計
-  static pw.Widget _buildCategoryStatistics(pw.Context context, pw.Font ttf, pw.Font boldTtf, Map<String, int> categoryCounts, int totalCount) {
+  static pw.Widget _buildCategoryStatistics(
+    pw.Context context,
+    pw.Font ttf,
+    pw.Font boldTtf,
+    Map<String, int> categoryCounts,
+    int totalCount,
+    String recordUnit,
+  ) {
     // 定義各類別的顏色
     final Map<String, PdfColor> categoryColors = {
       AppConstants.normalStatus: PdfColors.green,
@@ -191,7 +206,7 @@ class ReportService {
               pw.SizedBox(width: 8),
               pw.Expanded(child: pw.Text(category, style: pw.TextStyle(font: ttf, fontSize: 12, color: PdfColors.grey800))),
               pw.SizedBox(width: 8),
-              pw.Text('$count 筆 ($percentage%)', style: pw.TextStyle(font: boldTtf, fontSize: 12, color: color)),
+              pw.Text('$count $recordUnit ($percentage%)', style: pw.TextStyle(font: boldTtf, fontSize: 12, color: color)),
             ],
           ),
         ),
