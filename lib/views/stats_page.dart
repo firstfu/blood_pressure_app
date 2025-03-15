@@ -16,6 +16,7 @@ import '../services/report_service.dart';
 import '../themes/app_theme.dart';
 import '../utils/stats_utils.dart';
 import '../views/advanced_analysis_page.dart';
+import '../views/advanced_features_page.dart';
 import '../widgets/stats/time_range_selector.dart';
 import '../widgets/stats/date_range_selector.dart';
 import '../widgets/stats/stats_trend_tab.dart';
@@ -135,6 +136,14 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         title: const Text('血壓統計', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
         actions: [
+          // 添加進階功能按鈕
+          IconButton(
+            icon: const Icon(Icons.auto_graph),
+            tooltip: '高級功能',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
+            },
+          ),
           // 添加高級分析按鈕
           IconButton(
             icon: const Icon(Icons.analytics),
