@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../themes/app_theme.dart';
@@ -127,36 +128,68 @@ class DateRangeSelector extends StatelessWidget {
     final firstDate = isStartDate ? DateTime(2020) : (startDate ?? DateTime(2020));
     final lastDate = isStartDate ? (endDate ?? DateTime.now()) : DateTime.now();
 
-    final pickedDate = await showDatePicker(
+    DateTime? pickedDate = initialDate;
+
+    await showCupertinoModalPopup(
       context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(primary: AppTheme.primaryColor, onPrimary: Colors.white, onSurface: Colors.black),
-            textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: AppTheme.primaryColor)),
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                    child: Text(context.tr('取消')),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoButton(
+                    child: Text(context.tr('確定')),
+                    onPressed: () {
+                      Navigator.of(context).pop(pickedDate);
+                    },
+                  ),
+                ],
+              ),
+              const Divider(height: 0),
+              Expanded(
+                child: CupertinoDatePicker(
+                  initialDateTime: initialDate,
+                  minimumDate: firstDate,
+                  maximumDate: lastDate,
+                  mode: CupertinoDatePickerMode.date,
+                  onDateTimeChanged: (DateTime newDate) {
+                    pickedDate = newDate;
+                  },
+                  dateOrder: DatePickerDateOrder.ymd,
+                  use24hFormat: true,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ],
           ),
-          child: child!,
         );
       },
-    );
-
-    if (pickedDate != null) {
-      if (isStartDate) {
-        onStartDateChanged(pickedDate);
-        // 如果開始日期晚於結束日期，或結束日期未設置，則將結束日期設為開始日期
-        if (endDate == null || pickedDate.isAfter(endDate!)) {
-          onEndDateChanged(pickedDate);
-        }
-      } else {
-        onEndDateChanged(pickedDate);
-        // 如果結束日期早於開始日期，或開始日期未設置，則將開始日期設為結束日期
-        if (startDate == null || pickedDate.isBefore(startDate!)) {
-          onStartDateChanged(pickedDate);
+    ).then((value) {
+      if (value != null) {
+        if (isStartDate) {
+          onStartDateChanged(value);
+          // 如果開始日期晚於結束日期，或結束日期未設置，則將結束日期設為開始日期
+          if (endDate == null || value.isAfter(endDate!)) {
+            onEndDateChanged(value);
+          }
+        } else {
+          onEndDateChanged(value);
+          // 如果結束日期早於開始日期，或開始日期未設置，則將開始日期設為結束日期
+          if (startDate == null || value.isBefore(startDate!)) {
+            onStartDateChanged(value);
+          }
         }
       }
-    }
+    });
   }
 }
