@@ -28,7 +28,7 @@ class BloodPressureCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(DateTimeUtils.getRelativeTimeDescription(record.measureTime), style: theme.textTheme.bodyMedium),
+                Text(DateTimeUtils.getRelativeTimeDescription(context, record.measureTime), style: theme.textTheme.bodyMedium),
                 StatusBadge(text: status, color: statusColor),
               ],
             ),

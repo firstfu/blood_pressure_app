@@ -653,7 +653,9 @@ class LifestyleAnalysisService {
     return {'systolic': systolicSum / records.length, 'diastolic': diastolicSum / records.length};
   }
 
+  // TODO: 可能用到，也可能沒用到
   // 生成改善建議
+  // ignore: unused_element
   List<String> _generateRecommendations(
     Map<String, dynamic> exerciseCorrelation,
     Map<String, dynamic> sleepCorrelation,
