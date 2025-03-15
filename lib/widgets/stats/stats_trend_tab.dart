@@ -8,9 +8,16 @@ import 'package:flutter/material.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../themes/app_theme.dart';
 import '../../widgets/trend_chart.dart';
+import '../../widgets/bar_chart.dart';
 import '../../widgets/bp_category_pie_chart.dart';
 import '../../widgets/stats/statistics_card.dart';
 import '../../services/mock_data_service.dart';
+
+// 圖表類型枚舉
+enum ChartType {
+  line, // 折線圖
+  bar, // 長條圖
+}
 
 class StatsTrendTab extends StatefulWidget {
   final List<BloodPressureRecord> records;
@@ -26,6 +33,7 @@ class StatsTrendTab extends StatefulWidget {
 
 class _StatsTrendTabState extends State<StatsTrendTab> {
   bool _showPulse = true; // 默認顯示心率
+  ChartType _chartType = ChartType.line; // 默認顯示折線圖
 
   @override
   Widget build(BuildContext context) {
@@ -55,40 +63,87 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 標題行
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
-                    const SizedBox(width: 8),
-                    Text('血壓趨勢', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
-                  ],
-                ),
-                // 添加心率顯示切換
-                Row(
-                  children: [
-                    Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 14)),
-                    const SizedBox(width: 8),
-                    Switch(
-                      value: _showPulse,
-                      onChanged: (value) {
-                        setState(() {
-                          _showPulse = value;
-                        });
-                      },
-                      activeColor: Colors.orange,
+                Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(width: 8),
+                Text('最近2週趨勢', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // 控制項行 - 移到下一行以避免水平溢出
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // 圖表類型切換
+                SegmentedButton<ChartType>(
+                  segments: const [
+                    ButtonSegment<ChartType>(
+                      value: ChartType.line,
+                      icon: Icon(Icons.show_chart, size: 16),
+                      label: Text('折線圖', style: TextStyle(fontSize: 12)),
+                    ),
+                    ButtonSegment<ChartType>(
+                      value: ChartType.bar,
+                      icon: Icon(Icons.bar_chart, size: 16),
+                      label: Text('長條圖', style: TextStyle(fontSize: 12)),
                     ),
                   ],
+                  selected: {_chartType},
+                  onSelectionChanged: (Set<ChartType> newSelection) {
+                    setState(() {
+                      _chartType = newSelection.first;
+                    });
+                  },
+                  style: ButtonStyle(visualDensity: VisualDensity.compact, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                ),
+                const SizedBox(width: 16),
+                // 在兩種圖表模式下都顯示心率切換
+                Text('顯示心率', style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 14)),
+                const SizedBox(width: 8),
+                Switch(
+                  value: _showPulse,
+                  onChanged: (value) {
+                    setState(() {
+                      _showPulse = value;
+                    });
+                  },
+                  activeColor: Colors.orange,
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            SizedBox(height: 250, child: TrendChart(records: widget.records, showPulse: _showPulse)),
+            const SizedBox(height: 16),
+            SizedBox(height: 250, child: _buildChart()),
           ],
         ),
       ),
     );
+  }
+
+  // 根據選擇的圖表類型構建對應的圖表
+  Widget _buildChart() {
+    if (widget.records.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
+            const SizedBox(height: 16),
+            Text('暫無數據', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+          ],
+        ),
+      );
+    }
+
+    switch (_chartType) {
+      case ChartType.line:
+        return TrendChart(records: widget.records, showPulse: _showPulse);
+      case ChartType.bar:
+        return BloodPressureBarChart(records: widget.records, showPulse: _showPulse);
+      default:
+        return TrendChart(records: widget.records, showPulse: _showPulse);
+    }
   }
 
   Widget _buildBloodPressureCategoryCard() {
