@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../models/user_profile.dart';
 import '../services/shared_prefs_service.dart';
@@ -41,6 +42,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // 血型選項
   final List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', '未知'];
+
+  // 定義現代化設計常量
+  final double _borderRadius = 16.0;
+  final double _spacing = 16.0;
+  final double _smallSpacing = 8.0;
+
+  // 主色調
+  final Color _primaryColor = const Color(0xFF4A7BF7);
+  final Color _primaryLightColor = const Color(0xFF6B92FF);
+  final Color _backgroundColor = const Color(0xFFF5F7FA);
+  final Color _cardColor = Colors.white;
+  final Color _textColor = const Color(0xFF2D3748);
+  final Color _secondaryTextColor = const Color(0xFF718096);
+  final Color _borderColor = const Color(0xFFE2E8F0);
+  final Color _iconColor = const Color(0xFF4A7BF7);
+
+  // 字體大小
+  final double _titleFontSize = 20.0;
+  final double _sectionTitleFontSize = 16.0;
+  final double _contentFontSize = 15.0;
+  final double _smallFontSize = 13.0;
 
   @override
   void initState() {
@@ -103,7 +125,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
       await SharedPrefsService.saveUserProfile(_profile);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('個人資料已更新')), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.tr('個人資料已更新')),
+            backgroundColor: _primaryColor,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
         Navigator.pop(context, _profile);
       }
     }
@@ -112,8 +142,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        title: Text(context.tr('編輯個人資料')),
+        backgroundColor: _primaryColor,
+        elevation: 0,
+        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
+        title: Text(context.tr('編輯個人資料'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: _titleFontSize)),
         centerTitle: true,
         actions: [
           TextButton(
@@ -122,203 +156,193 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 基本信息
-              _buildSectionTitle(context.tr('基本信息')),
-              _buildTextField(
-                controller: _nameController,
-                labelText: context.tr('姓名'),
-                hintText: context.tr('請輸入您的姓名'),
-                icon: Icons.person,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.tr('請輸入姓名');
-                  }
-                  return null;
-                },
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildTextField(
-                      controller: _ageController,
-                      labelText: context.tr('年齡'),
-                      hintText: context.tr('歲'),
-                      icon: Icons.cake,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildDropdownField(
-                      labelText: context.tr('性別'),
-                      icon: Icons.wc,
-                      value: _profile.gender,
-                      items: [
-                        DropdownMenuItem(value: 'male', child: Text(context.tr('男'))),
-                        DropdownMenuItem(value: 'female', child: Text(context.tr('女'))),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          _profile.gender = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildTextField(
-                      controller: _heightController,
-                      labelText: context.tr('身高'),
-                      hintText: context.tr('厘米'),
-                      icon: Icons.height,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildTextField(
-                      controller: _weightController,
-                      labelText: context.tr('體重'),
-                      hintText: context.tr('公斤'),
-                      icon: Icons.monitor_weight,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                    ),
-                  ),
-                ],
-              ),
-              _buildDropdownField(
-                labelText: context.tr('血型'),
-                icon: Icons.bloodtype,
-                value: _profile.bloodType,
-                items: _bloodTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _profile.bloodType = value;
-                  });
-                },
-              ),
-
-              // 聯絡信息
-              _buildSectionTitle(context.tr('聯絡信息')),
-              _buildTextField(
-                controller: _emailController,
-                labelText: context.tr('電子郵件'),
-                hintText: context.tr('請輸入您的電子郵件'),
-                icon: Icons.email,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              _buildTextField(
-                controller: _phoneController,
-                labelText: context.tr('電話號碼'),
-                hintText: context.tr('請輸入您的電話號碼'),
-                icon: Icons.phone,
-                keyboardType: TextInputType.phone,
-              ),
-              _buildTextField(
-                controller: _emergencyContactController,
-                labelText: context.tr('緊急聯絡人'),
-                hintText: context.tr('請輸入緊急聯絡人信息'),
-                icon: Icons.contact_phone,
-              ),
-
-              // 健康信息
-              _buildSectionTitle(context.tr('健康信息')),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildSwitchField(
-                      labelText: context.tr('糖尿病'),
-                      value: _profile.hasDiabetes,
-                      onChanged: (value) {
-                        setState(() {
-                          _profile.hasDiabetes = value;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildSwitchField(
-                      labelText: context.tr('吸煙者'),
-                      value: _profile.isSmoker,
-                      onChanged: (value) {
-                        setState(() {
-                          _profile.isSmoker = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              _buildTextField(
-                controller: _cholesterolController,
-                labelText: context.tr('膽固醇水平'),
-                hintText: context.tr('mg/dL'),
-                icon: Icons.science,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-              ),
-              _buildTextField(
-                controller: _medicalConditionsController,
-                labelText: context.tr('醫療狀況'),
-                hintText: context.tr('請輸入您的醫療狀況'),
-                icon: Icons.medical_services,
-                maxLines: 3,
-              ),
-              _buildTextField(
-                controller: _medicationsController,
-                labelText: context.tr('正在服用的藥物'),
-                hintText: context.tr('請輸入您正在服用的藥物'),
-                icon: Icons.medication,
-                maxLines: 3,
-              ),
-              _buildTextField(
-                controller: _allergiesController,
-                labelText: context.tr('過敏史'),
-                hintText: context.tr('請輸入您的過敏史'),
-                icon: Icons.warning,
-                maxLines: 3,
-              ),
-
-              // 其他信息
-              _buildSectionTitle(context.tr('其他信息')),
-              _buildTextField(
-                controller: _notesController,
-                labelText: context.tr('備註'),
-                hintText: context.tr('請輸入其他備註信息'),
-                icon: Icons.note,
-                maxLines: 5,
-              ),
-
-              const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _saveProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: Text(context.tr('保存個人資料'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      body: Container(
+        color: _backgroundColor,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 基本信息
+                _buildSectionTitle(context.tr('基本信息')),
+                _buildTextField(
+                  controller: _nameController,
+                  label: context.tr('姓名'),
+                  hint: context.tr('請輸入您的姓名'),
+                  icon: Icons.person,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.tr('請輸入姓名');
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              const SizedBox(height: 32),
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTextField(
+                        controller: _ageController,
+                        label: context.tr('年齡'),
+                        hint: context.tr('歲'),
+                        icon: Icons.cake,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      ),
+                    ),
+                    SizedBox(width: _spacing),
+                    Expanded(
+                      child: _buildDropdown<String>(
+                        label: context.tr('性別'),
+                        icon: Icons.wc,
+                        value: _profile.gender,
+                        items: [
+                          DropdownMenuItem(value: 'male', child: Text(context.tr('男'))),
+                          DropdownMenuItem(value: 'female', child: Text(context.tr('女'))),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _profile.gender = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTextField(
+                        controller: _heightController,
+                        label: context.tr('身高'),
+                        hint: context.tr('厘米'),
+                        icon: Icons.height,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                      ),
+                    ),
+                    SizedBox(width: _spacing),
+                    Expanded(
+                      child: _buildTextField(
+                        controller: _weightController,
+                        label: context.tr('體重'),
+                        hint: context.tr('公斤'),
+                        icon: Icons.monitor_weight,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                      ),
+                    ),
+                  ],
+                ),
+                _buildDropdown<String>(
+                  label: context.tr('血型'),
+                  icon: Icons.bloodtype,
+                  value: _profile.bloodType,
+                  items: _bloodTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _profile.bloodType = value;
+                    });
+                  },
+                ),
+
+                // 聯絡信息
+                _buildSectionTitle(context.tr('聯絡信息')),
+                _buildTextField(
+                  controller: _emailController,
+                  label: context.tr('電子郵件'),
+                  hint: context.tr('請輸入您的電子郵件'),
+                  icon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                _buildTextField(
+                  controller: _phoneController,
+                  label: context.tr('電話號碼'),
+                  hint: context.tr('請輸入您的電話號碼'),
+                  icon: Icons.phone,
+                  keyboardType: TextInputType.phone,
+                ),
+                _buildTextField(
+                  controller: _emergencyContactController,
+                  label: context.tr('緊急聯絡人'),
+                  hint: context.tr('請輸入緊急聯絡人信息'),
+                  icon: Icons.contact_phone,
+                ),
+
+                // 健康信息
+                _buildSectionTitle(context.tr('健康信息')),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSwitchOption(
+                        title: context.tr('糖尿病'),
+                        subtitle: '',
+                        value: _profile.hasDiabetes,
+                        onChanged: (value) {
+                          setState(() {
+                            _profile.hasDiabetes = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSwitchOption(
+                        title: context.tr('吸煙者'),
+                        subtitle: '',
+                        value: _profile.isSmoker,
+                        onChanged: (value) {
+                          setState(() {
+                            _profile.isSmoker = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                _buildTextField(
+                  controller: _cholesterolController,
+                  label: context.tr('膽固醇水平'),
+                  hint: context.tr('mg/dL'),
+                  icon: Icons.science,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                ),
+                _buildTextField(
+                  controller: _medicalConditionsController,
+                  label: context.tr('醫療狀況'),
+                  hint: context.tr('請輸入您的醫療狀況'),
+                  icon: Icons.medical_services,
+                  maxLines: 3,
+                ),
+                _buildTextField(
+                  controller: _medicationsController,
+                  label: context.tr('正在服用的藥物'),
+                  hint: context.tr('請輸入您正在服用的藥物'),
+                  icon: Icons.medication,
+                  maxLines: 3,
+                ),
+                _buildTextField(
+                  controller: _allergiesController,
+                  label: context.tr('過敏史'),
+                  hint: context.tr('請輸入您的過敏史'),
+                  icon: Icons.warning,
+                  maxLines: 3,
+                ),
+
+                // 其他信息
+                _buildSectionTitle(context.tr('其他信息')),
+                _buildTextField(controller: _notesController, label: context.tr('備註'), hint: context.tr('請輸入其他備註信息'), icon: Icons.note, maxLines: 5),
+
+                SizedBox(height: _spacing),
+                _buildButton(text: context.tr('保存個人資料'), onPressed: _saveProfile, isPrimary: true),
+                SizedBox(height: _spacing),
+              ],
+            ),
           ),
         ),
       ),
@@ -327,84 +351,123 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   /// 構建區段標題
   Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+    return Container(
+      margin: EdgeInsets.only(top: _spacing, bottom: _smallSpacing),
+      child: Row(
+        children: [
+          Container(width: 4, height: 20, decoration: BoxDecoration(color: _primaryColor, borderRadius: BorderRadius.circular(2))),
+          SizedBox(width: _smallSpacing),
+          Text(title, style: TextStyle(fontSize: _sectionTitleFontSize, fontWeight: FontWeight.bold, color: _textColor)),
+        ],
+      ),
     );
   }
 
   /// 構建文本輸入框
   Widget _buildTextField({
     required TextEditingController controller,
-    required String labelText,
-    required String hintText,
+    required String label,
+    required String hint,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
     List<TextInputFormatter>? inputFormatters,
     int maxLines = 1,
     String? Function(String?)? validator,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+    return Container(
+      margin: EdgeInsets.only(bottom: _spacing),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
-          labelText: labelText,
-          hintText: hintText,
-          prefixIcon: Icon(icon, color: AppTheme.primaryColor),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon, color: _iconColor),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(_borderRadius),
+            borderSide: BorderSide(color: _primaryColor, width: 1.5),
           ),
+          filled: true,
+          fillColor: _cardColor,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
+        style: TextStyle(fontSize: _contentFontSize, color: _textColor),
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
-        maxLines: maxLines,
         validator: validator,
+        maxLines: maxLines,
       ),
     );
   }
 
   /// 構建下拉選擇框
-  Widget _buildDropdownField({
-    required String labelText,
+  Widget _buildDropdown<T>({
+    required String label,
     required IconData icon,
-    required String? value,
-    required List<DropdownMenuItem<String>> items,
-    required void Function(String?) onChanged,
+    required T? value,
+    required List<DropdownMenuItem<T>> items,
+    required void Function(T?) onChanged,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: DropdownButtonFormField<String>(
+    return Container(
+      margin: EdgeInsets.only(bottom: _spacing),
+      child: DropdownButtonFormField<T>(
         value: value,
         decoration: InputDecoration(
-          labelText: labelText,
-          prefixIcon: Icon(icon, color: AppTheme.primaryColor),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          labelText: label,
+          prefixIcon: Icon(icon, color: _iconColor),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(_borderRadius),
+            borderSide: BorderSide(color: _primaryColor, width: 1.5),
           ),
+          filled: true,
+          fillColor: _cardColor,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
+        style: TextStyle(fontSize: _contentFontSize, color: _textColor),
+        dropdownColor: _cardColor,
         items: items,
         onChanged: onChanged,
       ),
     );
   }
 
-  /// 構建開關選擇框
-  Widget _buildSwitchField({required String labelText, required bool value, required void Function(bool) onChanged}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        children: [
-          Text(labelText, style: const TextStyle(fontSize: 16)),
-          const Spacer(),
-          Switch(value: value, onChanged: onChanged, activeColor: AppTheme.primaryColor),
-        ],
+  /// 構建開關選項
+  Widget _buildSwitchOption({required String title, required String subtitle, required bool value, required Function(bool) onChanged}) {
+    return Container(
+      margin: EdgeInsets.only(bottom: _spacing),
+      decoration: BoxDecoration(color: _cardColor, borderRadius: BorderRadius.circular(_borderRadius), border: Border.all(color: _borderColor)),
+      child: SwitchListTile(
+        title: Text(title, style: TextStyle(fontSize: _contentFontSize, color: _textColor)),
+        subtitle: subtitle.isNotEmpty ? Text(subtitle, style: TextStyle(fontSize: _smallFontSize, color: _secondaryTextColor)) : null,
+        value: value,
+        activeColor: _primaryColor,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  /// 構建按鈕
+  Widget _buildButton({required String text, required VoidCallback onPressed, bool isPrimary = true}) {
+    return Container(
+      margin: EdgeInsets.only(bottom: _spacing),
+      width: double.infinity,
+      height: 54,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isPrimary ? _primaryColor : Colors.transparent,
+          foregroundColor: isPrimary ? Colors.white : _primaryColor,
+          elevation: isPrimary ? 2 : 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(_borderRadius),
+            side: isPrimary ? BorderSide.none : BorderSide(color: _primaryColor),
+          ),
+        ),
+        child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
     );
   }

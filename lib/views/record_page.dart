@@ -252,13 +252,8 @@ class _RecordPageState extends State<RecordPage> {
         ),
       );
 
-      // 清空表單或返回上一頁
-      if (!_isEditing) {
-        _resetForm();
-        Navigator.pop(context, true);
-      } else {
-        Navigator.pop(context, record);
-      }
+      // 返回上一頁
+      Navigator.pop(context, record);
     }
   }
 
@@ -615,8 +610,14 @@ class _RecordPageState extends State<RecordPage> {
           style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
+        leading:
+            !_isEditing ? IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: context.tr('重置表單')) : null,
         actions: [
-          if (!_isEditing) IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: context.tr('重置表單')),
+          TextButton(
+            onPressed: _saveRecord,
+            style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 16)),
+            child: Text(context.tr('保存'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          ),
         ],
       ),
       body: SingleChildScrollView(
