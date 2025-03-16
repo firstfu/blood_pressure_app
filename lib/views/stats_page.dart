@@ -265,6 +265,11 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       return;
     }
 
+    // 提前獲取並保存需要的翻譯文本
+    final recordDataText = context.tr('血壓記錄數據');
+    String formatGeneratedText(String formatName) => context.tr('$formatName 檔案已生成');
+    final exportFailedText = context.tr('匯出失敗：');
+
     // 顯示加載對話框
     final loadingDialog = _showLoadingDialog(context);
 
@@ -287,12 +292,15 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       loadingDialog.dismiss();
 
       // 分享文件
-      await Share.shareXFiles([XFile(filePath)], text: context.tr('血壓記錄數據'));
+      await Share.shareXFiles([XFile(filePath)], text: recordDataText);
+
+      // 檢查 widget 是否仍然掛載在 widget 樹上
+      if (!mounted) return;
 
       // 顯示成功消息
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(context.tr('$formatName 檔案已生成')), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating));
+      ).showSnackBar(SnackBar(content: Text(formatGeneratedText(formatName)), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating));
     } catch (e) {
       // 檢查 widget 是否仍然掛載在 widget 樹上
       if (!mounted) return;
@@ -303,7 +311,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       // 顯示錯誤消息
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(context.tr('匯出失敗：$e')), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
+      ).showSnackBar(SnackBar(content: Text('$exportFailedText$e'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
     }
   }
 
@@ -322,6 +330,9 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     final reportFailedText = context.tr('生成報告失敗');
     final recordUnitText = context.tr('筆');
 
+    // 提前獲取時間範圍文本
+    final String timeRangeText = _getTimeRangeText(context);
+
     // 顯示加載對話框
     final loadingDialog = _showLoadingDialog(context);
 
@@ -331,9 +342,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 計算血壓分類統計
       final Map<String, int> categoryCounts = StatsUtils.calculateCategoryCounts(_filteredRecords);
-
-      // 獲取時間範圍文本
-      final String timeRangeText = _getTimeRangeText();
 
       // 獲取開始和結束日期
       final DateTime startDate = _startDate ?? DateTime.now().subtract(const Duration(days: 30));
@@ -362,6 +370,14 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 保存並分享報告
       await ReportService.saveAndShareReport(pdfData, fileName);
+
+      // 檢查 widget 是否仍然掛載在 widget 樹上
+      if (!mounted) return;
+
+      // 顯示成功消息
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('${reportTitleText}已生成'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
+      );
     } catch (e) {
       // 檢查 widget 是否仍然掛載在 widget 樹上
       if (!mounted) return;
@@ -382,7 +398,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
   }
 
   // 獲取時間範圍文本
-  String _getTimeRangeText() {
+  String _getTimeRangeText(BuildContext context) {
     switch (_selectedTimeRange) {
       case TimeRange.week:
         return context.tr('近 7 天');
