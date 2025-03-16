@@ -222,7 +222,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
               ],
             ),
             const SizedBox(height: 16),
-            _buildInfoRow(Icons.person, context.tr('Developer'), 'kents'),
+            _buildInfoRow(Icons.person, context.tr('Developer'), 'Phil'),
             InkWell(
               onTap: () => _launchURL('mailto:firefirstfu@gmail.com'),
               child: _buildInfoRow(Icons.email, context.tr('Contact Email'), 'firefirstfu@gmail.com'),
