@@ -223,8 +223,14 @@ class _AboutAppPageState extends State<AboutAppPage> {
             ),
             const SizedBox(height: 16),
             _buildInfoRow(Icons.person, context.tr('Developer'), 'kents'),
-            _buildInfoRow(Icons.email, context.tr('Contact Email'), 'firefirstfu@gmail.com'),
-            _buildInfoRow(Icons.language, context.tr('Official Website'), context.tr('www.bloodpressuremanager.com')),
+            InkWell(
+              onTap: () => _launchURL('mailto:firefirstfu@gmail.com'),
+              child: _buildInfoRow(Icons.email, context.tr('Contact Email'), 'firefirstfu@gmail.com'),
+            ),
+            InkWell(
+              onTap: () => _launchURL('https://www.bloodpressuremanager.com'),
+              child: _buildInfoRow(Icons.language, context.tr('Official Website'), context.tr('www.bloodpressuremanager.com')),
+            ),
           ],
         ),
       ),

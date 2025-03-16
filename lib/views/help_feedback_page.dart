@@ -373,6 +373,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
     // 模擬提交過程
     Future.delayed(const Duration(seconds: 2), () {
+      // 檢查 widget 是否仍然掛載
+      if (!mounted) return;
+
       // 關閉提交中對話框
       Navigator.pop(context);
 
@@ -414,7 +417,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('無法打開 $url'), backgroundColor: AppTheme.warningColor));
       }
     }
