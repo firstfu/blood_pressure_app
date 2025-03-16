@@ -269,6 +269,13 @@ class MockDataService {
           record.measureTime.isAtSameMomentAs(end);
     }).toList();
   }
+
+  // 獲取所有血壓記錄
+  static List<BloodPressureRecord> getAllRecords() {
+    // 在實際應用中，這裡會從資料庫中獲取所有記錄
+    // 這裡為了演示，我們返回所有模擬數據
+    return getMockBloodPressureRecords();
+  }
 }
 
 // 時間範圍枚舉

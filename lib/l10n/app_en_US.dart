@@ -20,6 +20,23 @@ const Map<String, String> enUS = {
   '已篩選': 'Filtered',
   '原': 'Original',
   '範圍': 'Range',
+  '處理中...': 'Processing...',
+  '暫無記錄': 'No Records',
+  '已服藥': 'Medicated',
+
+  // Export Function
+  '選擇匯出格式': 'Select Export Format',
+  '匯出為 CSV 檔案': 'Export as CSV File',
+  '適用於 Excel、Google 試算表等': 'Compatible with Excel, Google Sheets, etc.',
+  '匯出為 Excel 檔案': 'Export as Excel File',
+  '包含格式化和顏色標記': 'Includes formatting and color coding',
+  '匯出': 'Export',
+  '匯出成功': 'Export Successful',
+  '匯出失敗': 'Export Failed',
+  '檔案已儲存至': 'File saved to',
+  '無法儲存檔案': 'Unable to save file',
+  '暫無數據，無法匯出': 'No data available, cannot export',
+  '血壓記錄數據': 'Blood Pressure Records Data',
 
   // App Name
   '血壓管家': 'Blood Pressure Manager',
