@@ -356,69 +356,109 @@ const Map<String, String> enUS = {
   '適用法律': 'Governing Law',
   '條款變更': 'Changes to Terms',
   '聯絡我們': 'Contact Us',
-
-  // Privacy Policy Content
-  'privacy_title': 'Privacy Policy',
-  'privacy_last_updated': 'Last Updated: May 15, 2024',
-  'privacy_introduction':
-      'Thank you for using the "Blood Pressure Manager" application. This Privacy Policy explains how we collect, use, store, and protect your personal information. Please read the following carefully to understand our privacy practices.',
-  'privacy_information_collection': 'Information Collection',
-  'privacy_information_collection_content':
-      'We collect the following information:\n• Personal data you provide (such as name, age, gender, etc.)\n• Health-related information (such as blood pressure readings, heart rate, etc.)\n• Device information (such as device model, operating system version, etc.)\n• Usage statistics',
-  'privacy_information_use': 'Information Use',
-  'privacy_information_use_content':
-      'We use the collected information to:\n• Provide, maintain, and improve our services\n• Analyze usage patterns to optimize user experience\n• Provide personalized health recommendations\n• Communicate with you when necessary',
-  'privacy_data_storage': 'Data Storage',
-  'privacy_data_storage_content':
-      'Your health data is primarily stored on your device. If you choose to use the cloud sync feature, data will be encrypted and stored on our secure servers.',
-  'privacy_data_sharing': 'Data Sharing',
-  'privacy_data_sharing_content':
-      'We do not share your personal information with third parties without your consent, except:\n• When required by law\n• To protect our rights and property\n• In emergency situations to protect your safety or the safety of the public',
-  'privacy_data_security': 'Data Security',
-  'privacy_data_security_content': 'We take reasonable security measures to protect your information from unauthorized access, use, or disclosure.',
-  'privacy_children': 'Children\'s Privacy',
-  'privacy_children_content':
-      'Our services are not directed to children under 13. If we discover that we have collected personal information from children under 13, we will take steps to delete such information promptly.',
-  'privacy_changes': 'Changes to Privacy Policy',
-  'privacy_changes_content':
-      'We may update this Privacy Policy from time to time. When there are significant changes, we will notify you through the application.',
-  'privacy_contact': 'Contact Us',
-  'privacy_contact_content':
-      'If you have any questions or suggestions regarding this Privacy Policy, please contact us at: support@bloodpressuremanager.com',
-
-  // Terms of Use Content
-  'terms_title': 'Terms of Use',
-  'terms_last_updated': 'Last Updated: May 15, 2024',
-  'terms_introduction':
-      'Welcome to the "Blood Pressure Manager" application. Please read the following Terms of Use carefully, as they govern your use of our services.',
-  'terms_acceptance': 'Acceptance of Terms',
-  'terms_acceptance_content':
-      'By using this application, you agree to these terms. If you do not agree to these terms, please do not use this application.',
-  'terms_service_description': 'Service Description',
-  'terms_service_description_content':
-      '"Blood Pressure Manager" provides blood pressure monitoring, recording, and analysis functions to help users track and manage blood pressure health.',
-  'terms_medical_disclaimer': 'Medical Disclaimer',
-  'terms_medical_disclaimer_content':
-      'The information provided by this application is for reference only and does not constitute medical advice. Do not rely on this application to make medical decisions; consult qualified healthcare professionals.',
-  'terms_user_account': 'User Account',
-  'terms_user_account_content':
-      'You are responsible for maintaining the confidentiality of your account information and for all activities under your account.',
-  'terms_prohibited_uses': 'Prohibited Uses',
-  'terms_prohibited_uses_content':
-      'You may not:\n• Use the service in any illegal or unauthorized manner\n• Attempt to interfere with the normal operation of the service\n• Circumvent any security features of the service\n• Use automated processes to access the service',
-  'terms_intellectual_property': 'Intellectual Property',
-  'terms_intellectual_property_content':
-      'This application and its content (including but not limited to text, graphics, logos, icons, images, and software) are protected by copyright, trademark, and other intellectual property laws.',
-  'terms_termination': 'Termination',
-  'terms_termination_content':
-      'We reserve the right to terminate or suspend your use of the service at any time for any reason without prior notice.',
-  'terms_limitation_of_liability': 'Limitation of Liability',
-  'terms_limitation_of_liability_content':
-      'To the maximum extent permitted by law, we are not liable for any direct, indirect, incidental, special, consequential, or punitive damages.',
-  'terms_governing_law': 'Governing Law',
-  'terms_governing_law_content': 'These terms are governed by the laws of Taiwan, without regard to conflict of law principles.',
-  'terms_changes': 'Changes to Terms',
-  'terms_changes_content': 'We reserve the right to modify these terms at any time. Modified terms will be posted in the application.',
-  'terms_contact': 'Contact Us',
   'terms_contact_content': 'If you have any questions about these terms, please contact us at: support@bloodpressuremanager.com',
+
+  // 隱私政策內容 (中文鍵值對應英文翻譯)
+  '1. 資料收集': '1. Data Collection',
+  '我們收集的資訊包括但不限於：': 'The information we collect includes but is not limited to:',
+  '您提供的個人資料，如姓名、電子郵件地址等': 'Personal information you provide, such as name, email address, etc.',
+  '您輸入的健康資料，如血壓讀數、心率等': 'Health data you enter, such as blood pressure readings, heart rate, etc.',
+  '裝置資訊，如裝置型號、作業系統版本等': 'Device information, such as device model, operating system version, etc.',
+  '使用應用程式的相關資訊，如使用頻率、功能使用情況等': 'Information related to app usage, such as frequency of use, feature usage, etc.',
+
+  '2. 資料使用': '2. Data Usage',
+  '我們使用收集的資訊用於：': 'We use the collected information for:',
+  '提供、維護和改進我們的服務': 'Providing, maintaining, and improving our services',
+  '為您提供個人化的健康建議和提醒': 'Providing personalized health recommendations and reminders',
+  '分析使用模式以改進用戶體驗': 'Analyzing usage patterns to improve user experience',
+  '與您溝通有關服務更新和新功能': 'Communicating with you about service updates and new features',
+
+  '3. 資料共享': '3. Data Sharing',
+  '我們不會出售您的個人資料。我們可能在以下情況下共享您的資訊：': 'We do not sell your personal information. We may share your information in the following circumstances:',
+  '經您明確同意': 'With your explicit consent',
+  '與提供服務所需的第三方服務提供商共享': 'With third-party service providers necessary for providing our services',
+  '為遵守法律要求或保護我們的權利': 'To comply with legal requirements or protect our rights',
+
+  '4. 資料安全': '4. Data Security',
+  '我們採取合理的安全措施保護您的資訊不被未經授權的訪問、使用或披露。然而，沒有任何網絡或電子存儲方法是100%安全的。':
+      'We take reasonable security measures to protect your information from unauthorized access, use, or disclosure. However, no network or electronic storage method is 100% secure.',
+
+  '5. 您的權利': '5. Your Rights',
+  '您有權：': 'You have the right to:',
+  '訪問、更正或刪除您的個人資料': 'Access, correct, or delete your personal information',
+  '限制或反對我們處理您的資料': 'Restrict or object to our processing of your data',
+  '要求資料可攜性': 'Request data portability',
+  '撤回同意': 'Withdraw consent',
+
+  '6. 兒童隱私': '6. Children\'s Privacy',
+  '我們的服務不面向13歲以下兒童。我們不會故意收集13歲以下兒童的個人資料。':
+      'Our services are not directed at children under 13. We do not knowingly collect personal information from children under 13.',
+
+  '7. 隱私政策變更': '7. Changes to Privacy Policy',
+  '我們可能會不時更新本隱私政策。更新後的政策將在應用程式中發布，並在重大變更時通知您。':
+      'We may update this Privacy Policy from time to time. The updated policy will be posted in the app, and you will be notified of significant changes.',
+
+  '8. 聯絡我們': '8. Contact Us',
+  '如果您對本隱私政策有任何疑問或建議，請通過以下方式聯絡我們：':
+      'If you have any questions or suggestions about this Privacy Policy, please contact us through the following methods:',
+  '電子郵件: firefirstfu@gmail.com': 'Email: firefirstfu@gmail.com',
+
+  // 使用條款內容 (中文鍵值對應英文翻譯)
+  '1. 接受條款': '1. Acceptance of Terms',
+  '通過下載、安裝或使用血壓管家應用程式（以下簡稱"應用程式"），您同意受本使用條款的約束。如果您不同意這些條款，請勿使用本應用程式。':
+      'By downloading, installing, or using the Blood Pressure Manager application (hereinafter referred to as the "Application"), you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this Application.',
+
+  '2. 使用許可': '2. License to Use',
+  '我們授予您有限的、非獨占的、不可轉讓的許可，以在您擁有或控制的裝置上下載、安裝和使用本應用程式，僅供個人、非商業用途。':
+      'We grant you a limited, non-exclusive, non-transferable license to download, install, and use the Application on devices you own or control, solely for personal, non-commercial purposes.',
+
+  '3. 使用限制': '3. Use Restrictions',
+  '您同意不會：': 'You agree not to:',
+  '出租、租賃、出借、銷售、再分發或再授權本應用程式': 'Rent, lease, lend, sell, redistribute, or sublicense the Application',
+  '複製、反編譯、反向工程、拆解、嘗試獲取源代碼、修改或創建本應用程式的衍生作品':
+      'Copy, decompile, reverse engineer, disassemble, attempt to derive the source code, modify, or create derivative works of the Application',
+  '移除、更改或遮蓋本應用程式中的任何版權、商標或其他專有權聲明': 'Remove, alter, or obscure any copyright, trademark, or other proprietary rights notices from the Application',
+  '使用本應用程式進行任何非法、欺詐或未經授權的目的': 'Use the Application for any illegal, fraudulent, or unauthorized purpose',
+
+  '4. 健康資訊免責聲明': '4. Health Information Disclaimer',
+  '本應用程式提供的資訊僅供參考，不構成醫療建議。應用程式不應被用作診斷工具或替代專業醫療諮詢、診斷或治療。':
+      'The information provided by this Application is for reference only and does not constitute medical advice. The Application should not be used as a diagnostic tool or as a substitute for professional medical consultation, diagnosis, or treatment.',
+  '我們建議您在做出任何健康相關決定前諮詢合格的醫療專業人員。如果您認為自己可能有醫療緊急情況，請立即聯絡您的醫生或撥打緊急服務電話。':
+      'We recommend that you consult qualified medical professionals before making any health-related decisions. If you believe you may have a medical emergency, please immediately contact your doctor or call emergency services.',
+
+  '5. 用戶內容': '5. User Content',
+  '您對您通過本應用程式提交、發布或顯示的任何內容（包括但不限於血壓讀數、健康資料等）負全部責任。':
+      'You are fully responsible for any content you submit, post, or display through the Application (including but not limited to blood pressure readings, health data, etc.).',
+  '通過提交內容，您授予我們全球性的、非獨占的、免版稅的許可，以使用、複製、修改、創建衍生作品、分發、公開展示和以其他方式利用該內容，用於提供和改進我們的服務。':
+      'By submitting content, you grant us a worldwide, non-exclusive, royalty-free license to use, copy, modify, create derivative works, distribute, publicly display, and otherwise exploit such content for the purpose of providing and improving our services.',
+
+  '6. 隱私': '6. Privacy',
+  '我們根據我們的隱私政策收集、使用和處理您的個人資料。通過使用本應用程式，您同意我們按照隱私政策處理您的資訊。':
+      'We collect, use, and process your personal information in accordance with our Privacy Policy. By using the Application, you agree to our processing of your information as set forth in the Privacy Policy.',
+
+  '7. 終止': '7. Termination',
+  '如果您違反本使用條款的任何條款，我們可以終止或暫停您對本應用程式的訪問，恕不另行通知。':
+      'If you breach any term of these Terms of Use, we may terminate or suspend your access to the Application without prior notice.',
+
+  '8. 免責聲明': '8. Disclaimer',
+  '本應用程式按"現狀"和"可用"的基礎提供，不提供任何形式的明示或暗示保證。':
+      'The Application is provided on an "as is" and "as available" basis, without any warranties of any kind, either express or implied.',
+  '我們不保證本應用程式將無錯誤或不間斷運行，也不保證缺陷將被糾正，或本應用程式或提供它的伺服器沒有病毒或其他有害成分。':
+      'We do not guarantee that the Application will be error-free or uninterrupted, nor do we guarantee that defects will be corrected or that the Application or the server that makes it available are free of viruses or other harmful components.',
+
+  '9. 責任限制': '9. Limitation of Liability',
+  '在法律允許的最大範圍內，我們不對因使用或無法使用本應用程式而導致的任何直接、間接、附帶、特殊、衍生或懲罰性損害負責。':
+      'To the maximum extent permitted by law, we shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages resulting from the use or inability to use the Application.',
+
+  '10. 條款變更': '10. Changes to Terms',
+  '我們保留隨時修改或替換這些條款的權利。修改後的條款將在應用程式中發布。繼續使用本應用程式即表示您同意受修改後的條款約束。':
+      'We reserve the right to modify or replace these terms at any time. The modified terms will be posted in the Application. Continued use of the Application after such changes means you agree to be bound by the modified terms.',
+
+  '11. 適用法律': '11. Governing Law',
+  '這些條款受中華民國法律管轄，不考慮法律衝突原則。':
+      'These terms are governed by the laws of the Republic of China (Taiwan), without regard to principles of conflict of laws.',
+
+  '12. 聯絡我們': '12. Contact Us',
+  '如果您對本使用條款有任何疑問或建議，請通過以下方式聯絡我們：':
+      'If you have any questions or suggestions about these Terms of Use, please contact us through the following methods:',
 };

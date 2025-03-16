@@ -16,7 +16,7 @@ class PrivacyPolicyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.tr('隱私政策')),
+        title: Text(context.tr('Privacy Policy')),
         centerTitle: true,
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: Colors.white,
@@ -32,7 +32,7 @@ class PrivacyPolicyPage extends StatelessWidget {
               const SizedBox(height: 16),
 
               // 隱私政策內容
-              _buildSectionTitle(context, '1. ${context.tr('資料收集')}'),
+              _buildSectionTitle(context, context.tr('1. 資料收集')),
               _buildParagraph(context, context.tr('我們收集的資訊包括但不限於：')),
               _buildBulletPoint(context, context.tr('您提供的個人資料，如姓名、電子郵件地址等')),
               _buildBulletPoint(context, context.tr('您輸入的健康資料，如血壓讀數、心率等')),
@@ -41,7 +41,7 @@ class PrivacyPolicyPage extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '2. ${context.tr('資料使用')}'),
+              _buildSectionTitle(context, context.tr('2. 資料使用')),
               _buildParagraph(context, context.tr('我們使用收集的資訊用於：')),
               _buildBulletPoint(context, context.tr('提供、維護和改進我們的服務')),
               _buildBulletPoint(context, context.tr('為您提供個人化的健康建議和提醒')),
@@ -50,7 +50,7 @@ class PrivacyPolicyPage extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '3. ${context.tr('資料共享')}'),
+              _buildSectionTitle(context, context.tr('3. 資料共享')),
               _buildParagraph(context, context.tr('我們不會出售您的個人資料。我們可能在以下情況下共享您的資訊：')),
               _buildBulletPoint(context, context.tr('經您明確同意')),
               _buildBulletPoint(context, context.tr('與提供服務所需的第三方服務提供商共享')),
@@ -58,12 +58,12 @@ class PrivacyPolicyPage extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '4. ${context.tr('資料安全')}'),
+              _buildSectionTitle(context, context.tr('4. 資料安全')),
               _buildParagraph(context, context.tr('我們採取合理的安全措施保護您的資訊不被未經授權的訪問、使用或披露。然而，沒有任何網絡或電子存儲方法是100%安全的。')),
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '5. ${context.tr('您的權利')}'),
+              _buildSectionTitle(context, context.tr('5. 您的權利')),
               _buildParagraph(context, context.tr('您有權：')),
               _buildBulletPoint(context, context.tr('訪問、更正或刪除您的個人資料')),
               _buildBulletPoint(context, context.tr('限制或反對我們處理您的資料')),
@@ -72,19 +72,19 @@ class PrivacyPolicyPage extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '6. ${context.tr('兒童隱私')}'),
+              _buildSectionTitle(context, context.tr('6. 兒童隱私')),
               _buildParagraph(context, context.tr('我們的服務不面向13歲以下兒童。我們不會故意收集13歲以下兒童的個人資料。')),
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '7. ${context.tr('隱私政策變更')}'),
+              _buildSectionTitle(context, context.tr('7. 隱私政策變更')),
               _buildParagraph(context, context.tr('我們可能會不時更新本隱私政策。更新後的政策將在應用程式中發布，並在重大變更時通知您。')),
 
               const SizedBox(height: 16),
 
-              _buildSectionTitle(context, '8. ${context.tr('聯絡我們')}'),
+              _buildSectionTitle(context, context.tr('8. 聯絡我們')),
               _buildParagraph(context, context.tr('如果您對本隱私政策有任何疑問或建議，請通過以下方式聯絡我們：')),
-              _buildParagraph(context, 'Email: firefirstfu@gmail.com'),
+              _buildParagraph(context, context.tr('電子郵件: firefirstfu@gmail.com')),
 
               const SizedBox(height: 30),
             ],
