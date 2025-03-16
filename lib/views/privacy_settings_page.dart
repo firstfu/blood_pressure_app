@@ -1,6 +1,6 @@
 // @ Author: firstfu
 // @ Create Time: 2024-05-16 10:45:23
-// @ Description: 血壓管家 App 隱私設定頁面，用於管理用戶數據和隱私設置
+// @ Description: 血壓管家 App 隱私偏好頁面，用於管理應用通知與提示設置
 
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations_extension.dart';
@@ -9,7 +9,7 @@ import '../services/shared_prefs_service.dart';
 
 /// PrivacySettingsPage 類
 ///
-/// 實現應用程式的隱私設定頁面，用於管理用戶數據和隱私設置
+/// 實現應用程式的隱私偏好頁面，用於管理應用通知與提示設置
 class PrivacySettingsPage extends StatefulWidget {
   const PrivacySettingsPage({super.key});
 
@@ -47,7 +47,7 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
     await SharedPrefsService.savePrivacySettings(settings);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('隱私設定已保存'))));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('偏好設定已保存'))));
     }
   }
 
@@ -55,7 +55,7 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.tr('隱私設定')),
+        title: Text(context.tr('隱私偏好')),
         centerTitle: true,
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: Colors.white,
@@ -68,11 +68,11 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 數據收集與使用
-              _buildSectionTitle(context.tr('數據收集與使用')),
-              // _buildSwitchItem(context.tr('允許數據收集'), context.tr('允許收集匿名使用數據以改進應用'), _allowDataCollection, (value) {
-              //   setState(() => _allowDataCollection = value);
-              // }),
+              // 應用通知與提示
+              _buildSectionTitle(context.tr('應用通知與提示')),
+              _buildSwitchItem(context.tr('使用體驗改進計劃'), context.tr('參與匿名使用統計以幫助我們改進應用'), _allowDataCollection, (value) {
+                setState(() => _allowDataCollection = value);
+              }),
               _buildSwitchItem(context.tr('健康提示'), context.tr('根據您的數據提供個性化健康建議'), _allowHealthTips, (value) {
                 setState(() => _allowHealthTips = value);
               }),
@@ -83,14 +83,13 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
               const SizedBox(height: 24),
 
               // 保存按鈕
-              SizedBox(
-                width: double.infinity,
+              Center(
                 child: ElevatedButton(
                   onPressed: _savePrivacySettings,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: Text(context.tr('保存設定')),

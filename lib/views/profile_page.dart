@@ -117,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _buildSettingItem(Icons.notifications, context.tr('提醒設定'), context.tr('設置測量提醒時間'), () {}),
         _buildSettingItem(Icons.language, context.tr('語言設定'), context.tr('切換應用語言'), _navigateToLanguageSettings),
         _buildSettingItem(Icons.color_lens, context.tr('主題設定'), context.tr('自定義應用外觀'), () {}),
-        _buildSettingItem(Icons.security, context.tr('隱私設定'), context.tr('管理數據和隱私'), _navigateToPrivacySettings),
+        _buildSettingItem(Icons.security, context.tr('隱私偏好'), context.tr('管理應用通知與提示'), _navigateToPrivacySettings),
       ],
     );
   }
