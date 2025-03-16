@@ -6,11 +6,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../models/user_profile.dart';
 import '../services/shared_prefs_service.dart';
-import '../themes/app_theme.dart';
 
 /// 編輯個人資料頁面
 ///
@@ -50,7 +48,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // 主色調
   final Color _primaryColor = const Color(0xFF4A7BF7);
-  final Color _primaryLightColor = const Color(0xFF6B92FF);
   final Color _backgroundColor = const Color(0xFFF5F7FA);
   final Color _cardColor = Colors.white;
   final Color _textColor = const Color(0xFF2D3748);
