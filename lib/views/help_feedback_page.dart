@@ -439,7 +439,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       await launchUrl(uri);
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開 $url')), backgroundColor: AppTheme.warningColor));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開連結')), backgroundColor: AppTheme.warningColor));
       }
     }
   }
