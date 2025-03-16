@@ -225,43 +225,44 @@ const Map<String, String> enUS = {
   '提交成功': 'Submission Successful',
   '感謝您的反饋，我們會認真考慮您的意見和建議。': 'Thank you for your feedback. We will carefully consider your opinions and suggestions.',
 
-  // FAQ 答案內容
-  '在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。':
-      'Click the "Records" button in the bottom navigation bar, then click the "+" button in the bottom right corner of the record page, fill in your blood pressure values, heart rate, and other information, then click "Save Record".',
-  '在應用底部導航欄點擊「統計」按鈕，進入統計頁面後可以查看您的血壓趨勢圖表和統計數據。您可以選擇不同的時間範圍（7天、2週、1月或自訂）來查看相應的趨勢。':
-      'Click the "Statistics" button in the bottom navigation bar, then you can view your blood pressure trend charts and statistics. You can choose different time ranges (7 days, 2 weeks, 1 month, or custom) to view the corresponding trends.',
-  '在「我的」頁面中點擊「提醒設定」，您可以設置每日測量血壓的提醒時間，系統會在設定的時間發送通知提醒您測量血壓。':
-      'In the "Profile" page, click "Reminder Settings", you can set the daily blood pressure measurement reminder time, and the system will send a notification to remind you to measure your blood pressure at the set time.',
-  '在「統計」頁面中點擊右上角的「更多」按鈕，選擇「生成報告」選項，系統會生成一份包含您血壓數據的PDF報告，您可以保存或分享該報告。':
-      'In the "Statistics" page, click the "More" button in the top right corner, select "Generate Report", the system will generate a PDF report containing your blood pressure data, which you can save or share.',
-  '本應用採用國際通用的血壓分類標準：\n• 正常：收縮壓 < 120 mmHg 且舒張壓 < 80 mmHg\n• 臨界：收縮壓 120-139 mmHg 或舒張壓 80-89 mmHg\n• 高血壓一級：收縮壓 140-159 mmHg 或舒張壓 90-99 mmHg\n• 高血壓二級：收縮壓 ≥ 160 mmHg 或舒張壓 ≥ 100 mmHg\n• 高血壓危象：收縮壓 > 180 mmHg 或舒張壓 > 120 mmHg':
-      'This app uses internationally recognized blood pressure classification standards:\n• Normal: Systolic < 120 mmHg and Diastolic < 80 mmHg\n• Elevated: Systolic 120-139 mmHg or Diastolic 80-89 mmHg\n• Stage 1 Hypertension: Systolic 140-159 mmHg or Diastolic 90-99 mmHg\n• Stage 2 Hypertension: Systolic ≥ 160 mmHg or Diastolic ≥ 100 mmHg\n• Hypertensive Crisis: Systolic > 180 mmHg or Diastolic > 120 mmHg',
-  '在「我的」頁面中點擊「語言設定」，選擇您想要的語言（目前支持繁體中文和英文），系統會立即切換到所選語言。':
-      'In the "Profile" page, click "Language Settings", select your desired language (currently supports Traditional Chinese and English), and the system will immediately switch to the selected language.',
-
-  // About Us Page
-  '開發者信息': 'Developer Information',
-  '聯絡郵箱': 'Contact Email',
-  'contact@bloodpressuremanager.com': 'contact@bloodpressuremanager.com',
-  '法律信息': 'Legal Information',
-  '開源許可': 'Open Source Licenses',
-  '版權所有': 'Copyright',
-  '保留所有權利': 'All Rights Reserved',
-  'Health tips and reminders': 'Health tips and reminders',
-  'Developer': 'Developer',
-  'Contact Email': 'Contact Email',
-  'Official Website': 'Official Website',
-  'Privacy Policy': 'Privacy Policy',
-  'Terms of Use': 'Terms of Use',
-
   // Personal Info
+  '編輯個人資料': 'Edit Profile',
+  '保存': 'Save',
+  '保存個人資料': 'Save Profile',
+  '個人資料已更新': 'Profile Updated',
+  '基本信息': 'Basic Information',
+  '聯絡信息': 'Contact Information',
+  '健康信息': 'Health Information',
+  '其他信息': 'Other Information',
+  '請輸入您的姓名': 'Please enter your name',
+  '請輸入姓名': 'Please enter a name',
+  '年齡': 'Age',
+  '歲': 'Years',
   '性別': 'Gender',
   '男': 'Male',
   '女': 'Female',
-  '其他': 'Other',
-  '年齡': 'Age',
   '身高': 'Height',
+  '厘米': 'cm',
   '體重': 'Weight',
+  '公斤': 'kg',
+  '血型': 'Blood Type',
+  '未知': 'Unknown',
+  '請輸入您的電子郵件': 'Please enter your email',
+  '電話號碼': 'Phone Number',
+  '請輸入您的電話號碼': 'Please enter your phone number',
+  '緊急聯絡人': 'Emergency Contact',
+  '請輸入緊急聯絡人信息': 'Please enter emergency contact information',
+  '糖尿病': 'Diabetes',
+  '吸煙者': 'Smoker',
+  '膽固醇水平': 'Cholesterol Level',
+  'mg/dL': 'mg/dL',
+  '醫療狀況': 'Medical Conditions',
+  '請輸入您的醫療狀況': 'Please enter your medical conditions',
+  '正在服用的藥物': 'Current Medications',
+  '請輸入您正在服用的藥物': 'Please enter your current medications',
+  '過敏史': 'Allergies',
+  '請輸入您的過敏史': 'Please enter your allergies',
+  '請輸入其他備註信息': 'Please enter additional notes',
 
   // Onboarding
   '開始使用': 'Get Started',

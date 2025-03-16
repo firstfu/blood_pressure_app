@@ -10,7 +10,9 @@ import '../l10n/app_localizations_extension.dart';
 import '../services/shared_prefs_service.dart';
 import '../themes/app_theme.dart';
 import '../constants/app_constants.dart';
+import '../models/user_profile.dart';
 import 'about_app_page.dart';
+import 'edit_profile_page.dart';
 import 'help_feedback_page.dart';
 import 'language_settings_page.dart';
 import 'onboarding_page.dart';
@@ -34,34 +36,68 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _showDevOptions = false;
   // 應用評分服務
   final InAppReview _inAppReview = InAppReview.instance;
+  // 用戶資料
+  UserProfile? _userProfile;
+  // 是否正在加載
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  /// 加載用戶資料
+  Future<void> _loadUserProfile() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final profile = await SharedPrefsService.getUserProfile();
+      setState(() {
+        _userProfile = profile;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('加載用戶資料時出錯: $e');
+      setState(() {
+        _userProfile = UserProfile.createDefault();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(context.tr('我的')), centerTitle: true),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 用戶資料卡片
-            _buildUserProfileCard(),
+      body:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 用戶資料卡片
+                    _buildUserProfileCard(),
 
-            const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-            // 設置選項
-            _buildSettingsSection(),
+                    // 設置選項
+                    _buildSettingsSection(),
 
-            const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-            // 關於應用
-            _buildAboutSection(),
+                    // 關於應用
+                    _buildAboutSection(),
 
-            // 開發者選項（隱藏）
-            if (_showDevOptions) _buildDeveloperOptions(),
-          ],
-        ),
-      ),
+                    // 開發者選項（隱藏）
+                    if (_showDevOptions) _buildDeveloperOptions(),
+                  ],
+                ),
+              ),
     );
   }
 
@@ -89,23 +125,34 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(context.tr('姓名'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    _userProfile?.name.isNotEmpty == true ? _userProfile!.name : context.tr('姓名'),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 4),
                   Text(context.tr('點擊編輯個人資料'), style: const TextStyle(color: AppTheme.textSecondaryColor)),
                 ],
               ),
             ),
             // 編輯按鈕
-            IconButton(
-              icon: const Icon(Icons.edit, color: AppTheme.primaryColor),
-              onPressed: () {
-                // TODO: 實現編輯個人資料功能
-              },
-            ),
+            IconButton(icon: const Icon(Icons.edit, color: AppTheme.primaryColor), onPressed: _navigateToEditProfile),
           ],
         ),
       ),
     );
+  }
+
+  /// 導航到編輯個人資料頁面
+  void _navigateToEditProfile() async {
+    if (_userProfile == null) return;
+
+    final result = await Navigator.push<UserProfile>(context, MaterialPageRoute(builder: (context) => EditProfilePage(userProfile: _userProfile!)));
+
+    if (result != null) {
+      setState(() {
+        _userProfile = result;
+      });
+    }
   }
 
   /// 構建設置選項

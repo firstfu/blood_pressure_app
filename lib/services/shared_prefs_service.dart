@@ -4,6 +4,7 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/user_profile.dart';
 
 /// 共享偏好設定服務
 ///
@@ -12,6 +13,7 @@ class SharedPrefsService {
   static const String _keyOnBoardingCompleted = 'onBoardingCompleted';
   static const String _keyPrivacySettings = 'privacySettings';
   static const String _keyThemeSettings = 'themeSettings';
+  static const String _keyUserProfile = 'userProfile';
 
   /// 獲取 onBoarding 完成狀態
   ///
@@ -123,5 +125,41 @@ class SharedPrefsService {
     // 保存到 SharedPreferences
     await prefs.setString(_keyThemeSettings, settingsJson);
     print('主題設定已保存: $settings');
+  }
+
+  /// 獲取用戶資料
+  ///
+  /// 返回用戶的個人資料，如果沒有設定過，返回默認值
+  static Future<UserProfile> getUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? profileJson = prefs.getString(_keyUserProfile);
+
+    if (profileJson == null) {
+      // 返回默認用戶資料
+      return UserProfile.createDefault();
+    }
+
+    // 解析 JSON 字符串為 UserProfile 對象
+    try {
+      return UserProfile.fromJsonString(profileJson);
+    } catch (e) {
+      print('解析用戶資料時出錯: $e');
+      // 出錯時返回默認用戶資料
+      return UserProfile.createDefault();
+    }
+  }
+
+  /// 保存用戶資料
+  ///
+  /// 將用戶的個人資料保存到本地存儲中
+  static Future<void> saveUserProfile(UserProfile profile) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // 將 UserProfile 對象轉換為 JSON 字符串
+    final String profileJson = profile.toJsonString();
+
+    // 保存到 SharedPreferences
+    await prefs.setString(_keyUserProfile, profileJson);
+    print('用戶資料已保存: ${profile.name}');
   }
 }
