@@ -221,7 +221,6 @@
 
 ### 數據存儲
 
-- 本地數據使用 SQLite 或 Hive
 - 雲端數據使用 Firebase Firestore 或 MongoDB
 - 圖片和報告使用 Firebase Storage 或 Amazon S3
 
