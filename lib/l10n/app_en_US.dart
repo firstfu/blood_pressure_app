@@ -511,4 +511,17 @@ const Map<String, String> enUS = {
   '通知': 'Notifications',
   '保存設定': 'Save Settings',
   '管理應用通知與提示': 'Manage App Notifications & Tips',
+
+  // Theme Settings Page
+  '醫療藍': 'Medical Blue',
+  '健康綠': 'Health Green',
+  '靜謐紫': 'Calm Purple',
+  '活力紅': 'Vibrant Red',
+  '溫暖橙': 'Warm Orange',
+  '清新青': 'Fresh Teal',
+  '自動跟隨系統深淺模式設定': 'Automatically follow system light/dark mode settings',
+  '使用深色主題，適合夜間使用': 'Use dark theme, suitable for night use',
+  '主題設定已保存，重啟應用後生效': 'Theme settings saved, will take effect after restarting the app',
+  '深淺模式': 'Light/Dark Mode',
+  '主題顏色': 'Theme Color',
 };
