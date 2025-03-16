@@ -24,13 +24,29 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   final TextEditingController _emailController = TextEditingController();
 
   // 選擇的反饋類型
-  String _selectedFeedbackType = '功能建議';
+  late String _selectedFeedbackType;
 
   // 反饋類型列表
-  final List<String> _feedbackTypes = ['功能建議', '問題回報', '使用疑問', '其他'];
+  late List<String> _feedbackTypes;
 
   // 展開的 FAQ 索引
   int? _expandedFaqIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    // 初始化時設置默認值，等待 build 時再更新為多語系值
+    _selectedFeedbackType = '功能建議';
+    _feedbackTypes = ['功能建議', '問題回報', '使用疑問', '其他'];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 在 context 可用時更新多語系值
+    _selectedFeedbackType = context.tr('功能建議');
+    _feedbackTypes = [context.tr('功能建議'), context.tr('問題回報'), context.tr('使用疑問'), context.tr('其他')];
+  }
 
   @override
   void dispose() {
@@ -102,40 +118,42 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('常見問題解答', Icons.question_answer_outlined),
+          _buildSectionTitle(context.tr('常見問題解答'), Icons.question_answer_outlined),
           const SizedBox(height: 16),
 
           // FAQ 列表
-          _buildFaqItem(0, '如何記錄我的血壓數據？', '在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。'),
-          _buildFaqItem(1, '如何查看我的血壓趨勢？', '在應用底部導航欄點擊「統計」按鈕，進入統計頁面後可以查看您的血壓趨勢圖表和統計數據。您可以選擇不同的時間範圍（7天、2週、1月或自訂）來查看相應的趨勢。'),
-          _buildFaqItem(2, '如何設置測量提醒？', '在「我的」頁面中點擊「提醒設定」，您可以設置每日測量血壓的提醒時間，系統會在設定的時間發送通知提醒您測量血壓。'),
-          _buildFaqItem(3, '如何導出我的血壓數據？', '在「統計」頁面中點擊右上角的「更多」按鈕，選擇「生成報告」選項，系統會生成一份包含您血壓數據的PDF報告，您可以保存或分享該報告。'),
+          _buildFaqItem(0, context.tr('如何記錄我的血壓數據？'), context.tr('在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。')),
+          _buildFaqItem(1, context.tr('如何查看我的血壓趨勢？'), context.tr('在應用底部導航欄點擊「統計」按鈕，進入統計頁面後可以查看您的血壓趨勢圖表和統計數據。您可以選擇不同的時間範圍（7天、2週、1月或自訂）來查看相應的趨勢。')),
+          _buildFaqItem(2, context.tr('如何設置測量提醒？'), context.tr('在「我的」頁面中點擊「提醒設定」，您可以設置每日測量血壓的提醒時間，系統會在設定的時間發送通知提醒您測量血壓。')),
+          _buildFaqItem(3, context.tr('如何導出我的血壓數據？'), context.tr('在「統計」頁面中點擊右上角的「更多」按鈕，選擇「生成報告」選項，系統會生成一份包含您血壓數據的PDF報告，您可以保存或分享該報告。')),
           _buildFaqItem(
             4,
-            '血壓分類標準是什麼？',
-            '本應用採用國際通用的血壓分類標準：\n• 正常：收縮壓 < 120 mmHg 且舒張壓 < 80 mmHg\n• 臨界：收縮壓 120-139 mmHg 或舒張壓 80-89 mmHg\n• 高血壓一級：收縮壓 140-159 mmHg 或舒張壓 90-99 mmHg\n• 高血壓二級：收縮壓 ≥ 160 mmHg 或舒張壓 ≥ 100 mmHg\n• 高血壓危象：收縮壓 > 180 mmHg 或舒張壓 > 120 mmHg',
+            context.tr('血壓分類標準是什麼？'),
+            context.tr(
+              '本應用採用國際通用的血壓分類標準：\n• 正常：收縮壓 < 120 mmHg 且舒張壓 < 80 mmHg\n• 臨界：收縮壓 120-139 mmHg 或舒張壓 80-89 mmHg\n• 高血壓一級：收縮壓 140-159 mmHg 或舒張壓 90-99 mmHg\n• 高血壓二級：收縮壓 ≥ 160 mmHg 或舒張壓 ≥ 100 mmHg\n• 高血壓危象：收縮壓 > 180 mmHg 或舒張壓 > 120 mmHg',
+            ),
           ),
-          _buildFaqItem(5, '如何更改應用語言？', '在「我的」頁面中點擊「語言設定」，選擇您想要的語言（目前支持繁體中文和英文），系統會立即切換到所選語言。'),
+          _buildFaqItem(5, context.tr('如何更改應用語言？'), context.tr('在「我的」頁面中點擊「語言設定」，選擇您想要的語言（目前支持繁體中文和英文），系統會立即切換到所選語言。')),
 
           const SizedBox(height: 24),
 
-          _buildSectionTitle('聯絡我們', Icons.contact_support_outlined),
+          _buildSectionTitle(context.tr('聯絡我們'), Icons.contact_support_outlined),
           const SizedBox(height: 16),
 
           // 聯絡方式
           _buildContactItem(
             Icons.email_outlined,
-            '電子郵件',
+            context.tr('電子郵件'),
             'support@bloodpressuremanager.com',
             () => _launchURL('mailto:support@bloodpressuremanager.com'),
           ),
           _buildContactItem(
             Icons.language_outlined,
-            '官方網站',
+            context.tr('官方網站'),
             'www.bloodpressuremanager.com',
             () => _launchURL('https://www.bloodpressuremanager.com'),
           ),
-          _buildContactItem(Icons.support_agent_outlined, '客服熱線', '+886 2 1234 5678', () => _launchURL('tel:+886212345678')),
+          _buildContactItem(Icons.support_agent_outlined, context.tr('客服熱線'), '+886 2 1234 5678', () => _launchURL('tel:+886212345678')),
         ],
       ),
     );
@@ -148,7 +166,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('提交反饋', Icons.edit_note_outlined),
+          _buildSectionTitle(context.tr('提交反饋'), Icons.edit_note_outlined),
           const SizedBox(height: 16),
 
           // 反饋表單
@@ -162,7 +180,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 反饋類型
-                  Text('反饋類型', style: TypographyTheme.formLabel),
+                  Text(context.tr('反饋類型'), style: TypographyTheme.formLabel),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -194,14 +212,14 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   const SizedBox(height: 16),
 
                   // 反饋內容
-                  Text('反饋內容', style: TypographyTheme.formLabel),
+                  Text(context.tr('反饋內容'), style: TypographyTheme.formLabel),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _feedbackController,
                     maxLines: 5,
                     style: TypographyTheme.body,
                     decoration: InputDecoration(
-                      hintText: '請描述您的問題或建議...',
+                      hintText: context.tr('請描述您的問題或建議...'),
                       hintStyle: TypographyTheme.inputHint,
                       filled: true,
                       fillColor: Colors.white,
@@ -216,14 +234,14 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   const SizedBox(height: 16),
 
                   // 聯絡郵箱
-                  Text('聯絡郵箱（選填）', style: TypographyTheme.formLabel),
+                  Text(context.tr('聯絡郵箱（選填）'), style: TypographyTheme.formLabel),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: TypographyTheme.body,
                     decoration: InputDecoration(
-                      hintText: '請輸入您的電子郵箱',
+                      hintText: context.tr('請輸入您的電子郵箱'),
                       hintStyle: TypographyTheme.inputHint,
                       filled: true,
                       fillColor: Colors.white,
@@ -252,7 +270,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                       children: [
                         const Icon(Icons.send_outlined, size: 18),
                         const SizedBox(width: 8),
-                        Text('提交反饋', style: TypographyTheme.buttonText),
+                        Text(context.tr('提交反饋'), style: TypographyTheme.buttonText),
                       ],
                     ),
                   ),
@@ -357,7 +375,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   void _submitFeedback() {
     // 檢查反饋內容是否為空
     if (_feedbackController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('請輸入反饋內容'), backgroundColor: AppTheme.warningColor));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('請輸入反饋內容')), backgroundColor: AppTheme.warningColor));
       return;
     }
 
@@ -366,8 +384,11 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       context: context,
       barrierDismissible: false,
       builder:
-          (context) => const AlertDialog(
-            content: Column(mainAxisSize: MainAxisSize.min, children: [CircularProgressIndicator(), SizedBox(height: 16), Text('正在提交反饋...')]),
+          (context) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [const CircularProgressIndicator(), const SizedBox(height: 16), Text(context.tr('正在提交反饋...'))],
+            ),
           ),
     );
 
@@ -388,10 +409,10 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 children: [
                   const Icon(Icons.check_circle, color: AppTheme.successColor),
                   const SizedBox(width: 8),
-                  Text('提交成功', style: TypographyTheme.subtitle),
+                  Text(context.tr('提交成功'), style: TypographyTheme.subtitle),
                 ],
               ),
-              content: Text('感謝您的反饋，我們會認真考慮您的意見和建議。', style: TypographyTheme.body),
+              content: Text(context.tr('感謝您的反饋，我們會認真考慮您的意見和建議。'), style: TypographyTheme.body),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -400,10 +421,10 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                     _feedbackController.clear();
                     _emailController.clear();
                     setState(() {
-                      _selectedFeedbackType = '功能建議';
+                      _selectedFeedbackType = context.tr('功能建議');
                     });
                   },
-                  child: const Text('確定'),
+                  child: Text(context.tr('確定')),
                 ),
               ],
             ),
@@ -418,7 +439,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       await launchUrl(uri);
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('無法打開 $url'), backgroundColor: AppTheme.warningColor));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開 $url')), backgroundColor: AppTheme.warningColor));
       }
     }
   }
