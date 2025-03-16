@@ -1,6 +1,6 @@
 ---
-description: flutter開發風格與規則
-globs: *.dart
+description: 
+globs: 
 alwaysApply: true
 ---
 
@@ -19,3 +19,4 @@ alwaysApply: true
 3、頁面的風格要保持一致性。
 4、頁面程式碼大於600行時請自行拆分組件。
 5、程式裡面的 print 代碼不要移除。
+6、專案裡面的文字與佈局、排版，在開始寫時就要導入多國語系。

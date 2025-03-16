@@ -136,7 +136,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(20)),
           child: Text(
-            '${context.tr('版本')}: $_appVersion (Build $_buildNumber)',
+            '${context.tr('版本：')} $_appVersion (${context.tr('建置版本')} $_buildNumber)',
             style: const TextStyle(fontSize: 14, color: AppTheme.primaryColor, fontWeight: FontWeight.w500),
           ),
         ),
@@ -159,21 +159,24 @@ class _AboutAppPageState extends State<AboutAppPage> {
               children: [
                 const Icon(Icons.info_outline, color: AppTheme.primaryColor, size: 22),
                 const SizedBox(width: 10),
-                Text('應用介紹', style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
+                Text(
+                  context.tr('應用介紹'),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              '血壓管家是一款專為高血壓患者和關注血壓健康的用戶設計的應用程式。它提供了簡單易用的血壓記錄功能，幫助用戶追蹤血壓變化趨勢，並提供數據分析和健康建議。',
-              style: TextStyle(fontSize: 15, height: 1.6, color: AppTheme.textPrimaryColor),
+            Text(
+              context.tr('血壓管家是一款專為高血壓患者和關注血壓健康的用戶設計的應用程式。它提供了簡單易用的血壓記錄功能，幫助用戶追蹤血壓變化趨勢，並提供數據分析和健康建議。'),
+              style: const TextStyle(fontSize: 15, height: 1.6, color: AppTheme.textPrimaryColor),
             ),
             const SizedBox(height: 12),
-            const Text('主要功能包括：', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.textPrimaryColor)),
+            Text(context.tr('主要功能包括：'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.textPrimaryColor)),
             const SizedBox(height: 8),
-            _buildFeatureItem('血壓記錄與追蹤'),
-            _buildFeatureItem('數據統計與分析'),
-            _buildFeatureItem('趨勢圖表可視化'),
-            _buildFeatureItem('健康建議與提醒'),
+            _buildFeatureItem(context.tr('血壓記錄與追蹤')),
+            _buildFeatureItem(context.tr('數據統計與分析')),
+            _buildFeatureItem(context.tr('趨勢圖表可視化')),
+            _buildFeatureItem(context.tr('Health tips and reminders')),
           ],
         ),
       ),
@@ -210,13 +213,16 @@ class _AboutAppPageState extends State<AboutAppPage> {
               children: [
                 const Icon(Icons.person_outline, color: AppTheme.primaryColor, size: 22),
                 const SizedBox(width: 10),
-                Text('開發者信息', style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
+                Text(
+                  context.tr('開發者信息'),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 16),
-            _buildInfoRow(Icons.person, '開發者', 'FirstFu'),
-            _buildInfoRow(Icons.email, '聯絡郵箱', 'contact@bloodpressuremanager.com'),
-            _buildInfoRow(Icons.language, '官方網站', 'www.bloodpressuremanager.com'),
+            _buildInfoRow(Icons.person, context.tr('Developer'), 'kents'),
+            _buildInfoRow(Icons.email, context.tr('Contact Email'), 'firefirstfu@gmail.com'),
+            _buildInfoRow(Icons.language, context.tr('Official Website'), context.tr('www.bloodpressuremanager.com')),
           ],
         ),
       ),
@@ -238,28 +244,20 @@ class _AboutAppPageState extends State<AboutAppPage> {
               children: [
                 const Icon(Icons.gavel_outlined, color: AppTheme.primaryColor, size: 22),
                 const SizedBox(width: 10),
-                Text('法律信息', style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
+                Text(
+                  context.tr('法律信息'),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 16),
-            _buildLegalButton(context.tr('隱私政策'), Icons.privacy_tip_outlined, () => _launchURL('https://www.bloodpressuremanager.com/privacy')),
+            _buildLegalButton(
+              context.tr('Privacy Policy'),
+              Icons.privacy_tip_outlined,
+              () => _launchURL('https://www.bloodpressuremanager.com/privacy'),
+            ),
             const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
-            _buildLegalButton(context.tr('使用條款'), Icons.description_outlined, () => _launchURL('https://www.bloodpressuremanager.com/terms')),
-            const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
-            _buildLegalButton('開源許可', Icons.source_outlined, () {
-              // 顯示開源許可頁面
-              showLicensePage(
-                context: context,
-                applicationName: context.tr('血壓管家'),
-                applicationVersion: _appVersion,
-                applicationIcon: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(15)),
-                  child: const Icon(Icons.favorite, size: 30, color: AppTheme.primaryColor),
-                ),
-              );
-            }),
+            _buildLegalButton(context.tr('Terms of Use'), Icons.description_outlined, () => _launchURL('https://www.bloodpressuremanager.com/terms')),
           ],
         ),
       ),
@@ -270,9 +268,9 @@ class _AboutAppPageState extends State<AboutAppPage> {
   Widget _buildCopyright() {
     return Column(
       children: [
-        Text('© ${DateTime.now().year} Blood Pressure Manager', style: const TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor)),
+        Text('© ${DateTime.now().year} ${context.tr('血壓管家')}', style: const TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor)),
         const SizedBox(height: 4),
-        const Text('All Rights Reserved', style: TextStyle(fontSize: 12, color: AppTheme.textSecondaryColor)),
+        Text(context.tr('保留所有權利'), style: const TextStyle(fontSize: 12, color: AppTheme.textSecondaryColor)),
       ],
     );
   }
