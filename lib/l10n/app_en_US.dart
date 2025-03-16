@@ -504,4 +504,11 @@ const Map<String, String> enUS = {
   '允許匿名分享數據用於健康研究': 'Allow anonymous data sharing for health research',
   '查看我們如何處理您的數據': 'See how we handle your data',
   '偏好設定已保存': 'Preferences saved',
+
+  // Privacy Preferences Page
+  '隱私偏好': 'Privacy Preferences',
+  '健康提示': 'Health Tips',
+  '通知': 'Notifications',
+  '保存設定': 'Save Settings',
+  '管理應用通知與提示': 'Manage App Notifications & Tips',
 };
