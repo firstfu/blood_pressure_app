@@ -14,6 +14,7 @@ import 'about_app_page.dart';
 import 'help_feedback_page.dart';
 import 'language_settings_page.dart';
 import 'onboarding_page.dart';
+import 'privacy_settings_page.dart';
 
 /// ProfilePage 類
 ///
@@ -116,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _buildSettingItem(Icons.notifications, context.tr('提醒設定'), context.tr('設置測量提醒時間'), () {}),
         _buildSettingItem(Icons.language, context.tr('語言設定'), context.tr('切換應用語言'), _navigateToLanguageSettings),
         _buildSettingItem(Icons.color_lens, context.tr('主題設定'), context.tr('自定義應用外觀'), () {}),
-        _buildSettingItem(Icons.security, context.tr('隱私設定'), context.tr('管理數據和隱私'), () {}),
+        _buildSettingItem(Icons.security, context.tr('隱私設定'), context.tr('管理數據和隱私'), _navigateToPrivacySettings),
       ],
     );
   }
@@ -205,6 +206,11 @@ class _ProfilePageState extends State<ProfilePage> {
   /// 導航到語言設定頁面
   void _navigateToLanguageSettings() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguageSettingsPage()));
+  }
+
+  /// 導航到隱私設定頁面
+  void _navigateToPrivacySettings() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PrivacySettingsPage()));
   }
 
   /// 評分應用
