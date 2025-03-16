@@ -194,6 +194,8 @@ const Map<String, String> enUS = {
   'support@bloodpressuremanager.com': 'support@bloodpressuremanager.com',
   'www.bloodpressuremanager.com': 'www.bloodpressuremanager.com',
   '無法打開連結': 'Unable to open link',
+  '無法打開應用商店': 'Unable to open App Store',
+  '發生錯誤': 'An error occurred',
   '提交反饋': 'Submit Feedback',
   '反饋類型': 'Feedback Type',
   '使用疑問': 'Usage Questions',
@@ -487,4 +489,5 @@ const Map<String, String> enUS = {
   '12. 聯絡我們': '12. Contact Us',
   '如果您對本使用條款有任何疑問或建議，請通過以下方式聯絡我們：':
       'If you have any questions or suggestions about these Terms of Use, please contact us through the following methods:',
+  '一款幫助您監測和管理血壓的應用': 'An app to help you monitor and manage your blood pressure',
 };

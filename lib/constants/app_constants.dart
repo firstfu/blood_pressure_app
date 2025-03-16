@@ -104,4 +104,9 @@ class AppConstants {
   // 心率分類閾值
   static const int highPulseThreshold = 100;
   static const int lowPulseThreshold = 60;
+
+  // 應用商店連結
+  static const String appStoreUrl = 'https://apps.apple.com/app/id123456789'; // 替換為實際的 App Store ID
+  static const String googlePlayUrl = 'https://play.google.com/store/apps/details?id=com.example.bloodpressuremanager'; // 替換為實際的 Google Play 包名
+  static const String appDescription = '一款幫助您監測和管理血壓的應用';
 }

@@ -3,9 +3,13 @@
 // @ Description: 血壓管家 App 個人頁面，用於顯示和管理用戶個人資料和設置
 
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../services/shared_prefs_service.dart';
 import '../themes/app_theme.dart';
+import '../constants/app_constants.dart';
 import 'about_app_page.dart';
 import 'help_feedback_page.dart';
 import 'language_settings_page.dart';
@@ -26,6 +30,8 @@ class _ProfilePageState extends State<ProfilePage> {
   int _devModeCounter = 0;
   // 是否顯示開發者選項
   bool _showDevOptions = false;
+  // 應用評分服務
+  final InAppReview _inAppReview = InAppReview.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -128,8 +134,8 @@ class _ProfilePageState extends State<ProfilePage> {
         _buildSettingItem(Icons.help, context.tr('幫助與反饋'), context.tr('獲取幫助或提交反饋'), () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HelpFeedbackPage()));
         }),
-        _buildSettingItem(Icons.star, context.tr('評分應用'), context.tr('在應用商店評分'), () {}),
-        _buildSettingItem(Icons.share, context.tr('分享應用'), context.tr('與朋友分享此應用'), () {}),
+        _buildSettingItem(Icons.star, context.tr('評分應用'), context.tr('在應用商店評分'), _rateApp),
+        _buildSettingItem(Icons.share, context.tr('分享應用'), context.tr('與朋友分享此應用'), _shareApp),
       ],
     );
   }
@@ -199,6 +205,62 @@ class _ProfilePageState extends State<ProfilePage> {
   /// 導航到語言設定頁面
   void _navigateToLanguageSettings() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguageSettingsPage()));
+  }
+
+  /// 評分應用
+  void _rateApp() async {
+    try {
+      // 檢查是否可以請求評分
+      final bool isAvailable = await _inAppReview.isAvailable();
+
+      if (isAvailable) {
+        // 使用系統內建的評分對話框
+        await _inAppReview.requestReview();
+      } else {
+        // 如果系統內建評分不可用，則打開應用商店頁面
+        await _openAppStore();
+      }
+    } catch (e) {
+      // 如果出現錯誤，則嘗試直接打開應用商店
+      await _openAppStore();
+    }
+  }
+
+  /// 分享應用
+  void _shareApp() async {
+    final String appName = context.tr('血壓管家');
+    final String appDescription = context.tr(AppConstants.appDescription);
+    final String appLink = Theme.of(context).platform == TargetPlatform.iOS ? AppConstants.appStoreUrl : AppConstants.googlePlayUrl;
+
+    try {
+      await Share.share('$appName - $appDescription\n$appLink', subject: appName);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${context.tr('發生錯誤')}: $e'), backgroundColor: AppTheme.warningColor));
+      }
+    }
+  }
+
+  /// 打開應用商店
+  Future<void> _openAppStore() async {
+    final Uri appStoreUrl = Uri.parse(
+      // 根據平台選擇不同的應用商店鏈接
+      Theme.of(context).platform == TargetPlatform.iOS ? AppConstants.appStoreUrl : AppConstants.googlePlayUrl,
+    );
+
+    try {
+      if (await canLaunchUrl(appStoreUrl)) {
+        await launchUrl(appStoreUrl, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開應用商店')), backgroundColor: AppTheme.warningColor));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${context.tr('發生錯誤')}: $e'), backgroundColor: AppTheme.warningColor));
+      }
+    }
   }
 
   /// 重置 OnBoarding 狀態
