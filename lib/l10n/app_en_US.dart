@@ -490,4 +490,18 @@ const Map<String, String> enUS = {
   '如果您對本使用條款有任何疑問或建議，請通過以下方式聯絡我們：':
       'If you have any questions or suggestions about these Terms of Use, please contact us through the following methods:',
   '一款幫助您監測和管理血壓的應用': 'An app to help you monitor and manage your blood pressure',
+
+  // Privacy Settings
+  '應用通知與提示': 'App Notifications & Tips',
+  '使用體驗改進計劃': 'Experience Improvement Program',
+  '參與匿名使用統計以幫助我們改進應用': 'Participate in anonymous usage statistics to help us improve the app',
+  '根據您的數據提供個性化健康建議': 'Provide personalized health recommendations based on your data',
+  '接收測量提醒和健康提示通知': 'Receive measurement reminders and health tip notifications',
+  '數據安全': 'Data Security',
+  '雲端備份': 'Cloud Backup',
+  '允許將您的數據備份到雲端': 'Allow your data to be backed up to the cloud',
+  '數據分享': 'Data Sharing',
+  '允許匿名分享數據用於健康研究': 'Allow anonymous data sharing for health research',
+  '查看我們如何處理您的數據': 'See how we handle your data',
+  '偏好設定已保存': 'Preferences saved',
 };
