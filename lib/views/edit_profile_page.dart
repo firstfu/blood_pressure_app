@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:app_settings/app_settings.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../models/user_profile.dart';
 import '../services/shared_prefs_service.dart';
@@ -106,10 +107,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _notesController.text = _profile.notes ?? '';
   }
 
+  /// 顯示選擇頭像來源的對話框
+  void _showImageSourceActionSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(_borderRadius))),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: Text(context.tr('拍攝照片')),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text(context.tr('從相冊選擇')),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              if (_avatarFile != null)
+                ListTile(
+                  leading: const Icon(Icons.delete, color: Colors.red),
+                  title: Text(context.tr('移除頭像'), style: const TextStyle(color: Colors.red)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _removeAvatar();
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   /// 選擇頭像
-  Future<void> _pickAvatar() async {
+  Future<void> _pickImage(ImageSource source) async {
     try {
-      final XFile? pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 800, maxHeight: 800, imageQuality: 85);
+      final XFile? pickedFile = await _imagePicker.pickImage(source: source, maxWidth: 800, maxHeight: 800, imageQuality: 85);
 
       if (pickedFile != null) {
         setState(() {
@@ -118,12 +160,77 @@ class _EditProfilePageState extends State<EditProfilePage> {
         });
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(context.tr('選擇頭像失敗：$e')), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
+      // 處理權限被拒絕的情況
+      if (e is PlatformException) {
+        if (e.code == 'photo_access_denied' || e.code == 'camera_access_denied') {
+          _showPermissionDeniedDialog(source);
+        } else {
+          _showErrorDialog(e.message ?? context.tr('未知錯誤'));
+        }
+      } else {
+        _showErrorDialog(e.toString());
       }
     }
+  }
+
+  /// 移除頭像
+  void _removeAvatar() {
+    setState(() {
+      _avatarFile = null;
+      _avatarPath = null;
+    });
+  }
+
+  /// 顯示權限被拒絕的對話框
+  void _showPermissionDeniedDialog(ImageSource source) {
+    final String permissionType = source == ImageSource.camera ? context.tr('相機') : context.tr('相冊');
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(context.tr('權限被拒絕')),
+          content: Text(context.tr('無法存取您的$permissionType。請前往設定開啟權限。')),
+          actions: <Widget>[
+            TextButton(
+              child: Text(context.tr('取消')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(context.tr('前往設定')),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // 導航到應用設定頁面
+                AppSettings.openAppSettings();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// 顯示錯誤對話框
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(context.tr('發生錯誤')),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text(context.tr('確定')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   /// 保存個人資料
@@ -191,7 +298,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap: _pickAvatar,
+                        onTap: _showImageSourceActionSheet,
                         child: Stack(
                           children: [
                             CircleAvatar(
