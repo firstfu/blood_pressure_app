@@ -3,6 +3,7 @@
 // 遵循 Material Design 3 設計規範
 
 import 'package:flutter/material.dart';
+import 'typography_theme.dart';
 
 /// AppTheme 類別
 ///
@@ -65,13 +66,23 @@ class AppTheme {
       scaffoldBackgroundColor: backgroundColor,
       cardColor: cardColor,
       fontFamily: 'NotoSansTC',
-      appBarTheme: const AppBarTheme(backgroundColor: primaryColor, foregroundColor: Colors.white, elevation: 0, centerTitle: true),
+      // 使用新的排版主題
+      textTheme: TypographyTheme.textTheme,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        // 使用新的頁面標題樣式
+        titleTextStyle: TypographyTheme.pageTitle,
+      ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedItemColor: primaryColor,
         unselectedItemColor: textSecondaryColor,
-        selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'NotoSansTC'),
-        unselectedLabelStyle: TextStyle(fontSize: 12, fontFamily: 'NotoSansTC'),
+        // 使用新的底部導航欄樣式
+        selectedLabelStyle: TypographyTheme.bottomNavSelected,
+        unselectedLabelStyle: TypographyTheme.bottomNavUnselected,
         elevation: 8,
         type: BottomNavigationBarType.fixed,
       ),
@@ -89,6 +100,8 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           minimumSize: const Size(double.infinity, 52),
           elevation: 2,
+          // 使用新的按鈕文字樣式
+          textStyle: TypographyTheme.buttonText,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -98,29 +111,16 @@ class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           minimumSize: const Size(double.infinity, 52),
+          // 使用新的按鈕文字樣式 (需要覆蓋顏色)
+          textStyle: TypographyTheme.buttonText.copyWith(color: primaryColor),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          textStyle: const TextStyle(fontWeight: FontWeight.w500),
+          textStyle: TypographyTheme.emphasized,
         ),
-      ),
-      textTheme: const TextTheme(
-        // 標題
-        displayLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // H1
-        displayMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // H2
-        displaySmall: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // H3
-        headlineMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // H4
-        // 正文
-        bodyLarge: TextStyle(fontSize: 16, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // 主要文字
-        bodyMedium: TextStyle(fontSize: 14, color: textSecondaryColor, fontFamily: 'NotoSansTC'), // 次要文字
-        bodySmall: TextStyle(fontSize: 12, color: textSecondaryColor, fontFamily: 'NotoSansTC'), // 小型文字
-        // 數據顯示
-        titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // 大型數據
-        titleMedium: TextStyle(fontSize: 24, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // 中型數據
-        titleSmall: TextStyle(fontSize: 18, color: textPrimaryColor, fontFamily: 'NotoSansTC'), // 小型數據
       ),
       cardTheme: CardTheme(
         color: cardColor,
@@ -141,8 +141,10 @@ class AppTheme {
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
         errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: warningColor, width: 1.0)),
         focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: warningColor, width: 1.5)),
-        hintStyle: TextStyle(color: textSecondaryColor.withAlpha(179), fontSize: 14),
-        labelStyle: TextStyle(color: textSecondaryColor, fontSize: 14),
+        // 使用新的輸入提示樣式
+        hintStyle: TypographyTheme.inputHint,
+        // 使用新的表單標籤樣式
+        labelStyle: TypographyTheme.formLabel,
         errorStyle: TextStyle(color: warningColor, fontSize: 12),
       ),
       dividerTheme: const DividerThemeData(color: dividerColor, thickness: 1, space: 1),
@@ -158,7 +160,7 @@ class AppTheme {
         thumbColor: primaryColor,
         overlayColor: primaryColor.withAlpha(51),
         valueIndicatorColor: primaryDarkColor,
-        valueIndicatorTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+        valueIndicatorTextStyle: TypographyTheme.small.copyWith(color: Colors.white),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {

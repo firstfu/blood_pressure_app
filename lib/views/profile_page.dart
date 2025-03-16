@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../services/shared_prefs_service.dart';
 import '../themes/app_theme.dart';
+import 'about_app_page.dart';
+import 'help_feedback_page.dart';
 import 'language_settings_page.dart';
 import 'onboarding_page.dart';
 
@@ -120,8 +122,12 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text(context.tr('關於我們'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
-        _buildSettingItem(Icons.info, context.tr('關於應用'), context.tr('版本信息和開發者'), () {}),
-        _buildSettingItem(Icons.help, context.tr('幫助與反饋'), context.tr('獲取幫助或提交反饋'), () {}),
+        _buildSettingItem(Icons.info, context.tr('關於應用'), context.tr('版本信息和開發者'), () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AboutAppPage()));
+        }),
+        _buildSettingItem(Icons.help, context.tr('幫助與反饋'), context.tr('獲取幫助或提交反饋'), () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HelpFeedbackPage()));
+        }),
         _buildSettingItem(Icons.star, context.tr('評分應用'), context.tr('在應用商店評分'), () {}),
         _buildSettingItem(Icons.share, context.tr('分享應用'), context.tr('與朋友分享此應用'), () {}),
       ],
