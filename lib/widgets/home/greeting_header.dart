@@ -16,20 +16,28 @@ class GreetingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final greeting = DateTimeUtils.getGreeting(context);
     final currentDate = DateTimeUtils.getFullCurrentDate(context);
+    // 獲取狀態欄高度
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+
+    // 為較小螢幕設備增加額外的頂部間距
+    final double topPadding = statusBarHeight + 16; // 增加到至少 16 的間距
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, topPadding, 16, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.primaryColor,
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 1))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$greeting，${context.tr('用戶')}', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 26)),
+          Text(
+            '$greeting，${context.tr('用戶')}',
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white),
+          ),
           const SizedBox(height: 4),
-          Text(currentDate, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryColor, fontSize: 15)),
+          Text(currentDate, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withAlpha(204), fontSize: 15)),
         ],
       ),
     );

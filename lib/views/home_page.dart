@@ -41,6 +41,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat(reverse: true);
     _loadRecords();
+
+    // 設置沉浸式狀態欄
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light));
   }
 
   @override
@@ -65,70 +68,78 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const GreetingHeader(),
-              const SizedBox(height: 16),
-              if (!isMeasuredToday)
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: MeasurementStatusCard(isMeasuredToday: isMeasuredToday)),
-              const SizedBox(height: 24),
-              if (lastRecord != null) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(context.tr('最近一次測量'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
-                ),
-                const SizedBox(height: 12),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: LastMeasurementCard(record: lastRecord)),
-                const SizedBox(height: 24),
-              ],
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(_getTrendTitle(), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
-                    HomeTimeRangeSelector(
-                      selectedTimeRange: _selectedTimeRange,
-                      onTimeRangeChanged: (timeRange) {
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 沉浸式頂部問候區域
+          const GreetingHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  if (!isMeasuredToday)
+                    Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: MeasurementStatusCard(isMeasuredToday: isMeasuredToday)),
+                  const SizedBox(height: 24),
+                  if (lastRecord != null) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(context.tr('最近一次測量'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: LastMeasurementCard(record: lastRecord)),
+                    const SizedBox(height: 24),
+                  ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_getTrendTitle(), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                        HomeTimeRangeSelector(
+                          selectedTimeRange: _selectedTimeRange,
+                          onTimeRangeChanged: (timeRange) {
+                            setState(() {
+                              _selectedTimeRange = timeRange;
+                              _loadRecords();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TrendChartCard(
+                    records: _records,
+                    selectedTimeRange: _selectedTimeRange,
+                    onViewDetails: () {
+                      // 導航到統計頁面，並傳遞當前選擇的時間範圍
+                      HapticFeedback.lightImpact();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange))).then((_) {
+                        // 返回時刷新數據
                         setState(() {
-                          _selectedTimeRange = timeRange;
                           _loadRecords();
                         });
-                      },
-                    ),
-                  ],
-                ),
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(context.tr('健康建議'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                  ),
+                  const SizedBox(height: 12),
+                  ...selectedTips.map(
+                    (tip) => Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: HealthTipCard(tip: tip)),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-              const SizedBox(height: 12),
-              TrendChartCard(
-                records: _records,
-                selectedTimeRange: _selectedTimeRange,
-                onViewDetails: () {
-                  // 導航到統計頁面，並傳遞當前選擇的時間範圍
-                  HapticFeedback.lightImpact();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatsPage(initialTimeRange: _selectedTimeRange))).then((_) {
-                    // 返回時刷新數據
-                    setState(() {
-                      _loadRecords();
-                    });
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(context.tr('健康建議'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
-              ),
-              const SizedBox(height: 12),
-              ...selectedTips.map((tip) => Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: HealthTipCard(tip: tip))),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
       floatingActionButton: _buildFloatingActionButton(context),
     );
