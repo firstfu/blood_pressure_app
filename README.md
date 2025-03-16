@@ -31,18 +31,28 @@
 - Multi-timeframe trend charts (7 days, 2 weeks, 1 month)
 - Detailed statistical analysis, including averages, highest/lowest values
 - Blood pressure status distribution ratios
+- Advanced analysis features including morning surge analysis and measurement condition comparisons
 
 ### 🔔 Health Reminders and Recommendations
 
 - Daily measurement reminder function
 - Personalized health recommendations based on blood pressure data
 - Professional medical knowledge tips
+- Risk assessment for cardiovascular diseases
 
 ### 👤 Personal Profile Management
 
 - User profile management
 - Personal health goal setting
 - Data backup and recovery
+- Multi-language support (Traditional Chinese, Simplified Chinese, English)
+
+### 📋 Advanced Features
+
+- Health report generation in PDF format
+- Lifestyle correlation analysis
+- Blood pressure trend prediction
+- Onboarding experience for new users
 
 ## 🛠️ Technical Features
 
@@ -51,6 +61,8 @@
 - **Local Data Storage**: Protects user privacy, no network connection required
 - **Adaptive UI**: Adapts to different device sizes and screens
 - **Material Design 3**: Modern design language, providing a consistent visual experience
+- **Internationalization**: Full support for multiple languages
+- **Theme Customization**: Light and dark mode support
 
 ## 📋 User Guide
 
@@ -67,11 +79,13 @@
 - The main page automatically displays recent blood pressure trend charts
 - Different time ranges can be selected (7 days, 2 weeks, 1 month)
 - Click "View Details" to enter the statistics page for more detailed analysis
+- Advanced analysis features are available in the Statistics section
 
 ### Health Recommendations
 
 - The main page displays health recommendations based on the user's blood pressure condition
 - Click on recommendation cards to get more related information
+- Risk assessment provides personalized health advice
 
 ## 🔜 Future Plans
 
@@ -80,6 +94,7 @@
 - Data sharing with healthcare professionals
 - Direct connection to Bluetooth blood pressure monitors
 - Intelligent blood pressure analysis and early warning
+- Cloud synchronization for data backup
 
 ## 📝 Developer Notes
 
@@ -87,8 +102,8 @@ This application is developed using the Flutter framework and adopts the MVVM ar
 
 ### Environment Requirements
 
-- Flutter 3.0.0 or higher
-- Dart 2.17.0 or higher
+- Flutter 3.7.0 or higher
+- Dart 3.0.0 or higher
 - Android Studio / VS Code
 
 ### Installation and Running
@@ -157,18 +172,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 多時間範圍趨勢圖表（7 天、2 週、1 個月）
 - 詳細統計分析，包括平均值、最高/最低值
 - 血壓狀態分佈比例
+- 進階分析功能，包括晨峰血壓分析和測量條件比較
 
 ### 🔔 健康提醒與建議
 
 - 每日測量提醒功能
 - 根據血壓數據提供個性化健康建議
 - 專業醫療知識小貼士
+- 心血管疾病風險評估
 
 ### 👤 個人檔案管理
 
 - 用戶資料管理
 - 個人健康目標設定
 - 數據備份與恢復
+- 多語言支援（繁體中文、簡體中文、英文）
+
+### 📋 進階功能
+
+- 健康報告生成（PDF 格式）
+- 生活習慣關聯分析
+- 血壓趨勢預測
+- 新用戶引導體驗
 
 ## 🛠️ 技術特點
 
@@ -177,6 +202,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **本地數據存儲**：保護用戶隱私，無需網絡連接
 - **自適應 UI**：適配不同尺寸的設備和屏幕
 - **Material Design 3**：現代化的設計語言，提供一致的視覺體驗
+- **國際化**：完整支援多種語言
+- **主題定制**：支援淺色和深色模式
 
 ## 📋 使用指南
 
@@ -193,11 +220,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 主頁面自動顯示最近血壓趨勢圖
 - 可選擇不同時間範圍（7 天、2 週、1 個月）
 - 點擊「查看詳情」進入統計頁面，獲取更詳細的分析
+- 在統計部分可使用進階分析功能
 
 ### 健康建議
 
 - 主頁面顯示根據用戶血壓狀況提供的健康建議
 - 點擊建議卡片獲取更多相關信息
+- 風險評估提供個性化健康建議
 
 ## 🔜 未來計劃
 
@@ -206,6 +235,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 與醫療專業人士共享數據功能
 - 藍牙血壓計直接連接功能
 - 智能血壓分析與預警
+- 雲端同步數據備份
 
 ## 📝 開發者說明
 
@@ -213,8 +243,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### 環境要求
 
-- Flutter 3.0.0 或更高版本
-- Dart 2.17.0 或更高版本
+- Flutter 3.7.0 或更高版本
+- Dart 3.0.0 或更高版本
 - Android Studio / VS Code
 
 ### 安裝與運行
