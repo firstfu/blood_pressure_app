@@ -4,8 +4,10 @@
  * @ Description: 編輯個人資料頁面，用於編輯用戶的基本信息
  */
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../models/user_profile.dart';
 import '../services/shared_prefs_service.dart';
@@ -36,6 +38,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _allergiesController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
+  // 頭像相關
+  final ImagePicker _imagePicker = ImagePicker();
+  String? _avatarPath;
+  File? _avatarFile;
+
   // 血型選項
   final List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', '未知'];
 
@@ -64,6 +71,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     _profile = widget.userProfile;
     _initControllers();
+    _avatarPath = _profile.avatarPath;
+    if (_avatarPath != null && _avatarPath!.isNotEmpty) {
+      _avatarFile = File(_avatarPath!);
+    }
   }
 
   @override
@@ -95,6 +106,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _notesController.text = _profile.notes ?? '';
   }
 
+  /// 選擇頭像
+  Future<void> _pickAvatar() async {
+    try {
+      final XFile? pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 800, maxHeight: 800, imageQuality: 85);
+
+      if (pickedFile != null) {
+        setState(() {
+          _avatarFile = File(pickedFile.path);
+          _avatarPath = pickedFile.path;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(context.tr('選擇頭像失敗：$e')), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
+      }
+    }
+  }
+
   /// 保存個人資料
   Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
@@ -109,6 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _profile.medications = _medicationsController.text.trim().isEmpty ? null : _medicationsController.text.trim();
       _profile.allergies = _allergiesController.text.trim().isEmpty ? null : _allergiesController.text.trim();
       _profile.notes = _notesController.text.trim().isEmpty ? null : _notesController.text.trim();
+      _profile.avatarPath = _avatarPath;
 
       // 保存到 SharedPreferences
       await SharedPrefsService.saveUserProfile(_profile);
@@ -154,6 +186,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 頭像
+                Center(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: _pickAvatar,
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundColor: _borderColor,
+                              backgroundImage: _getAvatarImage(),
+                              child: _avatarFile == null ? Icon(Icons.person, size: 50, color: _primaryColor) : null,
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: _primaryColor,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white, width: 2),
+                                ),
+                                child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: _smallSpacing),
+                      Text(context.tr('點擊更換頭像'), style: TextStyle(color: _secondaryTextColor, fontSize: _smallFontSize)),
+                      SizedBox(height: _spacing),
+                    ],
+                  ),
+                ),
+
                 // 基本信息
                 _buildSectionTitle(context.tr('基本信息')),
                 _buildTextField(
@@ -323,6 +392,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
       ),
     );
+  }
+
+  /// 獲取頭像圖片
+  ImageProvider? _getAvatarImage() {
+    if (_avatarFile != null && _avatarFile!.existsSync()) {
+      return FileImage(_avatarFile!);
+    }
+    return null;
   }
 
   /// 構建區段標題

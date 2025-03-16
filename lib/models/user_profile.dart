@@ -26,6 +26,7 @@ class UserProfile {
   String? medications; // 正在服用的藥物
   String? allergies; // 過敏史
   String? notes; // 其他備註
+  String? avatarPath; // 頭像圖片路徑
 
   /// 構造函數
   UserProfile({
@@ -45,6 +46,7 @@ class UserProfile {
     this.medications,
     this.allergies,
     this.notes,
+    this.avatarPath,
   });
 
   /// 從 JSON 創建 UserProfile 對象
@@ -66,6 +68,7 @@ class UserProfile {
       medications: json['medications'] as String?,
       allergies: json['allergies'] as String?,
       notes: json['notes'] as String?,
+      avatarPath: json['avatarPath'] as String?,
     );
   }
 
@@ -88,6 +91,7 @@ class UserProfile {
       'medications': medications,
       'allergies': allergies,
       'notes': notes,
+      'avatarPath': avatarPath,
     };
   }
 

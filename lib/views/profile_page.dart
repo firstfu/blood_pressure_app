@@ -2,6 +2,7 @@
 // @ Create Time: 2024-05-15 16:16:42
 // @ Description: 血壓管家 App 個人頁面，用於顯示和管理用戶個人資料和設置
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,6 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
   UserProfile? _userProfile;
   // 是否正在加載
   bool _isLoading = true;
+  // 頭像文件
+  File? _avatarFile;
 
   @override
   void initState() {
@@ -58,6 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _userProfile = profile;
         _isLoading = false;
+        _loadAvatarFile();
       });
     } catch (e) {
       print('加載用戶資料時出錯: $e');
@@ -65,6 +69,18 @@ class _ProfilePageState extends State<ProfilePage> {
         _userProfile = UserProfile.createDefault();
         _isLoading = false;
       });
+    }
+  }
+
+  /// 加載頭像文件
+  void _loadAvatarFile() {
+    if (_userProfile?.avatarPath != null && _userProfile!.avatarPath!.isNotEmpty) {
+      final avatarFile = File(_userProfile!.avatarPath!);
+      if (avatarFile.existsSync()) {
+        setState(() {
+          _avatarFile = avatarFile;
+        });
+      }
     }
   }
 
@@ -116,7 +132,8 @@ class _ProfilePageState extends State<ProfilePage> {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: AppTheme.primaryColor.withAlpha(26),
-                child: const Icon(Icons.person, size: 40, color: AppTheme.primaryColor),
+                backgroundImage: _avatarFile != null ? FileImage(_avatarFile!) : null,
+                child: _avatarFile == null ? const Icon(Icons.person, size: 40, color: AppTheme.primaryColor) : null,
               ),
             ),
             const SizedBox(width: 16),
@@ -151,6 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (result != null) {
       setState(() {
         _userProfile = result;
+        _loadAvatarFile();
       });
     }
   }
@@ -251,102 +269,47 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  /// 導航到語言設定頁面
+  /// 重置引導頁面
+  Future<void> _resetOnboarding() async {
+    await SharedPrefsService.resetOnBoardingStatus();
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const OnboardingPage()), (route) => false);
+    }
+  }
+
+  /// 導航到語言設置頁面
   void _navigateToLanguageSettings() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguageSettingsPage()));
   }
 
-  /// 導航到隱私設定頁面
-  void _navigateToPrivacySettings() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PrivacySettingsPage()));
-  }
-
-  /// 導航到主題設定頁面
+  /// 導航到主題設置頁面
   void _navigateToThemeSettings() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ThemeSettingsPage()));
   }
 
-  /// 評分應用
-  void _rateApp() async {
-    try {
-      // 檢查是否可以請求評分
-      final bool isAvailable = await _inAppReview.isAvailable();
+  /// 導航到隱私設置頁面
+  void _navigateToPrivacySettings() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PrivacySettingsPage()));
+  }
 
-      if (isAvailable) {
-        // 使用系統內建的評分對話框
-        await _inAppReview.requestReview();
+  /// 評分應用
+  Future<void> _rateApp() async {
+    if (await _inAppReview.isAvailable()) {
+      _inAppReview.requestReview();
+    } else {
+      final url = Uri.parse(AppConstants.appStoreUrl);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
       } else {
-        // 如果系統內建評分不可用，則打開應用商店頁面
-        await _openAppStore();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開應用商店'))));
+        }
       }
-    } catch (e) {
-      // 如果出現錯誤，則嘗試直接打開應用商店
-      await _openAppStore();
     }
   }
 
   /// 分享應用
-  void _shareApp() async {
-    final String appName = context.tr('血壓管家');
-    final String appDescription = context.tr(AppConstants.appDescription);
-    final String appLink = Theme.of(context).platform == TargetPlatform.iOS ? AppConstants.appStoreUrl : AppConstants.googlePlayUrl;
-
-    try {
-      await Share.share('$appName - $appDescription\n$appLink', subject: appName);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${context.tr('發生錯誤')}: $e'), backgroundColor: AppTheme.warningColor));
-      }
-    }
-  }
-
-  /// 打開應用商店
-  Future<void> _openAppStore() async {
-    final Uri appStoreUrl = Uri.parse(
-      // 根據平台選擇不同的應用商店鏈接
-      Theme.of(context).platform == TargetPlatform.iOS ? AppConstants.appStoreUrl : AppConstants.googlePlayUrl,
-    );
-
-    try {
-      if (await canLaunchUrl(appStoreUrl)) {
-        await launchUrl(appStoreUrl, mode: LaunchMode.externalApplication);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開應用商店')), backgroundColor: AppTheme.warningColor));
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${context.tr('發生錯誤')}: $e'), backgroundColor: AppTheme.warningColor));
-      }
-    }
-  }
-
-  /// 重置 OnBoarding 狀態
-  void _resetOnboarding() async {
-    // 顯示確認對話框
-    final bool? confirm = await showDialog<bool>(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(context.tr('重置引導頁面')),
-            content: Text(context.tr('這將重置應用的引導頁面狀態，下次啟動時將顯示引導頁面。確定要繼續嗎？')),
-            actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(context.tr('取消'))),
-              TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(context.tr('確定'))),
-            ],
-          ),
-    );
-
-    // 如果用戶確認，重置 OnBoarding 狀態並導航到引導頁面
-    if (confirm == true) {
-      await SharedPrefsService.resetOnBoardingStatus();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('引導頁面狀態已重置'))));
-
-        // 導航到引導頁面
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const OnboardingPage()));
-      }
-    }
+  Future<void> _shareApp() async {
+    await Share.share('${context.tr('推薦您使用血壓管家 App，幫助您輕鬆記錄和管理血壓數據！')}\n${AppConstants.appStoreUrl}', subject: context.tr('分享血壓管家 App'));
   }
 }
