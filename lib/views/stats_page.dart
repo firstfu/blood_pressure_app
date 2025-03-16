@@ -10,6 +10,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 import '../models/blood_pressure_record.dart';
 import '../services/mock_data_service.dart';
 import '../services/report_service.dart';
@@ -22,6 +23,7 @@ import '../widgets/stats/stats_trend_tab.dart';
 import '../widgets/stats/stats_data_table_tab.dart';
 import '../widgets/common/filter_sort_panel.dart';
 import '../l10n/app_localizations_extension.dart';
+import 'package:share_plus/share_plus.dart';
 
 class StatsPage extends StatefulWidget {
   final TimeRange initialTimeRange;
@@ -153,6 +155,9 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
             },
           ),
+          // 添加匯出按鈕
+          IconButton(icon: const Icon(Icons.file_download), tooltip: context.tr('匯出數據'), onPressed: () => _showExportOptions(context)),
+          // 添加生成報告按鈕
           IconButton(icon: const Icon(Icons.picture_as_pdf), tooltip: context.tr('生成報告'), onPressed: () => _generateReport(context)),
         ],
         bottom: TabBar(
@@ -197,6 +202,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                   onSortOrderChanged: (value) => _sortOrder = value,
                   onResetFiltersAndSort: _resetFiltersAndSort,
                   onApplyFiltersAndSort: _applyFiltersAndSort,
+                  onExportData: () => _showExportOptions(context),
                 ),
               ],
             ),
@@ -204,6 +210,102 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         ],
       ),
     );
+  }
+
+  // 顯示匯出選項
+  void _showExportOptions(BuildContext context) {
+    if (_filteredRecords.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法匯出'))));
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(context.tr('選擇匯出格式'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.table_chart, color: Colors.green),
+                title: Text(context.tr('匯出為 CSV 檔案')),
+                subtitle: Text(context.tr('適用於 Excel、Google 試算表等')),
+                onTap: () {
+                  Navigator.pop(context);
+                  _exportData(context, 'csv');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.table_view, color: Colors.blue),
+                title: Text(context.tr('匯出為 Excel 檔案')),
+                subtitle: Text(context.tr('包含格式化和顏色標記')),
+                onTap: () {
+                  Navigator.pop(context);
+                  _exportData(context, 'excel');
+                },
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // 匯出數據
+  Future<void> _exportData(BuildContext context, String format) async {
+    if (_filteredRecords.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法匯出'))));
+      return;
+    }
+
+    // 顯示加載對話框
+    final loadingDialog = _showLoadingDialog(context);
+
+    try {
+      String filePath;
+      String formatName;
+
+      if (format == 'csv') {
+        filePath = await ReportService.generateCSV(_filteredRecords);
+        formatName = 'CSV';
+      } else {
+        filePath = await ReportService.generateExcel(_filteredRecords);
+        formatName = 'Excel';
+      }
+
+      // 檢查 widget 是否仍然掛載在 widget 樹上
+      if (!mounted) return;
+
+      // 關閉加載對話框
+      loadingDialog.dismiss();
+
+      // 分享文件
+      await Share.shareXFiles([XFile(filePath)], text: context.tr('血壓記錄數據'));
+
+      // 顯示成功消息
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.tr('$formatName 檔案已生成')), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating));
+    } catch (e) {
+      // 檢查 widget 是否仍然掛載在 widget 樹上
+      if (!mounted) return;
+
+      // 關閉加載對話框
+      loadingDialog.dismiss();
+
+      // 顯示錯誤消息
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.tr('匯出失敗：$e')), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
+    }
   }
 
   // 生成健康報告
@@ -268,55 +370,76 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       // 關閉加載對話框
       loadingDialog.dismiss();
 
-      // 使用之前保存的 scaffoldMessenger 顯示錯誤訊息，避免使用異步操作後的 context
-      scaffoldMessenger.showSnackBar(SnackBar(content: Text('$reportFailedText: $e')));
+      // 顯示錯誤消息
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('$reportFailedText: $e'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
+      );
     }
   }
 
-  // 顯示加載對話框並返回一個可以安全關閉的對話框控制器
-  _LoadingDialogController _showLoadingDialog(BuildContext context) {
-    final controller = _LoadingDialogController();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        controller.dialogContext = dialogContext;
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-
-    return controller;
+  // 顯示加載對話框
+  LoadingDialog _showLoadingDialog(BuildContext context) {
+    return LoadingDialog.show(context);
   }
 
+  // 獲取時間範圍文本
   String _getTimeRangeText() {
-    final localContext = context; // 保存當前 context 的引用
-
     switch (_selectedTimeRange) {
       case TimeRange.week:
-        return localContext.tr('最近 7 天');
+        return context.tr('近 7 天');
       case TimeRange.twoWeeks:
-        return localContext.tr('最近 2 週');
+        return context.tr('近 14 天');
       case TimeRange.month:
-        return localContext.tr('最近 1 個月');
+        return context.tr('近 30 天');
       case TimeRange.custom:
         if (_startDate != null && _endDate != null) {
           final dateFormat = DateFormat('yyyy/MM/dd');
-          return '${dateFormat.format(_startDate!)} 至 ${dateFormat.format(_endDate!)}';
+          return '${dateFormat.format(_startDate!)} - ${dateFormat.format(_endDate!)}';
         }
-        return localContext.tr('自定義日期範圍');
+        return context.tr('自定義時間範圍');
     }
   }
 }
 
-// 加載對話框控制器，用於安全地關閉對話框
-class _LoadingDialogController {
-  BuildContext? dialogContext;
+// 加載對話框
+class LoadingDialog {
+  final BuildContext context;
+  final OverlayEntry _overlayEntry;
+  bool _isShowing = true;
+
+  LoadingDialog._(this.context, this._overlayEntry);
+
+  static LoadingDialog show(BuildContext context) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder:
+          (context) => Material(
+            color: Colors.black.withAlpha(77),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(context.tr('處理中...'), style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+    );
+
+    overlay.insert(overlayEntry);
+    return LoadingDialog._(context, overlayEntry);
+  }
 
   void dismiss() {
-    if (dialogContext != null && Navigator.canPop(dialogContext!)) {
-      Navigator.pop(dialogContext!);
-      dialogContext = null;
+    if (_isShowing) {
+      _overlayEntry.remove();
+      _isShowing = false;
     }
   }
 }

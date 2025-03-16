@@ -27,6 +27,7 @@ class StatsDataTableTab extends StatefulWidget {
   final Function(SortOrder) onSortOrderChanged;
   final VoidCallback onResetFiltersAndSort;
   final VoidCallback onApplyFiltersAndSort;
+  final VoidCallback? onExportData;
 
   const StatsDataTableTab({
     super.key,
@@ -45,6 +46,7 @@ class StatsDataTableTab extends StatefulWidget {
     required this.onSortOrderChanged,
     required this.onResetFiltersAndSort,
     required this.onApplyFiltersAndSort,
+    this.onExportData,
   });
 
   @override
@@ -67,6 +69,20 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              // 匯出按鈕
+              if (widget.onExportData != null)
+                OutlinedButton.icon(
+                  onPressed: widget.onExportData,
+                  icon: const Icon(Icons.file_download, color: Colors.blue),
+                  label: Text(context.tr('匯出'), style: const TextStyle(color: Colors.blue)),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.blue),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    minimumSize: const Size(100, 36),
+                    fixedSize: const Size.fromHeight(36),
+                  ),
+                ),
+              const SizedBox(width: 8),
               OutlinedButton.icon(
                 onPressed: _showFilterSortPanel,
                 icon: Icon(Icons.filter_list, color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[600]),
@@ -248,9 +264,9 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
     if (pulse < 60) {
       return Colors.blue; // 心率過低
     } else if (pulse > 100) {
-      return AppTheme.warningColor; // 心率過高
+      return Colors.orange; // 心率過高
     } else {
-      return AppTheme.successColor; // 心率正常
+      return Colors.green; // 心率正常
     }
   }
 
@@ -261,7 +277,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
     } else if (pulse > 100) {
       return Icons.arrow_upward; // 心率過高
     } else {
-      return Icons.favorite; // 心率正常
+      return Icons.check_circle; // 心率正常
     }
   }
 }
