@@ -30,7 +30,13 @@ class AppLocalizations {
     }
 
     // 如果找不到對應的翻譯，返回原始 key
-    return _localizedValues[localeKey]?[key] ?? key;
+    final translation = _localizedValues[localeKey]?[key];
+    if (translation == null) {
+      return key;
+    }
+
+    // print('翻譯結果: 語系=$localeKey, 鍵值=$key, 翻譯=$translation');
+    return translation;
   }
 
   // 獲取當前語系的名稱

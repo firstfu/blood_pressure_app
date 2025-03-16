@@ -7,6 +7,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../themes/app_theme.dart';
+import 'privacy_policy_page.dart';
+import 'terms_of_use_page.dart';
 
 /// AboutAppPage 類
 ///
@@ -245,7 +247,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
                 const Icon(Icons.gavel_outlined, color: AppTheme.primaryColor, size: 22),
                 const SizedBox(width: 10),
                 Text(
-                  context.tr('法律信息'),
+                  context.tr('法律資訊'),
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -254,10 +256,14 @@ class _AboutAppPageState extends State<AboutAppPage> {
             _buildLegalButton(
               context.tr('Privacy Policy'),
               Icons.privacy_tip_outlined,
-              () => _launchURL('https://www.bloodpressuremanager.com/privacy'),
+              () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PrivacyPolicyPage())),
             ),
             const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
-            _buildLegalButton(context.tr('Terms of Use'), Icons.description_outlined, () => _launchURL('https://www.bloodpressuremanager.com/terms')),
+            _buildLegalButton(
+              context.tr('Terms of Use'),
+              Icons.description_outlined,
+              () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TermsOfUsePage())),
+            ),
           ],
         ),
       ),

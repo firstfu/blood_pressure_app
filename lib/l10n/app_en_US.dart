@@ -138,7 +138,7 @@ const Map<String, String> enUS = {
   '應用介紹': 'App Introduction',
   '血壓管家是一款專為血壓監測設計的健康應用': 'Blood Pressure Manager is a health app designed for blood pressure monitoring',
   '開發團隊': 'Development Team',
-  '聯絡我們': 'Contact Us',
+  '聯絡我們_反饋': 'Contact Us For Feedback',
   '常見問題': 'FAQ',
   '使用指南': 'User Guide',
   '問題回報': 'Report Issues',
@@ -320,4 +320,105 @@ const Map<String, String> enUS = {
   '高血壓二級': 'Stage 2 Hypertension',
   '高血壓危象': 'Hypertensive Crisis',
   '筆': 'records',
+
+  // Privacy Policy Page
+  '最後更新日期': 'Last Updated',
+  '資料收集': 'Data Collection',
+  '我們收集的資料': 'Information We Collect',
+  '我們如何使用您的資料': 'How We Use Your Information',
+  '第三方服務': 'Third-Party Services',
+  '聯絡我們_隱私': 'Contact Us About Privacy',
+  '血壓管家隱私政策': 'Blood Pressure Manager Privacy Policy',
+  '感謝您使用血壓管家應用程式。本隱私政策旨在說明我們如何收集、使用、儲存和保護您的個人資料。請仔細閱讀以下內容，以了解我們的隱私實踐。':
+      'Thank you for using the Blood Pressure Manager application. This Privacy Policy is designed to explain how we collect, use, store, and protect your personal information. Please read the following carefully to understand our privacy practices.',
+  '我們收集的個人資料可能包括：': 'The personal information we may collect includes:',
+  '• 基本資料：姓名、年齡、性別、身高和體重等': '• Basic information: name, age, gender, height, and weight',
+
+  // Privacy and Terms
+  '法律資訊': 'Legal Information',
+  '最後更新': 'Last Updated',
+  '隱私條款': 'Privacy Policy',
+  '資訊收集': 'Information Collection',
+  '資訊使用': 'Information Use',
+  '資料儲存': 'Data Storage',
+  '資料分享': 'Data Sharing',
+  '資料安全': 'Data Security',
+  '兒童隱私': 'Children\'s Privacy',
+  '隱私條款變更': 'Changes to Privacy Policy',
+  '接受條款': 'Acceptance of Terms',
+  '服務描述': 'Service Description',
+  '醫療免責聲明': 'Medical Disclaimer',
+  '用戶帳戶': 'User Account',
+  '禁止行為': 'Prohibited Uses',
+  '知識產權': 'Intellectual Property',
+  '終止': 'Termination',
+  '責任限制': 'Limitation of Liability',
+  '適用法律': 'Governing Law',
+  '條款變更': 'Changes to Terms',
+  '聯絡我們': 'Contact Us',
+
+  // Privacy Policy Content
+  'privacy_title': 'Privacy Policy',
+  'privacy_last_updated': 'Last Updated: May 15, 2024',
+  'privacy_introduction':
+      'Thank you for using the "Blood Pressure Manager" application. This Privacy Policy explains how we collect, use, store, and protect your personal information. Please read the following carefully to understand our privacy practices.',
+  'privacy_information_collection': 'Information Collection',
+  'privacy_information_collection_content':
+      'We collect the following information:\n• Personal data you provide (such as name, age, gender, etc.)\n• Health-related information (such as blood pressure readings, heart rate, etc.)\n• Device information (such as device model, operating system version, etc.)\n• Usage statistics',
+  'privacy_information_use': 'Information Use',
+  'privacy_information_use_content':
+      'We use the collected information to:\n• Provide, maintain, and improve our services\n• Analyze usage patterns to optimize user experience\n• Provide personalized health recommendations\n• Communicate with you when necessary',
+  'privacy_data_storage': 'Data Storage',
+  'privacy_data_storage_content':
+      'Your health data is primarily stored on your device. If you choose to use the cloud sync feature, data will be encrypted and stored on our secure servers.',
+  'privacy_data_sharing': 'Data Sharing',
+  'privacy_data_sharing_content':
+      'We do not share your personal information with third parties without your consent, except:\n• When required by law\n• To protect our rights and property\n• In emergency situations to protect your safety or the safety of the public',
+  'privacy_data_security': 'Data Security',
+  'privacy_data_security_content': 'We take reasonable security measures to protect your information from unauthorized access, use, or disclosure.',
+  'privacy_children': 'Children\'s Privacy',
+  'privacy_children_content':
+      'Our services are not directed to children under 13. If we discover that we have collected personal information from children under 13, we will take steps to delete such information promptly.',
+  'privacy_changes': 'Changes to Privacy Policy',
+  'privacy_changes_content':
+      'We may update this Privacy Policy from time to time. When there are significant changes, we will notify you through the application.',
+  'privacy_contact': 'Contact Us',
+  'privacy_contact_content':
+      'If you have any questions or suggestions regarding this Privacy Policy, please contact us at: support@bloodpressuremanager.com',
+
+  // Terms of Use Content
+  'terms_title': 'Terms of Use',
+  'terms_last_updated': 'Last Updated: May 15, 2024',
+  'terms_introduction':
+      'Welcome to the "Blood Pressure Manager" application. Please read the following Terms of Use carefully, as they govern your use of our services.',
+  'terms_acceptance': 'Acceptance of Terms',
+  'terms_acceptance_content':
+      'By using this application, you agree to these terms. If you do not agree to these terms, please do not use this application.',
+  'terms_service_description': 'Service Description',
+  'terms_service_description_content':
+      '"Blood Pressure Manager" provides blood pressure monitoring, recording, and analysis functions to help users track and manage blood pressure health.',
+  'terms_medical_disclaimer': 'Medical Disclaimer',
+  'terms_medical_disclaimer_content':
+      'The information provided by this application is for reference only and does not constitute medical advice. Do not rely on this application to make medical decisions; consult qualified healthcare professionals.',
+  'terms_user_account': 'User Account',
+  'terms_user_account_content':
+      'You are responsible for maintaining the confidentiality of your account information and for all activities under your account.',
+  'terms_prohibited_uses': 'Prohibited Uses',
+  'terms_prohibited_uses_content':
+      'You may not:\n• Use the service in any illegal or unauthorized manner\n• Attempt to interfere with the normal operation of the service\n• Circumvent any security features of the service\n• Use automated processes to access the service',
+  'terms_intellectual_property': 'Intellectual Property',
+  'terms_intellectual_property_content':
+      'This application and its content (including but not limited to text, graphics, logos, icons, images, and software) are protected by copyright, trademark, and other intellectual property laws.',
+  'terms_termination': 'Termination',
+  'terms_termination_content':
+      'We reserve the right to terminate or suspend your use of the service at any time for any reason without prior notice.',
+  'terms_limitation_of_liability': 'Limitation of Liability',
+  'terms_limitation_of_liability_content':
+      'To the maximum extent permitted by law, we are not liable for any direct, indirect, incidental, special, consequential, or punitive damages.',
+  'terms_governing_law': 'Governing Law',
+  'terms_governing_law_content': 'These terms are governed by the laws of Taiwan, without regard to conflict of law principles.',
+  'terms_changes': 'Changes to Terms',
+  'terms_changes_content': 'We reserve the right to modify these terms at any time. Modified terms will be posted in the application.',
+  'terms_contact': 'Contact Us',
+  'terms_contact_content': 'If you have any questions about these terms, please contact us at: support@bloodpressuremanager.com',
 };
