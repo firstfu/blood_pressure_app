@@ -11,6 +11,7 @@ import 'dart:convert';
 class SharedPrefsService {
   static const String _keyOnBoardingCompleted = 'onBoardingCompleted';
   static const String _keyPrivacySettings = 'privacySettings';
+  static const String _keyThemeSettings = 'themeSettings';
 
   /// 獲取 onBoarding 完成狀態
   ///
@@ -81,5 +82,46 @@ class SharedPrefsService {
     // 保存到 SharedPreferences
     await prefs.setString(_keyPrivacySettings, settingsJson);
     print('隱私設定已保存: $settings');
+  }
+
+  /// 獲取主題設定
+  ///
+  /// 返回用戶的主題設定，如果沒有設定過，返回默認值
+  static Future<Map<String, dynamic>> getThemeSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? settingsJson = prefs.getString(_keyThemeSettings);
+
+    if (settingsJson == null) {
+      // 返回默認設定
+      return {'themeColor': 'blue', 'useDarkMode': false, 'useSystemTheme': true};
+    }
+
+    // 解析 JSON 字符串為 Map
+    try {
+      final Map<String, dynamic> settings = Map<String, dynamic>.from(
+        // ignore: unnecessary_cast
+        (jsonDecode(settingsJson) as Map<dynamic, dynamic>),
+      );
+
+      return settings;
+    } catch (e) {
+      print('解析主題設定時出錯: $e');
+      // 出錯時返回默認設定
+      return {'themeColor': 'blue', 'useDarkMode': false, 'useSystemTheme': true};
+    }
+  }
+
+  /// 保存主題設定
+  ///
+  /// 將用戶的主題設定保存到本地存儲中
+  static Future<void> saveThemeSettings(Map<String, dynamic> settings) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // 將 Map 轉換為 JSON 字符串
+    final String settingsJson = jsonEncode(settings);
+
+    // 保存到 SharedPreferences
+    await prefs.setString(_keyThemeSettings, settingsJson);
+    print('主題設定已保存: $settings');
   }
 }
