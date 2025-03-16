@@ -334,15 +334,17 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             children: [
               Icon(icon, color: AppTheme.primaryColor, size: 20),
               const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: TypographyTheme.secondary),
-                  const SizedBox(height: 4),
-                  Text(value, style: TypographyTheme.emphasized.copyWith(color: AppTheme.primaryColor)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TypographyTheme.secondary),
+                    const SizedBox(height: 4),
+                    Text(value, style: TypographyTheme.emphasized.copyWith(color: AppTheme.primaryColor), overflow: TextOverflow.ellipsis),
+                  ],
+                ),
               ),
-              const Spacer(),
+              const SizedBox(width: 8),
               const Icon(Icons.arrow_forward_ios, color: AppTheme.textSecondaryColor, size: 14),
             ],
           ),
