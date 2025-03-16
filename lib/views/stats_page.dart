@@ -270,6 +270,9 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     String formatGeneratedText(String formatName) => context.tr('$formatName 檔案已生成');
     final exportFailedText = context.tr('匯出失敗：');
 
+    // 保存 ScaffoldMessenger 的引用
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     // 顯示加載對話框
     final loadingDialog = _showLoadingDialog(context);
 
@@ -297,10 +300,10 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       // 檢查 widget 是否仍然掛載在 widget 樹上
       if (!mounted) return;
 
-      // 顯示成功消息
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(formatGeneratedText(formatName)), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating));
+      // 使用保存的 scaffoldMessenger 引用顯示成功消息
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(formatGeneratedText(formatName)), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
+      );
     } catch (e) {
       // 檢查 widget 是否仍然掛載在 widget 樹上
       if (!mounted) return;
@@ -308,10 +311,10 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       // 關閉加載對話框
       loadingDialog.dismiss();
 
-      // 顯示錯誤消息
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('$exportFailedText$e'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
+      // 使用保存的 scaffoldMessenger 引用顯示錯誤消息
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('$exportFailedText$e'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
+      );
     }
   }
 
@@ -376,7 +379,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 顯示成功消息
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('${reportTitleText}已生成'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text('$reportTitleText已生成'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
       );
     } catch (e) {
       // 檢查 widget 是否仍然掛載在 widget 樹上
