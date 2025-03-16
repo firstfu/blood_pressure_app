@@ -178,18 +178,18 @@ class StatisticsCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: item.color.withOpacity(0.1),
+        color: item.color.withAlpha(26),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: item.color.withOpacity(0.3)),
+        border: Border.all(color: item.color.withAlpha(77)),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // 使用最小空間
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(item.icon, color: item.color, size: 22),
           const SizedBox(height: 6),
           Text(item.value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: item.color)),
-          Text(item.unit, style: TextStyle(fontSize: 12, color: item.color.withOpacity(0.8))),
+          Text(item.unit, style: TextStyle(fontSize: 12, color: item.color.withAlpha(204))),
           const SizedBox(height: 6),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -214,7 +214,7 @@ class StatisticsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 3, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withAlpha(26), spreadRadius: 1, blurRadius: 3, offset: const Offset(0, 1))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +238,7 @@ class StatisticsCard extends StatelessWidget {
                     RichText(
                       text: TextSpan(
                         children: [
-                          TextSpan(text: minValue, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color.withOpacity(0.8))),
+                          TextSpan(text: minValue, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color.withAlpha(204))),
                           TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                         ],
                       ),
