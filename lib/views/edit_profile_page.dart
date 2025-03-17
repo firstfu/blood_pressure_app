@@ -160,12 +160,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
       // 處理權限被拒絕的情況
       if (e is PlatformException) {
         if (e.code == 'photo_access_denied' || e.code == 'camera_access_denied') {
-          _showPermissionDeniedDialog(source);
+          if (mounted) {
+            _showPermissionDeniedDialog(source);
+          }
         } else {
-          _showErrorDialog(e.message ?? context.tr('未知錯誤'));
+          if (mounted) {
+            _showErrorDialog(e.message ?? context.tr('未知錯誤'));
+          }
         }
       } else {
-        _showErrorDialog(e.toString());
+        if (mounted) {
+          _showErrorDialog(e.toString());
+        }
       }
     }
   }

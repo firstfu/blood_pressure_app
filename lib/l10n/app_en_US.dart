@@ -161,6 +161,7 @@ const Map<String, String> enUS = {
   '問題回報': 'Report Issues',
   '功能建議': 'Feature Suggestions',
   '意見反饋': 'Feedback',
+  '其他': 'Other',
   '請描述您遇到的問題': 'Please describe the issue you encountered',
   '請提供您的建議': 'Please provide your suggestions',
   '提交': 'Submit',
@@ -567,4 +568,8 @@ const Map<String, String> enUS = {
       'This app uses internationally recognized blood pressure classification standards:\n• Normal: Systolic < 120 mmHg and Diastolic < 80 mmHg\n• Elevated: Systolic 120-139 mmHg or Diastolic 80-89 mmHg\n• Stage 1 Hypertension: Systolic 140-159 mmHg or Diastolic 90-99 mmHg\n• Stage 2 Hypertension: Systolic ≥ 160 mmHg or Diastolic ≥ 100 mmHg\n• Hypertensive Crisis: Systolic > 180 mmHg or Diastolic > 120 mmHg',
   '在「我的」頁面中點擊「語言設定」，選擇您想要的語言（目前支持繁體中文和英文），系統會立即切換到所選語言。':
       'In the "My" page, tap "Language Settings" and select your desired language (currently supports Traditional Chinese and English). The system will immediately switch to the selected language.',
+
+  // Edit Profile Page Specific
+  '未知錯誤': 'Unknown error',
+  '開發者信息': 'Developer Information',
 };
