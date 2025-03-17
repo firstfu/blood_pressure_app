@@ -208,7 +208,7 @@ const Map<String, String> enUS = {
   '電子郵件': 'Email',
   '官方網站': 'Official Website',
   '客服熱線': 'Customer Service Hotline',
-  'support@bloodpressuremanager.com': 'support@bloodpressuremanager.com',
+  'support@bloodpressuremanager.com': 'firefirstfu@gmail.com',
   'www.bloodpressuremanager.com': 'www.bloodpressuremanager.com',
   '無法打開連結': 'Unable to open link',
   '無法打開應用商店': 'Unable to open App Store',
@@ -402,7 +402,7 @@ const Map<String, String> enUS = {
   '適用法律': 'Governing Law',
   '條款變更': 'Changes to Terms',
   '聯絡我們': 'Contact Us',
-  'terms_contact_content': 'If you have any questions about these terms, please contact us at: support@bloodpressuremanager.com',
+  'terms_contact_content': 'If you have any questions about these terms, please contact us at: firefirstfu@gmail.com',
 
   // 隱私政策內容 (中文鍵值對應英文翻譯)
   '1. 資料收集': '1. Data Collection',
@@ -553,4 +553,18 @@ const Map<String, String> enUS = {
   '權限被拒絕': 'Permission Denied',
   '無法存取您的%s。請前往設定開啟權限。': 'Cannot access your %s. Please go to settings to enable permissions.',
   '前往設定': 'Go to Settings',
+
+  // FAQ 答案內容
+  '在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。':
+      'Tap the "Record" button in the bottom navigation bar, then tap the "+" button in the bottom right corner of the record page. Fill in your blood pressure values, heart rate, and other information, then tap "Save Record".',
+  '在應用底部導航欄點擊「統計」按鈕，進入統計頁面後可以查看您的血壓趨勢圖表和統計數據。您可以選擇不同的時間範圍（7天、2週、1月或自訂）來查看相應的趨勢。':
+      'Tap the "Statistics" button in the bottom navigation bar. On the statistics page, you can view your blood pressure trend charts and statistical data. You can select different time ranges (7 days, 2 weeks, 1 month, or custom) to view the corresponding trends.',
+  '在「我的」頁面中點擊「提醒設定」，您可以設置每日測量血壓的提醒時間，系統會在設定的時間發送通知提醒您測量血壓。':
+      'In the "My" page, tap "Reminder Settings". You can set the time for daily blood pressure measurement reminders, and the system will send notifications to remind you to measure your blood pressure at the set time.',
+  '在「統計」頁面中點擊右上角的「更多」按鈕，選擇「生成報告」選項，系統會生成一份包含您血壓數據的PDF報告，您可以保存或分享該報告。':
+      'On the "Statistics" page, tap the "More" button in the top right corner and select "Generate Report". The system will generate a PDF report containing your blood pressure data, which you can save or share.',
+  '本應用採用國際通用的血壓分類標準：\n• 正常：收縮壓 < 120 mmHg 且舒張壓 < 80 mmHg\n• 臨界：收縮壓 120-139 mmHg 或舒張壓 80-89 mmHg\n• 高血壓一級：收縮壓 140-159 mmHg 或舒張壓 90-99 mmHg\n• 高血壓二級：收縮壓 ≥ 160 mmHg 或舒張壓 ≥ 100 mmHg\n• 高血壓危象：收縮壓 > 180 mmHg 或舒張壓 > 120 mmHg':
+      'This app uses internationally recognized blood pressure classification standards:\n• Normal: Systolic < 120 mmHg and Diastolic < 80 mmHg\n• Elevated: Systolic 120-139 mmHg or Diastolic 80-89 mmHg\n• Stage 1 Hypertension: Systolic 140-159 mmHg or Diastolic 90-99 mmHg\n• Stage 2 Hypertension: Systolic ≥ 160 mmHg or Diastolic ≥ 100 mmHg\n• Hypertensive Crisis: Systolic > 180 mmHg or Diastolic > 120 mmHg',
+  '在「我的」頁面中點擊「語言設定」，選擇您想要的語言（目前支持繁體中文和英文），系統會立即切換到所選語言。':
+      'In the "My" page, tap "Language Settings" and select your desired language (currently supports Traditional Chinese and English). The system will immediately switch to the selected language.',
 };

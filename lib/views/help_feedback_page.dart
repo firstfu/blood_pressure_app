@@ -141,19 +141,14 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           const SizedBox(height: 16),
 
           // 聯絡方式
-          _buildContactItem(
-            Icons.email_outlined,
-            context.tr('電子郵件'),
-            'support@bloodpressuremanager.com',
-            () => _launchURL('mailto:support@bloodpressuremanager.com'),
-          ),
+          _buildContactItem(Icons.email_outlined, context.tr('電子郵件'), 'firefirstfu@gmail.com', () => _launchURL('mailto:firefirstfu@gmail.com')),
           _buildContactItem(
             Icons.language_outlined,
             context.tr('官方網站'),
             'www.bloodpressuremanager.com',
             () => _launchURL('https://www.bloodpressuremanager.com'),
           ),
-          _buildContactItem(Icons.support_agent_outlined, context.tr('客服熱線'), '+886 2 1234 5678', () => _launchURL('tel:+886212345678')),
+          // _buildContactItem(Icons.support_agent_outlined, context.tr('客服熱線'), '+886 2 1234 5678', () => _launchURL('tel:+886212345678')),
         ],
       ),
     );
