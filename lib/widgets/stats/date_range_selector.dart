@@ -98,23 +98,21 @@ class DateRangeSelector extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Center(
-            child: SizedBox(
-              width: 120.0,
-              // 使用 Key 強制重新構建按鈕
-              child: ElevatedButton.icon(
-                key: ValueKey('search_button_${locale.toString()}'),
-                onPressed: startDate != null && endDate != null ? onSearch : null,
-                icon: const Icon(Icons.search, size: 18),
-                label: Text(searchText, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  elevation: 2,
-                  shadowColor: AppTheme.primaryColor.withAlpha(100),
-                ),
+          SizedBox(
+            width: double.infinity,
+            // 使用 Key 強制重新構建按鈕
+            child: ElevatedButton.icon(
+              key: ValueKey('search_button_${locale.toString()}'),
+              onPressed: startDate != null && endDate != null ? onSearch : null,
+              icon: const Icon(Icons.search, size: 18),
+              label: Text(searchText, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                elevation: 2,
+                shadowColor: AppTheme.primaryColor.withAlpha(100),
               ),
             ),
           ),
