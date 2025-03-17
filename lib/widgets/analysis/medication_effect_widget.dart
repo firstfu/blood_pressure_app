@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:blood_pressure_app/l10n/app_localizations_extension.dart';
 
 class MedicationEffectWidget extends StatelessWidget {
   final Map<String, dynamic> analysis;
@@ -22,9 +23,9 @@ class MedicationEffectWidget extends StatelessWidget {
             children: [
               const Icon(Icons.info_outline, size: 48, color: Colors.grey),
               const SizedBox(height: 16),
-              Text(analysis['message'] ?? '沒有足夠的數據進行分析', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+              Text(analysis['message'] ?? context.tr('沒有足夠的數據進行分析'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
               const SizedBox(height: 8),
-              const Text('請確保您有記錄服藥和未服藥時的血壓數據', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
+              Text(context.tr('請確保您有記錄服藥和未服藥時的血壓數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 12)),
             ],
           ),
         ),
@@ -58,7 +59,7 @@ class MedicationEffectWidget extends StatelessWidget {
                 children: [
                   Icon(Icons.medication_outlined, color: Colors.blue.withAlpha(179), size: 18),
                   const SizedBox(width: 8),
-                  const Text('服藥效果摘要', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  Text(context.tr('服藥效果摘要'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -67,27 +68,27 @@ class MedicationEffectWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildEffectSummaryItem(
-                      '收縮壓',
-                      '${difference['systolic'].toStringAsFixed(1)} mmHg',
-                      percentChange['systolic'].toStringAsFixed(1) + '%',
+                      context.tr('收縮壓'),
+                      '${difference['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
+                      percentChange['systolic'].toStringAsFixed(1) + context.tr('%'),
                       difference['systolic'] > 0,
                     ),
                   ),
                   Container(height: 40, width: 1, color: Colors.grey.withAlpha(51)),
                   Expanded(
                     child: _buildEffectSummaryItem(
-                      '舒張壓',
-                      '${difference['diastolic'].toStringAsFixed(1)} mmHg',
-                      percentChange['diastolic'].toStringAsFixed(1) + '%',
+                      context.tr('舒張壓'),
+                      '${difference['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
+                      percentChange['diastolic'].toStringAsFixed(1) + context.tr('%'),
                       difference['diastolic'] > 0,
                     ),
                   ),
                   Container(height: 40, width: 1, color: Colors.grey.withAlpha(51)),
                   Expanded(
                     child: _buildEffectSummaryItem(
-                      '心率',
-                      '${difference['pulse'].toStringAsFixed(1)} bpm',
-                      percentChange['pulse'].toStringAsFixed(1) + '%',
+                      context.tr('心率'),
+                      '${difference['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
+                      percentChange['pulse'].toStringAsFixed(1) + context.tr('%'),
                       difference['pulse'] > 0,
                     ),
                   ),
@@ -103,7 +104,7 @@ class MedicationEffectWidget extends StatelessWidget {
           children: [
             Icon(Icons.bar_chart_outlined, color: Colors.blue.withAlpha(179), size: 16),
             const SizedBox(width: 6),
-            const Text('服藥效果對比', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(context.tr('服藥效果對比'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         ),
         const SizedBox(height: 16),
@@ -130,13 +131,13 @@ class MedicationEffectWidget extends StatelessWidget {
                           String title;
                           String value;
                           if (groupIndex == 0) {
-                            title = '收縮壓';
+                            title = context.tr('收縮壓');
                             value = rod.toY.toStringAsFixed(1);
                           } else if (groupIndex == 1) {
-                            title = '舒張壓';
+                            title = context.tr('舒張壓');
                             value = rod.toY.toStringAsFixed(1);
                           } else {
-                            title = '心率';
+                            title = context.tr('心率');
                             value = rod.toY.toStringAsFixed(1);
                           }
                           return BarTooltipItem('$title\n$value', const TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
@@ -151,11 +152,11 @@ class MedicationEffectWidget extends StatelessWidget {
                           getTitlesWidget: (value, meta) {
                             String text = '';
                             if (value == 0) {
-                              text = '收縮壓';
+                              text = context.tr('收縮壓');
                             } else if (value == 1) {
-                              text = '舒張壓';
+                              text = context.tr('舒張壓');
                             } else if (value == 2) {
-                              text = '心率';
+                              text = context.tr('心率');
                             }
                             return Padding(
                               padding: const EdgeInsets.only(top: 8.0),
@@ -249,7 +250,11 @@ class MedicationEffectWidget extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [_buildLegendItem('未服藥', Colors.red), const SizedBox(width: 24), _buildLegendItem('服藥後', Colors.blue)],
+                children: [
+                  _buildLegendItem(context.tr('未服藥'), Colors.red),
+                  const SizedBox(width: 24),
+                  _buildLegendItem(context.tr('服藥後'), Colors.blue),
+                ],
               ),
             ],
           ),
@@ -261,7 +266,7 @@ class MedicationEffectWidget extends StatelessWidget {
           children: [
             Icon(Icons.analytics_outlined, color: Colors.blue.withAlpha(179), size: 16),
             const SizedBox(width: 6),
-            const Text('詳細數據', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(context.tr('詳細數據'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         ),
         const SizedBox(height: 12),
@@ -288,27 +293,36 @@ class MedicationEffectWidget extends StatelessWidget {
                       colors: [Colors.blue.withAlpha(77), Colors.blue.withAlpha(51)],
                     ),
                   ),
-                  children: const [
-                    Padding(padding: EdgeInsets.all(10.0), child: Text('指標', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
-                    Padding(padding: EdgeInsets.all(10.0), child: Text('未服藥', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
-                    Padding(padding: EdgeInsets.all(10.0), child: Text('服藥後', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(context.tr('指標'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(context.tr('未服藥'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(context.tr('服藥後'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    ),
                   ],
                 ),
                 TableRow(
                   decoration: BoxDecoration(color: Colors.white),
                   children: [
-                    const Padding(padding: EdgeInsets.all(10.0), child: Text('收縮壓', style: TextStyle(color: Colors.black87))),
+                    Padding(padding: const EdgeInsets.all(10.0), child: Text(context.tr('收縮壓'), style: const TextStyle(color: Colors.black87))),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${nonMedicatedAvg['systolic'].toStringAsFixed(1)} mmHg',
+                        '${nonMedicatedAvg['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
                         style: TextStyle(color: Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${medicatedAvg['systolic'].toStringAsFixed(1)} mmHg',
+                        '${medicatedAvg['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
                         style: TextStyle(color: Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -317,18 +331,18 @@ class MedicationEffectWidget extends StatelessWidget {
                 TableRow(
                   decoration: BoxDecoration(color: Colors.grey.withAlpha(13)),
                   children: [
-                    const Padding(padding: EdgeInsets.all(10.0), child: Text('舒張壓', style: TextStyle(color: Colors.black87))),
+                    Padding(padding: const EdgeInsets.all(10.0), child: Text(context.tr('舒張壓'), style: const TextStyle(color: Colors.black87))),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${nonMedicatedAvg['diastolic'].toStringAsFixed(1)} mmHg',
+                        '${nonMedicatedAvg['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
                         style: TextStyle(color: Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${medicatedAvg['diastolic'].toStringAsFixed(1)} mmHg',
+                        '${medicatedAvg['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
                         style: TextStyle(color: Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -337,18 +351,18 @@ class MedicationEffectWidget extends StatelessWidget {
                 TableRow(
                   decoration: BoxDecoration(color: Colors.white),
                   children: [
-                    const Padding(padding: EdgeInsets.all(10.0), child: Text('心率', style: TextStyle(color: Colors.black87))),
+                    Padding(padding: const EdgeInsets.all(10.0), child: Text(context.tr('心率'), style: const TextStyle(color: Colors.black87))),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${nonMedicatedAvg['pulse'].toStringAsFixed(1)} bpm',
+                        '${nonMedicatedAvg['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
                         style: TextStyle(color: Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        '${medicatedAvg['pulse'].toStringAsFixed(1)} bpm',
+                        '${medicatedAvg['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
                         style: TextStyle(color: Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),

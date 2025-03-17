@@ -589,4 +589,14 @@ const Map<String, String> enUS = {
   '加載數據時發生錯誤': 'Error loading data',
   '更新風險評估時發生錯誤': 'Error updating risk assessment',
   '正在加載數據...': 'Loading data...',
+
+  // 服藥效果分析組件 - Medication Effect Analysis Component
+  '沒有足夠的數據進行分析': 'Not enough data for analysis',
+  '請確保您有記錄服藥和未服藥時的血壓數據': 'Please ensure you have recorded blood pressure data both with and without medication',
+  '服藥效果摘要': 'Medication Effect Summary',
+  '服藥效果對比': 'Medication Effect Comparison',
+  '詳細數據': 'Detailed Data',
+  '指標': 'Metrics',
+  '未服藥': 'Without Medication',
+  '服藥後': 'With Medication',
 };
