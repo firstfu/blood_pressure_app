@@ -542,4 +542,15 @@ const Map<String, String> enUS = {
   '主題設定已保存，重啟應用後生效': 'Theme settings saved, will take effect after restarting the app',
   '深淺模式': 'Light/Dark Mode',
   '主題顏色': 'Theme Color',
+
+  // 頭像與照片相關
+  '拍攝照片': 'Take Photo',
+  '從相冊選擇': 'Choose from Gallery',
+  '移除頭像': 'Remove Avatar',
+  '點擊更換頭像': 'Tap to Change Avatar',
+  '相機': 'Camera',
+  '相冊': 'Gallery',
+  '權限被拒絕': 'Permission Denied',
+  '無法存取您的%s。請前往設定開啟權限。': 'Cannot access your %s. Please go to settings to enable permissions.',
+  '前往設定': 'Go to Settings',
 };

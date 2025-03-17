@@ -39,6 +39,18 @@ class AppLocalizations {
     return translation;
   }
 
+  // 獲取當前語系的翻譯，並進行格式化
+  String formatTr(String key, List<String> args) {
+    String translation = translate(key);
+
+    // 使用args替換%s佔位符
+    for (var arg in args) {
+      translation = translation.replaceFirst('%s', arg);
+    }
+
+    return translation;
+  }
+
   // 獲取當前語系的名稱
   String get currentLanguageName {
     String localeKey = '${locale.languageCode}_${locale.countryCode}';

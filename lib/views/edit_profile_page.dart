@@ -187,7 +187,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(context.tr('權限被拒絕')),
-          content: Text(context.tr('無法存取您的$permissionType。請前往設定開啟權限。')),
+          content: Text(context.formatTr('無法存取您的%s。請前往設定開啟權限。', [permissionType])),
           actions: <Widget>[
             TextButton(
               child: Text(context.tr('取消')),

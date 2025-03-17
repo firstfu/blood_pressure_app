@@ -12,6 +12,11 @@ extension AppLocalizationsExtension on BuildContext {
     return AppLocalizations.of(this).translate(key);
   }
 
+  // 獲取當前語系的翻譯，並進行格式化
+  String formatTr(String key, List<String> args) {
+    return AppLocalizations.of(this).formatTr(key, args);
+  }
+
   // 獲取當前語系的名稱
   String get currentLanguageName {
     return AppLocalizations.of(this).currentLanguageName;
