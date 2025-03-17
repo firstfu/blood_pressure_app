@@ -32,7 +32,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cholesterolController = TextEditingController();
   final TextEditingController _medicalConditionsController = TextEditingController();
   final TextEditingController _medicationsController = TextEditingController();
@@ -84,7 +83,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _ageController.dispose();
     _heightController.dispose();
     _weightController.dispose();
-    _emailController.dispose();
     _cholesterolController.dispose();
     _medicalConditionsController.dispose();
     _medicationsController.dispose();
@@ -99,7 +97,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _ageController.text = _profile.age?.toString() ?? '';
     _heightController.text = _profile.height?.toString() ?? '';
     _weightController.text = _profile.weight?.toString() ?? '';
-    _emailController.text = _profile.email ?? '';
     _cholesterolController.text = _profile.cholesterolLevel?.toString() ?? '';
     _medicalConditionsController.text = _profile.medicalConditions ?? '';
     _medicationsController.text = _profile.medications ?? '';
@@ -241,7 +238,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _profile.age = _ageController.text.isEmpty ? null : int.tryParse(_ageController.text);
       _profile.height = _heightController.text.isEmpty ? null : double.tryParse(_heightController.text);
       _profile.weight = _weightController.text.isEmpty ? null : double.tryParse(_weightController.text);
-      _profile.email = _emailController.text.trim().isEmpty ? null : _emailController.text.trim();
       _profile.cholesterolLevel = _cholesterolController.text.isEmpty ? null : double.tryParse(_cholesterolController.text);
       _profile.medicalConditions = _medicalConditionsController.text.trim().isEmpty ? null : _medicalConditionsController.text.trim();
       _profile.medications = _medicationsController.text.trim().isEmpty ? null : _medicationsController.text.trim();
@@ -410,16 +406,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       _profile.bloodType = value;
                     });
                   },
-                ),
-
-                // 聯絡信息
-                _buildSectionTitle(context.tr('聯絡信息')),
-                _buildTextField(
-                  controller: _emailController,
-                  label: context.tr('電子郵件'),
-                  hint: context.tr('請輸入您的電子郵件'),
-                  icon: Icons.email,
-                  keyboardType: TextInputType.emailAddress,
                 ),
 
                 // 健康信息

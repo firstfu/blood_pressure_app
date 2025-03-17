@@ -19,9 +19,6 @@ class UserProfile {
   bool hasDiabetes;
   bool isSmoker;
   double? cholesterolLevel; // 膽固醇水平，單位：mg/dL
-  String? email;
-  String? phoneNumber;
-  String? emergencyContact;
   String? medicalConditions; // 其他醫療狀況
   String? medications; // 正在服用的藥物
   String? allergies; // 過敏史
@@ -39,9 +36,6 @@ class UserProfile {
     this.hasDiabetes = false,
     this.isSmoker = false,
     this.cholesterolLevel,
-    this.email,
-    this.phoneNumber,
-    this.emergencyContact,
     this.medicalConditions,
     this.medications,
     this.allergies,
@@ -61,9 +55,6 @@ class UserProfile {
       hasDiabetes: json['hasDiabetes'] as bool? ?? false,
       isSmoker: json['isSmoker'] as bool? ?? false,
       cholesterolLevel: json['cholesterolLevel'] as double?,
-      email: json['email'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
-      emergencyContact: json['emergencyContact'] as String?,
       medicalConditions: json['medicalConditions'] as String?,
       medications: json['medications'] as String?,
       allergies: json['allergies'] as String?,
@@ -84,9 +75,6 @@ class UserProfile {
       'hasDiabetes': hasDiabetes,
       'isSmoker': isSmoker,
       'cholesterolLevel': cholesterolLevel,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'emergencyContact': emergencyContact,
       'medicalConditions': medicalConditions,
       'medications': medications,
       'allergies': allergies,
