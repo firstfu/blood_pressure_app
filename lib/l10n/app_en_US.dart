@@ -34,6 +34,9 @@ const Map<String, String> enUS = {
   '基於您的血壓記錄進行深度分析，幫助您更好地了解血壓變化規律。':
       'Deep analysis based on your blood pressure records to help you better understand the patterns of your blood pressure changes.',
   '服藥效果分析': 'Medication Effect Analysis',
+  '測量條件分析': 'Measurement Condition Analysis',
+  '晨峰血壓分析': 'Morning Surge Analysis',
+  '重試': 'Retry',
 
   // Export Function
   '選擇匯出格式': 'Select Export Format',
@@ -582,4 +585,8 @@ const Map<String, String> enUS = {
   // Edit Profile Page Specific
   '未知錯誤': 'Unknown error',
   '開發者信息': 'Developer Information',
+  '沒有可用的血壓記錄數據': 'No blood pressure records available',
+  '加載數據時發生錯誤': 'Error loading data',
+  '更新風險評估時發生錯誤': 'Error updating risk assessment',
+  '正在加載數據...': 'Loading data...',
 };

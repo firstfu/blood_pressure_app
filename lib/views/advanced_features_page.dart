@@ -77,7 +77,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
       if (records.isEmpty) {
         setState(() {
           _isLoading = false;
-          _errorMessage = '沒有可用的血壓記錄數據';
+          _errorMessage = context.tr('沒有可用的血壓記錄數據');
         });
         return;
       }
@@ -108,7 +108,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = '加載數據時發生錯誤: $e';
+        _errorMessage = context.tr('加載數據時發生錯誤') + ': $e';
       });
     }
   }
@@ -131,13 +131,36 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = '更新風險評估時發生錯誤: $e';
+        _errorMessage = context.tr('更新風險評估時發生錯誤') + ': $e';
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // 更新加載訊息為本地化文本
+    final loadingMessage = context.tr('正在加載數據...');
+    if (!_isLoading) {
+      if (_predictionResults['hasData'] == false && _predictionResults['message'] == '正在加載數據...') {
+        _predictionResults['message'] = loadingMessage;
+      }
+      if (_riskAssessmentResults['hasData'] == false && _riskAssessmentResults['message'] == '正在加載數據...') {
+        _riskAssessmentResults['message'] = loadingMessage;
+      }
+      if (_correlationResults['hasData'] == false && _correlationResults['message'] == '正在加載數據...') {
+        _correlationResults['message'] = loadingMessage;
+      }
+      if (_medicationAnalysis['hasData'] == false && _medicationAnalysis['message'] == '正在加載數據...') {
+        _medicationAnalysis['message'] = loadingMessage;
+      }
+      if (_positionArmAnalysis['hasData'] == false && _positionArmAnalysis['message'] == '正在加載數據...') {
+        _positionArmAnalysis['message'] = loadingMessage;
+      }
+      if (_morningEveningAnalysis['hasData'] == false && _morningEveningAnalysis['message'] == '正在加載數據...') {
+        _morningEveningAnalysis['message'] = loadingMessage;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('高級功能'), style: const TextStyle(fontSize: 18)),
@@ -174,7 +197,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
                       const SizedBox(height: 16),
                       Text(_errorMessage!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.red)),
                       const SizedBox(height: 24),
-                      ElevatedButton(onPressed: _loadData, child: const Text('重試')),
+                      ElevatedButton(onPressed: _loadData, child: Text(context.tr('重試'))),
                     ],
                   ),
                 ),
@@ -225,11 +248,11 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Row(
+                                Row(
                                   children: [
-                                    Icon(Icons.compare_arrows, color: Colors.green),
-                                    SizedBox(width: 8),
-                                    Text('測量條件分析', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                    const Icon(Icons.compare_arrows, color: Colors.green),
+                                    const SizedBox(width: 8),
+                                    Text(context.tr('測量條件分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
@@ -248,11 +271,11 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Row(
+                                Row(
                                   children: [
-                                    Icon(Icons.wb_sunny, color: Colors.orange),
-                                    SizedBox(width: 8),
-                                    Text('晨峰血壓分析', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                    const Icon(Icons.wb_sunny, color: Colors.orange),
+                                    const SizedBox(width: 8),
+                                    Text(context.tr('晨峰血壓分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
