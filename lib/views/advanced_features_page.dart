@@ -16,6 +16,7 @@ import '../widgets/advanced_features/lifestyle_correlation_widget.dart';
 import '../widgets/analysis/medication_effect_widget.dart';
 import '../widgets/analysis/position_arm_effect_widget.dart';
 import '../widgets/analysis/morning_evening_effect_widget.dart';
+import '../l10n/app_localizations_extension.dart';
 
 class AdvancedFeaturesPage extends StatefulWidget {
   const AdvancedFeaturesPage({super.key});
@@ -139,14 +140,14 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('高級功能', style: TextStyle(fontSize: 18)),
+        title: Text(context.tr('高級功能'), style: const TextStyle(fontSize: 18)),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.analytics), text: '深度分析'),
-            Tab(icon: Icon(Icons.trending_up), text: '血壓預測'),
-            Tab(icon: Icon(Icons.favorite), text: '風險評估'),
-            Tab(icon: Icon(Icons.bar_chart), text: '生活方式分析'),
+          tabs: [
+            Tab(icon: const Icon(Icons.analytics), text: context.tr('深度分析')),
+            Tab(icon: const Icon(Icons.trending_up), text: context.tr('血壓預測')),
+            Tab(icon: const Icon(Icons.favorite), text: context.tr('風險評估')),
+            Tab(icon: const Icon(Icons.bar_chart), text: context.tr('生活方式分析')),
           ],
           labelStyle: const TextStyle(fontSize: 14, color: Colors.white),
           unselectedLabelColor: Colors.white70,
@@ -157,7 +158,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
           indicatorSize: TabBarIndicatorSize.tab,
           padding: const EdgeInsets.symmetric(horizontal: 8),
         ),
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData, tooltip: '重新加載數據')],
+        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData, tooltip: context.tr('重新加載數據'))],
       ),
       body:
           _isLoading
@@ -187,9 +188,9 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('深度分析', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text(context.tr('深度分析'), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 8),
-                        const Text('基於您的血壓記錄進行深度分析，幫助您更好地了解血壓變化規律。', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                        Text(context.tr('基於您的血壓記錄進行深度分析，幫助您更好地了解血壓變化規律。'), style: const TextStyle(fontSize: 14, color: Colors.grey)),
                         const SizedBox(height: 24),
 
                         // 服藥效果分析
@@ -201,11 +202,11 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Row(
+                                Row(
                                   children: [
-                                    Icon(Icons.medication, color: Colors.blue),
-                                    SizedBox(width: 8),
-                                    Text('服藥效果分析', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                    const Icon(Icons.medication, color: Colors.blue),
+                                    const SizedBox(width: 8),
+                                    Text(context.tr('服藥效果分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                                 const SizedBox(height: 16),

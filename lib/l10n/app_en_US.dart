@@ -24,6 +24,17 @@ const Map<String, String> enUS = {
   '暫無記錄': 'No Records',
   '已服藥': 'Medicated',
 
+  // Advanced Features Tabs
+  '深度分析': 'Deep Analysis',
+  '血壓預測': 'BP Prediction',
+  '風險評估': 'Risk Assessment',
+  '生活方式分析': 'Lifestyle Analysis',
+  '高級功能': 'Advanced Features',
+  '重新加載數據': 'Reload Data',
+  '基於您的血壓記錄進行深度分析，幫助您更好地了解血壓變化規律。':
+      'Deep analysis based on your blood pressure records to help you better understand the patterns of your blood pressure changes.',
+  '服藥效果分析': 'Medication Effect Analysis',
+
   // Export Function
   '選擇匯出格式': 'Select Export Format',
   '匯出為 CSV 檔案': 'Export as CSV File',
@@ -97,7 +108,6 @@ const Map<String, String> enUS = {
   '排序': 'Sort',
   '重置': 'Reset',
   '應用': 'Apply',
-  '高級功能': 'Advanced Features',
   '生成報告': 'Generate Report',
   '暫無數據，無法生成報告': 'No data available, cannot generate report',
   '生成報告失敗': 'Failed to generate report',
