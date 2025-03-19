@@ -210,7 +210,11 @@ class MorningEveningEffectWidget extends StatelessWidget {
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [_buildLegendItem(context.tr('早晨'), Colors.orange), const SizedBox(width: 24), _buildLegendItem(context.tr('晚間'), Colors.indigo)],
+          children: [
+            _buildLegendItem(context, context.tr('早晨'), Colors.orange),
+            const SizedBox(width: 24),
+            _buildLegendItem(context, context.tr('晚間'), Colors.indigo),
+          ],
         ),
 
         // 晨峰血壓說明
@@ -321,7 +325,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, Color color) {
+  Widget _buildLegendItem(BuildContext context, String label, Color color) {
     return Row(
       children: [Container(width: 16, height: 16, color: color), const SizedBox(width: 4), Text(label, style: const TextStyle(fontSize: 12))],
     );
