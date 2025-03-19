@@ -668,11 +668,46 @@ const Map<String, String> enUS = {
   'Please ensure you have recorded sufficient blood pressure data before and after medication':
       'Please ensure you have recorded sufficient blood pressure data before and after medication',
 
-  // 新增獨特的鍵值對，避免重複
+  // Position Analysis related content
+  '測量姿勢分析': 'Position Analysis',
+  '測量部位分析': 'Measurement Site Analysis',
+  '坐姿': 'Sitting',
+  '臥姿': 'Lying',
+  '左臂': 'Left Arm',
+  '右臂': 'Right Arm',
   '坐姿較高': 'Sitting Higher',
   '臥姿較高': 'Lying Higher',
   '左臂較高': 'Left Arm Higher',
   '右臂較高': 'Right Arm Higher',
+  '坐姿收縮壓': 'Sitting Systolic',
+  '臥姿收縮壓': 'Lying Systolic',
+  '坐姿舒張壓': 'Sitting Diastolic',
+  '臥姿舒張壓': 'Lying Diastolic',
+  '左臂收縮壓': 'Left Arm Systolic',
+  '右臂收縮壓': 'Right Arm Systolic',
+  '左臂舒張壓': 'Left Arm Diastolic',
+  '右臂舒張壓': 'Right Arm Diastolic',
+  '測量建議': 'Measurement Recommendations',
+  '測量姿勢建議': 'Position Recommendation',
+  '測量部位建議': 'Site Recommendation',
+  '您的血壓在不同姿勢下有明顯差異，建議固定使用': 'Your blood pressure shows significant differences between positions. It is recommended to consistently use',
+  '測量，以獲得更一致的結果。': 'for measurements to get more consistent results.',
+  '您的血壓在不同姿勢下差異不大，可以選擇最舒適的姿勢測量。':
+      'Your blood pressure shows minimal differences between positions. You can choose the most comfortable position for measurements.',
+  '暫無足夠數據提供建議，請嘗試在不同姿勢下測量血壓。': 'Not enough data to provide recommendations. Please try measuring in different positions.',
+  '您的左右臂血壓差異較大（超過10mmHg），建議諮詢醫生。通常應選擇血壓較高的':
+      'Your blood pressure difference between arms is significant (over 10mmHg). Consult your doctor. Usually choose the arm with higher readings (',
+  '進行常規測量。': ') for routine measurements.',
+  '您的左右臂血壓差異在正常範圍內，可以選擇任一側測量，但建議保持一致。':
+      'Your blood pressure difference between arms is within normal range. You can measure on either arm, but be consistent.',
+  '暫無足夠數據提供建議，請嘗試在左右臂分別測量血壓。': 'Not enough data to provide recommendations. Please try measuring on both left and right arms.',
+  '請確保您有記錄不同測量條件下的血壓數據': 'Please ensure you have recorded blood pressure data under different measurement conditions',
+
+  // Morning Surge Analysis related content
+  '晨峰血壓指數': 'Morning Surge Index',
+  '早晨': 'Morning',
+  '晚上': 'Evening',
+  '晨峰高血壓風險': 'Morning Surge Magnitude',
   '存在晨峰高血壓': 'Has Morning Surge',
   '無晨峰高血壓': 'No Morning Surge',
   '指數': 'Surge Index',
@@ -680,6 +715,11 @@ const Map<String, String> enUS = {
   '輕度晨峰': 'Mild Surge',
   '中度晨峰': 'Moderate Surge',
   '重度晨峰': 'Severe Surge',
+  '未知': 'Unknown',
+  '早晨收縮壓': 'Morning Systolic',
+  '晚上收縮壓': 'Evening Systolic',
+  '早晨舒張壓': 'Morning Diastolic',
+  '晚上舒張壓': 'Evening Diastolic',
   '晨峰解釋': 'Morning Surge Explanation',
   '什麼是晨峰': 'What is Morning Surge',
   '晨峰是指早晨血壓比晚上顯著升高的現象。研究表明，過度的晨峰與心血管風險增加相關。':
@@ -690,21 +730,6 @@ const Map<String, String> enUS = {
   '• 0-10：輕度晨峰': '• 0-10: Mild morning surge',
   '• 10-20：中度晨峰': '• 10-20: Moderate morning surge',
   '• 大於20：重度晨峰': '• Greater than 20: Severe morning surge',
+  '健康建議': 'Health Recommendations',
   '您沒有晨峰現象，請繼續保持良好的生活習慣。': 'You do not have morning surge phenomenon. Please continue maintaining good lifestyle habits.',
-
-  // 修復晨峰分析相關的翻譯
-  '晨峰幅度': 'Morning Surge Magnitude',
-  '有晨峰現象': 'Has Morning Surge',
-  '無晨峰現象': 'No Morning Surge',
-  '晨峰血壓說明': 'Morning Surge Explanation',
-  '什麼是晨峰血壓': 'What is Morning Surge Blood Pressure',
-  '晨峰血壓是指早晨起床後的血壓相比前一天晚上的血壓明顯升高的現象。研究顯示，過大的晨峰血壓與心血管疾病風險增加有關。':
-      'Morning surge blood pressure refers to a significant increase in blood pressure after waking up in the morning compared to the previous evening. Research shows that excessive morning surge is associated with increased cardiovascular disease risk.',
-  '晨峰指數計算方法': 'Morning Surge Index Calculation Method',
-  '您有輕度晨峰血壓現象，建議規律服藥並監測血壓變化。':
-      'You have mild morning surge phenomenon. It is recommended to take medication regularly and monitor blood pressure changes.',
-  '您有中度晨峰血壓現象，建議諮詢醫生調整藥物或服藥時間。':
-      'You have moderate morning surge phenomenon. It is recommended to consult your doctor about adjusting medication or medication timing.',
-  '您有重度晨峰血壓現象，請盡快諮詢醫生，可能需要24小時血壓監測和藥物調整。':
-      'You have severe morning surge phenomenon. Please consult your doctor as soon as possible. 24-hour blood pressure monitoring and medication adjustment may be needed.',
 };

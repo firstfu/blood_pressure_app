@@ -116,7 +116,15 @@ class AnalysisService {
   // 分析早晨和晚上的血壓差異
   static Map<String, dynamic> analyzeMorningEveningEffect(List<BloodPressureRecord> records) {
     if (records.isEmpty) {
-      return {'hasData': false, 'message': '沒有足夠的數據進行分析'};
+      return {
+        'hasData': false,
+        'message': '沒有足夠的數據進行分析',
+        'morningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
+        'eveningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
+        'difference': {'systolic': 0.0, 'diastolic': 0.0},
+        'surgeIndex': 0.0,
+        'surgeDegree': 'none',
+      };
     }
 
     // 將記錄分為早晨和晚上
@@ -133,7 +141,15 @@ class AnalysisService {
         }).toList();
 
     if (morningRecords.isEmpty || eveningRecords.isEmpty) {
-      return {'hasData': false, 'message': '需要同時有早晨和晚上的測量記錄才能進行比較'};
+      return {
+        'hasData': false,
+        'message': '需要同時有早晨和晚上的測量記錄才能進行比較',
+        'morningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
+        'eveningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
+        'difference': {'systolic': 0.0, 'diastolic': 0.0},
+        'surgeIndex': 0.0,
+        'surgeDegree': 'none',
+      };
     }
 
     // 計算早晨平均值
@@ -155,13 +171,32 @@ class AnalysisService {
     final diastolicDiff = morningDiastolicAvg - eveningDiastolicAvg;
     final pulseDiff = morningPulseAvg - eveningPulseAvg;
 
+    // 計算晨峰指數 (percentage)
+    final surgeIndexValue = eveningSystolicAvg > 0 ? (systolicDiff / eveningSystolicAvg) * 100 : 0.0;
+
+    // 確定晨峰程度
+    String surgeDegree = 'none';
+    if (surgeIndexValue > 20) {
+      surgeDegree = 'severe';
+    } else if (surgeIndexValue > 10) {
+      surgeDegree = 'moderate';
+    } else if (surgeIndexValue > 0) {
+      surgeDegree = 'mild';
+    } else {
+      surgeDegree = 'none';
+    }
+
     return {
       'hasData': true,
+      'morningData': {'systolic': morningSystolicAvg, 'diastolic': morningDiastolicAvg, 'count': morningRecords.length},
+      'eveningData': {'systolic': eveningSystolicAvg, 'diastolic': eveningDiastolicAvg, 'count': eveningRecords.length},
+      'difference': {'systolic': systolicDiff, 'diastolic': diastolicDiff},
+      'surgeIndex': surgeIndexValue,
+      'surgeDegree': surgeDegree,
       'morningRecords': morningRecords,
       'eveningRecords': eveningRecords,
       'morningAvg': {'systolic': morningSystolicAvg, 'diastolic': morningDiastolicAvg, 'pulse': morningPulseAvg},
       'eveningAvg': {'systolic': eveningSystolicAvg, 'diastolic': eveningDiastolicAvg, 'pulse': eveningPulseAvg},
-      'difference': {'systolic': systolicDiff, 'diastolic': diastolicDiff, 'pulse': pulseDiff},
       'morningEveningRatio': {'systolic': morningEveningSystolicRatio, 'diastolic': morningEveningDiastolicRatio},
       'hasMorningHypertension': morningEveningSystolicRatio > 1.15 || morningEveningDiastolicRatio > 1.15,
     };

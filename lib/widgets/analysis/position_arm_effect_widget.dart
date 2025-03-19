@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:blood_pressure_app/l10n/app_localizations_extension.dart';
 
 class PositionArmEffectWidget extends StatelessWidget {
   final Map<String, dynamic> analysis;
@@ -22,9 +23,9 @@ class PositionArmEffectWidget extends StatelessWidget {
             children: [
               const Icon(Icons.info_outline, size: 48, color: Colors.grey),
               const SizedBox(height: 16),
-              Text(analysis['message'] ?? '沒有足夠的數據進行分析', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+              Text(analysis['message'] ?? context.tr('沒有足夠的數據進行分析'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
               const SizedBox(height: 8),
-              const Text('請確保您有記錄不同測量條件下的血壓數據', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
+              Text(context.tr('請確保您有記錄不同測量條件下的血壓數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 12)),
             ],
           ),
         ),
@@ -39,7 +40,7 @@ class PositionArmEffectWidget extends StatelessWidget {
       children: [
         // 測量姿勢分析
         if (positionAnalysis['hasData'] == true) ...[
-          const Text('測量姿勢分析', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(context.tr('測量姿勢分析'), style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
@@ -51,23 +52,26 @@ class PositionArmEffectWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildPositionSummaryItem(
-                        '坐姿',
+                        context,
+                        context.tr('坐姿'),
                         '${positionAnalysis['sitting']['systolic'].toStringAsFixed(1)}/${positionAnalysis['sitting']['diastolic'].toStringAsFixed(1)}',
                         positionAnalysis['sitting']['count'].toString(),
                       ),
                     ),
                     Expanded(
                       child: _buildPositionSummaryItem(
-                        '臥姿',
+                        context,
+                        context.tr('臥姿'),
                         '${positionAnalysis['lying']['systolic'].toStringAsFixed(1)}/${positionAnalysis['lying']['diastolic'].toStringAsFixed(1)}',
                         positionAnalysis['lying']['count'].toString(),
                       ),
                     ),
                     Expanded(
                       child: _buildDifferenceSummaryItem(
-                        '差異',
+                        context,
+                        context.tr('差異'),
                         '${positionAnalysis['difference']['systolic'].abs().toStringAsFixed(1)}/${positionAnalysis['difference']['diastolic'].abs().toStringAsFixed(1)}',
-                        positionAnalysis['difference']['systolic'] > 0 ? '坐姿較高' : '臥姿較高',
+                        context.tr(positionAnalysis['difference']['systolic'] > 0 ? '坐姿較高' : '臥姿較高'),
                       ),
                     ),
                   ],
@@ -90,9 +94,9 @@ class PositionArmEffectWidget extends StatelessWidget {
                       String title;
                       String value;
                       if (group.x == 0) {
-                        title = rodIndex == 0 ? '坐姿收縮壓' : '臥姿收縮壓';
+                        title = rodIndex == 0 ? context.tr('坐姿收縮壓') : context.tr('臥姿收縮壓');
                       } else {
-                        title = rodIndex == 0 ? '坐姿舒張壓' : '臥姿舒張壓';
+                        title = rodIndex == 0 ? context.tr('坐姿舒張壓') : context.tr('臥姿舒張壓');
                       }
                       value = rod.toY.toStringAsFixed(1);
                       return BarTooltipItem('$title\n$value', const TextStyle(color: Colors.white));
@@ -105,7 +109,7 @@ class PositionArmEffectWidget extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        String text = value == 0 ? '收縮壓' : '舒張壓';
+                        String text = value == 0 ? context.tr('收縮壓') : context.tr('舒張壓');
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(text, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
@@ -180,14 +184,18 @@ class PositionArmEffectWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [_buildLegendItem('坐姿', Colors.green), const SizedBox(width: 24), _buildLegendItem('臥姿', Colors.purple)],
+            children: [
+              _buildLegendItem(context.tr('坐姿'), Colors.green),
+              const SizedBox(width: 24),
+              _buildLegendItem(context.tr('臥姿'), Colors.purple),
+            ],
           ),
           const SizedBox(height: 24),
         ],
 
         // 測量部位分析
         if (armAnalysis['hasData'] == true) ...[
-          const Text('測量部位分析', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(context.tr('測量部位分析'), style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
@@ -199,23 +207,26 @@ class PositionArmEffectWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildPositionSummaryItem(
-                        '左臂',
+                        context,
+                        context.tr('左臂'),
                         '${armAnalysis['leftArm']['systolic'].toStringAsFixed(1)}/${armAnalysis['leftArm']['diastolic'].toStringAsFixed(1)}',
                         armAnalysis['leftArm']['count'].toString(),
                       ),
                     ),
                     Expanded(
                       child: _buildPositionSummaryItem(
-                        '右臂',
+                        context,
+                        context.tr('右臂'),
                         '${armAnalysis['rightArm']['systolic'].toStringAsFixed(1)}/${armAnalysis['rightArm']['diastolic'].toStringAsFixed(1)}',
                         armAnalysis['rightArm']['count'].toString(),
                       ),
                     ),
                     Expanded(
                       child: _buildDifferenceSummaryItem(
-                        '差異',
+                        context,
+                        context.tr('差異'),
                         '${armAnalysis['difference']['systolic'].abs().toStringAsFixed(1)}/${armAnalysis['difference']['diastolic'].abs().toStringAsFixed(1)}',
-                        armAnalysis['difference']['systolic'] > 0 ? '左臂較高' : '右臂較高',
+                        context.tr(armAnalysis['difference']['systolic'] > 0 ? '左臂較高' : '右臂較高'),
                       ),
                     ),
                   ],
@@ -238,9 +249,9 @@ class PositionArmEffectWidget extends StatelessWidget {
                       String title;
                       String value;
                       if (group.x == 0) {
-                        title = rodIndex == 0 ? '左臂收縮壓' : '右臂收縮壓';
+                        title = rodIndex == 0 ? context.tr('左臂收縮壓') : context.tr('右臂收縮壓');
                       } else {
-                        title = rodIndex == 0 ? '左臂舒張壓' : '右臂舒張壓';
+                        title = rodIndex == 0 ? context.tr('左臂舒張壓') : context.tr('右臂舒張壓');
                       }
                       value = rod.toY.toStringAsFixed(1);
                       return BarTooltipItem('$title\n$value', const TextStyle(color: Colors.white));
@@ -253,7 +264,7 @@ class PositionArmEffectWidget extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        String text = value == 0 ? '收縮壓' : '舒張壓';
+                        String text = value == 0 ? context.tr('收縮壓') : context.tr('舒張壓');
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(text, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
@@ -328,13 +339,13 @@ class PositionArmEffectWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [_buildLegendItem('左臂', Colors.blue), const SizedBox(width: 24), _buildLegendItem('右臂', Colors.orange)],
+            children: [_buildLegendItem(context.tr('左臂'), Colors.blue), const SizedBox(width: 24), _buildLegendItem(context.tr('右臂'), Colors.orange)],
           ),
         ],
 
         // 測量建議
         const SizedBox(height: 24),
-        const Text('測量建議', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(context.tr('測量建議'), style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(12),
@@ -351,14 +362,16 @@ class PositionArmEffectWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('測量姿勢建議', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(context.tr('測量姿勢建議'), style: const TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
                         Text(
                           positionAnalysis['hasData'] == true
                               ? positionAnalysis['difference']['systolic'].abs() > 5
-                                  ? '您的血壓在不同姿勢下有明顯差異，建議固定使用${positionAnalysis['difference']['systolic'] < 0 ? '臥姿' : '坐姿'}測量，以獲得更一致的結果。'
-                                  : '您的血壓在不同姿勢下差異不大，可以選擇最舒適的姿勢測量。'
-                              : '暫無足夠數據提供建議，請嘗試在不同姿勢下測量血壓。',
+                                  ? context.tr('您的血壓在不同姿勢下有明顯差異，建議固定使用') +
+                                      context.tr(positionAnalysis['difference']['systolic'] < 0 ? '臥姿' : '坐姿') +
+                                      context.tr('測量，以獲得更一致的結果。')
+                                  : context.tr('您的血壓在不同姿勢下差異不大，可以選擇最舒適的姿勢測量。')
+                              : context.tr('暫無足夠數據提供建議，請嘗試在不同姿勢下測量血壓。'),
                           style: const TextStyle(fontSize: 14),
                         ),
                       ],
@@ -376,14 +389,16 @@ class PositionArmEffectWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('測量部位建議', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(context.tr('測量部位建議'), style: const TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
                         Text(
                           armAnalysis['hasData'] == true
                               ? armAnalysis['difference']['systolic'].abs() > 10
-                                  ? '您的左右臂血壓差異較大（超過10mmHg），建議諮詢醫生。通常應選擇血壓較高的${armAnalysis['difference']['systolic'] > 0 ? '左臂' : '右臂'}進行常規測量。'
-                                  : '您的左右臂血壓差異在正常範圍內，可以選擇任一側測量，但建議保持一致。'
-                              : '暫無足夠數據提供建議，請嘗試在左右臂分別測量血壓。',
+                                  ? context.tr('您的左右臂血壓差異較大（超過10mmHg），建議諮詢醫生。通常應選擇血壓較高的') +
+                                      context.tr(armAnalysis['difference']['systolic'] > 0 ? '左臂' : '右臂') +
+                                      context.tr('進行常規測量。')
+                                  : context.tr('您的左右臂血壓差異在正常範圍內，可以選擇任一側測量，但建議保持一致。')
+                              : context.tr('暫無足夠數據提供建議，請嘗試在左右臂分別測量血壓。'),
                           style: const TextStyle(fontSize: 14),
                         ),
                       ],
@@ -398,19 +413,19 @@ class PositionArmEffectWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPositionSummaryItem(String title, String value, String count) {
+  Widget _buildPositionSummaryItem(BuildContext context, String title, String value, String count) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         Text(value, style: const TextStyle(fontSize: 16)),
-        Text('$count 次測量', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text('$count ${context.tr('次測量')}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }
 
-  Widget _buildDifferenceSummaryItem(String title, String value, String note) {
+  Widget _buildDifferenceSummaryItem(BuildContext context, String title, String value, String note) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

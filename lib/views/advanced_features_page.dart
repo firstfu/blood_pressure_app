@@ -41,10 +41,18 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
   Map<String, dynamic> _riskAssessmentResults = {'hasData': false, 'message': '正在加載數據...'};
   Map<String, dynamic> _correlationResults = {'hasData': false, 'message': '正在加載數據...'};
 
-  // 深度分析結果
+  // 深度分析結果，添加預設欄位避免空值錯誤
   late Map<String, dynamic> _medicationAnalysis = {'hasData': false, 'message': '正在加載數據...'};
   late Map<String, dynamic> _positionArmAnalysis = {'hasData': false, 'message': '正在加載數據...'};
-  late Map<String, dynamic> _morningEveningAnalysis = {'hasData': false, 'message': '正在加載數據...'};
+  late Map<String, dynamic> _morningEveningAnalysis = {
+    'hasData': false,
+    'message': '正在加載數據...',
+    'morningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
+    'eveningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
+    'difference': {'systolic': 0.0, 'diastolic': 0.0},
+    'surgeIndex': 0.0,
+    'surgeDegree': 'none',
+  };
 
   // 用戶健康信息
   Map<String, dynamic> _userInfo = {'age': 45, 'gender': '男', 'hasDiabetes': false, 'isSmoker': false, 'cholesterolLevel': 180.0};
@@ -108,7 +116,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = context.tr('加載數據時發生錯誤') + ': $e';
+        _errorMessage = '${context.tr('加載數據時發生錯誤')}: $e';
       });
     }
   }
@@ -131,7 +139,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = context.tr('更新風險評估時發生錯誤') + ': $e';
+        _errorMessage = '${context.tr('更新風險評估時發生錯誤')}: $e';
       });
     }
   }
