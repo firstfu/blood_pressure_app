@@ -169,7 +169,6 @@ class AnalysisService {
     // 計算差異
     final systolicDiff = morningSystolicAvg - eveningSystolicAvg;
     final diastolicDiff = morningDiastolicAvg - eveningDiastolicAvg;
-    final pulseDiff = morningPulseAvg - eveningPulseAvg;
 
     // 計算晨峰指數 (percentage)
     final surgeIndexValue = eveningSystolicAvg > 0 ? (systolicDiff / eveningSystolicAvg) * 100 : 0.0;
