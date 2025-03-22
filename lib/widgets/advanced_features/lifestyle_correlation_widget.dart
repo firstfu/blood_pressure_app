@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class LifestyleCorrelationWidget extends StatefulWidget {
   final Map<String, dynamic> correlationResults;
@@ -18,13 +19,27 @@ class LifestyleCorrelationWidget extends StatefulWidget {
 
 class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget> {
   String _selectedFactor = 'exercise';
-  final Map<String, String> _factorNames = {'exercise': '運動', 'sleep': '睡眠', 'salt': '鹽分攝取', 'stress': '壓力', 'water': '水分攝取', 'alcohol': '酒精'};
+  late Map<String, String> _factorNames;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 初始化因素名稱映射，使用翻譯
+    _factorNames = {
+      'exercise': context.tr('運動'),
+      'sleep': context.tr('睡眠'),
+      'salt': context.tr('鹽分攝取'),
+      'stress': context.tr('壓力'),
+      'water': context.tr('水分攝取'),
+      'alcohol': context.tr('酒精'),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
     // 檢查是否有相關性結果
     if (widget.correlationResults.isEmpty) {
-      return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: Text('沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。')));
+      return Center(child: Padding(padding: const EdgeInsets.all(16.0), child: Text(context.tr('沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。'))));
     }
 
     // 獲取選定因素的數據
@@ -53,7 +68,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('選擇生活方式因素', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(context.tr('選擇生活方式因素'), style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           GridView.count(
             shrinkWrap: true,
@@ -124,9 +139,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           children: [
             const Icon(Icons.bar_chart, size: 48, color: Colors.grey),
             const SizedBox(height: 16),
-            Text('${_factorNames[_selectedFactor]} 數據不足，無法顯示圖表', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(context.tr('${_factorNames[_selectedFactor]} 數據不足，無法顯示圖表'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 8),
-            const Text('請記錄更多數據或選擇其他因素', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(context.tr('請記錄更多數據或選擇其他因素'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),
       );
@@ -147,7 +162,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.grey),
             const SizedBox(height: 16),
-            Text('無法顯示 ${_factorNames[_selectedFactor]} 的圖表數據', textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(context.tr('無法顯示 ${_factorNames[_selectedFactor]} 的圖表數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -292,11 +307,14 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               children: [
                 const Icon(Icons.warning_amber_rounded, color: Colors.orange),
                 const SizedBox(width: 8),
-                Text('${_factorNames[_selectedFactor]} 相關性數據不完整', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                Text(
+                  context.tr('${_factorNames[_selectedFactor]} 相關性數據不完整'),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                ),
               ],
             ),
             const SizedBox(height: 8),
-            const Text('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。'),
+            Text(context.tr('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。')),
           ],
         ),
       );
@@ -404,7 +422,10 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(padding: EdgeInsets.only(bottom: 12.0), child: Text('健康建議', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: Text(context.tr('健康建議'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
         if (recommendations is List)
           ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation))
         else if (recommendations is String)
