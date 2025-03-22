@@ -147,6 +147,10 @@ const Map<String, String> zhTWAdvancedAnalysis = {
   '上升': '上升',
   '下降': '下降',
   '波動': '波動',
+  '上升趨勢': '上升趨勢',
+  '下降趨勢': '下降趨勢',
+  '不穩定趨勢': '不穩定趨勢',
+  '穩定趨勢': '穩定趨勢',
   '您的血壓趨勢總體穩定，請繼續保持健康生活習慣。': '您的血壓趨勢總體穩定，請繼續保持健康生活習慣。',
   '您的收縮壓呈上升趨勢，建議關注並尋求醫生建議。': '您的收縮壓呈上升趨勢，建議關注並尋求醫生建議。',
   '您的舒張壓呈上升趨勢，建議關注並尋求醫生建議。': '您的舒張壓呈上升趨勢，建議關注並尋求醫生建議。',
@@ -161,6 +165,11 @@ const Map<String, String> zhTWAdvancedAnalysis = {
   '包含心率': '包含心率',
   '日期': '日期',
   '心率': '心率',
+  '您的血壓在近期顯示為穩定狀態': '您的血壓在近期顯示為穩定狀態',
+  '您的血壓在近期顯示為穩定狀態，變化範圍在正常波動範圍內。': '您的血壓在近期顯示為穩定狀態，變化範圍在正常波動範圍內。',
+  '您的血壓呈上升趨勢，可能需要更密切關注並考慮咨詢醫生。': '您的血壓呈上升趨勢，可能需要更密切關注並考慮咨詢醫生。',
+  '您的血壓呈下降趨勢，如果這是治療的效果，這是個好消息。': '您的血壓呈下降趨勢，如果這是治療的效果，這是個好消息。',
+  '您的血壓顯示出一些波動，建議定期監測並保持良好的生活習慣。': '您的血壓顯示出一些波動，建議定期監測並保持良好的生活習慣。',
 
   // 風險評估頁面
   '健康風險評估': '健康風險評估',
@@ -357,6 +366,10 @@ const Map<String, String> enUSAdvancedAnalysis = {
   '上升': 'Increasing',
   '下降': 'Decreasing',
   '波動': 'Fluctuating',
+  '上升趨勢': 'Rising Trend',
+  '下降趨勢': 'Falling Trend',
+  '不穩定趨勢': 'Unstable Trend',
+  '穩定趨勢': 'Stable Trend',
   '您的血壓趨勢總體穩定，請繼續保持健康生活習慣。': 'Your blood pressure trend is generally stable. Please continue maintaining healthy lifestyle habits.',
   '您的收縮壓呈上升趨勢，建議關注並尋求醫生建議。': 'Your systolic pressure shows an upward trend. It is recommended to pay attention and seek doctor\'s advice.',
   '您的舒張壓呈上升趨勢，建議關注並尋求醫生建議。': 'Your diastolic pressure shows an upward trend. It is recommended to pay attention and seek doctor\'s advice.',
@@ -374,6 +387,12 @@ const Map<String, String> enUSAdvancedAnalysis = {
   '包含心率': 'Including Pulse',
   '日期': 'Date',
   '心率': 'Pulse',
+  '您的血壓在近期顯示為穩定狀態': 'Your blood pressure has been stable recently',
+  '您的血壓在近期顯示為穩定狀態，變化範圍在正常波動範圍內。': 'Your blood pressure has been stable recently, with changes within the normal fluctuation range.',
+  '您的血壓呈上升趨勢，可能需要更密切關注並考慮咨詢醫生。': 'Your blood pressure shows an upward trend, you may need to pay closer attention and consider consulting a doctor.',
+  '您的血壓呈下降趨勢，如果這是治療的效果，這是個好消息。': 'Your blood pressure shows a downward trend, which is good news if it is the result of treatment.',
+  '您的血壓顯示出一些波動，建議定期監測並保持良好的生活習慣。':
+      'Your blood pressure shows some fluctuations, regular monitoring and maintaining good lifestyle habits are recommended.',
 
   // 風險評估頁面
   '健康風險評估': 'Health Risk Assessment',

@@ -110,31 +110,30 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
   // 構建趨勢信息
   Widget _buildTrendInfo(Map<String, dynamic> trend) {
-    Color trendColor;
     IconData trendIcon;
+    Color trendColor;
     String trendLabel;
-    String trendType = trend['type'] ?? 'stable';
 
-    switch (trendType) {
+    switch (trend['type']) {
       case 'rising':
-        trendColor = Colors.red;
         trendIcon = Icons.trending_up;
+        trendColor = Colors.red;
         trendLabel = context.tr('上升趨勢');
         break;
       case 'falling':
-        trendColor = Colors.green;
         trendIcon = Icons.trending_down;
+        trendColor = Colors.green;
         trendLabel = context.tr('下降趨勢');
         break;
       case 'unstable':
+        trendIcon = Icons.auto_graph;
         trendColor = Colors.orange;
-        trendIcon = Icons.shuffle;
         trendLabel = context.tr('不穩定趨勢');
         break;
       case 'stable':
       default:
-        trendColor = Colors.blue;
         trendIcon = Icons.trending_flat;
+        trendColor = Colors.blue;
         trendLabel = context.tr('穩定趨勢');
         break;
     }
