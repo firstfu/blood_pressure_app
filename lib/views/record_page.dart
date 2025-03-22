@@ -13,8 +13,9 @@ import '../l10n/app_localizations_extension.dart';
 
 class RecordPage extends StatefulWidget {
   final BloodPressureRecord? recordToEdit;
+  final bool isFromTabNav;
 
-  const RecordPage({super.key, this.recordToEdit});
+  const RecordPage({super.key, this.recordToEdit, this.isFromTabNav = false});
 
   @override
   State<RecordPage> createState() => _RecordPageState();
@@ -612,7 +613,13 @@ class _RecordPageState extends State<RecordPage> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         leading:
-            !_isEditing ? IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: context.tr('重置表單')) : null,
+            widget.isFromTabNav
+                ? IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _resetForm, tooltip: context.tr('重置表單'))
+                : IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                  tooltip: context.tr('取消'),
+                ),
         actions: [
           TextButton(
             onPressed: _saveRecord,
