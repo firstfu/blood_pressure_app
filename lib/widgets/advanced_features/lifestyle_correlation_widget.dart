@@ -73,10 +73,10 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
+            crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: 2.5,
+            childAspectRatio: 3.0,
             children:
                 _factorNames.entries.map((entry) {
                   final isSelected = _selectedFactor == entry.key;
@@ -98,14 +98,19 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (isSelected) Icon(Icons.check_circle, color: Colors.blue.shade800, size: 16),
-                            if (isSelected) const SizedBox(width: 4),
-                            Text(
-                              entry.value,
-                              style: TextStyle(
-                                color: isSelected ? Colors.blue.shade800 : Colors.black87,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                fontSize: 14,
+                            if (isSelected) Icon(Icons.check_circle, color: Colors.blue.shade800, size: 14),
+                            if (isSelected) const SizedBox(width: 2),
+                            Flexible(
+                              child: Text(
+                                entry.value,
+                                style: TextStyle(
+                                  color: isSelected ? Colors.blue.shade800 : Colors.black87,
+                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                  fontSize: 13,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
                               ),
                             ),
                           ],
@@ -310,14 +315,17 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               children: [
                 const Icon(Icons.warning_amber_rounded, color: Colors.orange),
                 const SizedBox(width: 8),
-                Text(
-                  '${_factorNames[_selectedFactor]} ${context.tr('相關性數據不完整')}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                Flexible(
+                  child: Text(
+                    '${_factorNames[_selectedFactor]} ${context.tr('相關性數據不完整')}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            Text(context.tr('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。')),
+            Text(context.tr('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。'), softWrap: true),
           ],
         ),
       );
@@ -370,24 +378,46 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 因素名稱 - 單獨一行並增大字體
+          Text(_factorNames[_selectedFactor] ?? '', style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 18), softWrap: true),
+          const SizedBox(height: 12),
+
+          // 相關性指標 - 使用Flexible包裝並處理溢出
           Row(
             children: [
-              Icon(icon, color: color),
+              Icon(icon, color: color, size: 20),
               const SizedBox(width: 8),
-              Text(
-                '${_factorNames[_selectedFactor]} ${context.tr('與血壓')}: $correlationText',
-                style: TextStyle(fontWeight: FontWeight.bold, color: color),
+              Flexible(
+                child: Text(
+                  '${context.tr('與血壓')}: $correlationText',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: color),
+                  overflow: TextOverflow.visible,
+                  softWrap: true,
+                ),
               ),
-              if (hasData) ...[const SizedBox(width: 8), Text('(${correlationValue.toStringAsFixed(2)})', style: TextStyle(color: color))],
             ],
           ),
+
+          // 相關性數值單獨顯示
+          if (hasData)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              child: Text('(${correlationValue.toStringAsFixed(2)})', style: TextStyle(color: color)),
+            ),
+
+          // 描述文本 - 增加間距
+          const SizedBox(height: 16),
+          Text(descriptionText, softWrap: true, style: const TextStyle(height: 1.4)),
+
+          // 影響部分 - 標題和內容分開顯示
+          const SizedBox(height: 16),
+          Text(context.tr('影響'), style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text(descriptionText),
-          const SizedBox(height: 8),
-          Text('${context.tr('影響')}: $impactText', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(impactText, softWrap: true, style: const TextStyle(height: 1.4)),
+
           if (!hasData && factorData['message'] != null) ...[
-            const SizedBox(height: 8),
-            Text(factorData['message'], style: TextStyle(color: Colors.grey.shade700, fontStyle: FontStyle.italic)),
+            const SizedBox(height: 12),
+            Text(factorData['message'], style: TextStyle(color: Colors.grey.shade700, fontStyle: FontStyle.italic), softWrap: true),
           ],
         ],
       ),
@@ -410,7 +440,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           children: [
             const Icon(Icons.lightbulb_outline, color: Colors.blue, size: 20),
             const SizedBox(width: 8),
-            Expanded(child: Text(recommendation)),
+            Expanded(child: Text(recommendation, softWrap: true)),
           ],
         ),
       ),
