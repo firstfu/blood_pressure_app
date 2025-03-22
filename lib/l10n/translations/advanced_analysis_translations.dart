@@ -90,6 +90,49 @@ const Map<String, String> zhTWAdvancedAnalysis = {
   '繼續保持良好的生活習慣': '繼續保持良好的生活習慣',
   '定期監測血壓，包括早晨和晚上': '定期監測血壓，包括早晨和晚上',
   '適量運動，但避免早晨劇烈運動': '適量運動，但避免早晨劇烈運動',
+
+  // 圖片中顯示的晨峰血壓相關詞彙
+  '晨峰指數': '晨峰指數',
+  '晨峰幅度': '晨峰幅度',
+  '有晨峰現象': '有晨峰現象',
+  '無晨峰現象': '無晨峰現象',
+  '無晨峰': '無晨峰',
+  '晨峰指數計算方法': '晨峰指數計算方法',
+  '晨峰指數 = (早晨收縮壓 - 晚間收縮壓) / 晚間收縮壓 × 100%': '晨峰指數 = (早晨收縮壓 - 晚間收縮壓) / 晚間收縮壓 × 100%',
+  '• 小於0：無晨峰現象': '• 小於0：無晨峰現象',
+  '• 0-10：輕度晨峰': '• 0-10：輕度晨峰',
+  '• 10-20：中度晨峰': '• 10-20：中度晨峰',
+  '• 大於20：重度晨峰': '• 大於20：重度晨峰',
+  '輕度晨峰': '輕度晨峰',
+  '中度晨峰': '中度晨峰',
+  '重度晨峰': '重度晨峰',
+  '未知': '未知',
+  '晚間': '晚間',
+  '早晚效應分析': '早晚效應分析',
+  'No Morning Surge': '無晨峰現象',
+  'Morning': '早晨',
+  'Systolic': '收縮壓',
+  'Diastolic': '舒張壓',
+  'Morning Surge Index': '晨峰指數',
+  'Morning Surge Magnitude': '晨峰幅度',
+  'Morning Surge Explanation': '晨峰血壓說明',
+  'What is Morning Surge': '什麼是晨峰血壓',
+  '沒有足夠的數據進行分析': '沒有足夠的數據進行分析',
+  'measurements': '次測量',
+  '收縮壓': '收縮壓',
+  '舒張壓': '舒張壓',
+
+  // 晨峰血壓說明
+  '晨峰血壓說明': '晨峰血壓說明',
+  '什麼是晨峰血壓': '什麼是晨峰血壓',
+  '晨峰血壓是指早晨起床後的血壓相比前一天晚上的血壓明顯升高的現象。研究顯示，過大的晨峰血壓與心血管疾病風險增加有關。': '晨峰血壓是指早晨起床後的血壓相比前一天晚上的血壓明顯升高的現象。研究顯示，過大的晨峰血壓與心血管疾病風險增加有關。',
+
+  // 健康建議
+  '健康建議': '健康建議',
+  '您沒有晨峰血壓現象，請繼續保持良好的生活習慣。': '您沒有晨峰血壓現象，請繼續保持良好的生活習慣。',
+  '您有輕度晨峰血壓現象，建議規律服藥並監測血壓變化。': '您有輕度晨峰血壓現象，建議規律服藥並監測血壓變化。',
+  '您有中度晨峰血壓現象，建議諮詢醫生調整藥物或服藥時間。': '您有中度晨峰血壓現象，建議諮詢醫生調整藥物或服藥時間。',
+  '您有重度晨峰血壓現象，請盡快諮詢醫生，可能需要24小時血壓監測和藥物調整。': '您有重度晨峰血壓現象，請盡快諮詢醫生，可能需要24小時血壓監測和藥物調整。',
 };
 
 // 英文深度分析詞彙
@@ -186,4 +229,49 @@ const Map<String, String> enUSAdvancedAnalysis = {
   '繼續保持良好的生活習慣': 'Continue maintaining good lifestyle habits',
   '定期監測血壓，包括早晨和晚上': 'Regularly monitor blood pressure, both in the morning and evening',
   '適量運動，但避免早晨劇烈運動': 'Exercise moderately, but avoid intense morning exercise',
+
+  // 圖片中顯示的晨峰血壓相關詞彙
+  '晨峰指數': 'Morning Surge Index',
+  '晨峰幅度': 'Morning Surge Magnitude',
+  '有晨峰現象': 'Morning Surge Present',
+  '無晨峰現象': 'No Morning Surge',
+  '無晨峰': 'No Morning Surge',
+  '晨峰指數計算方法': 'Morning Surge Index Calculation Method',
+  '晨峰指數 = (早晨收縮壓 - 晚間收縮壓) / 晚間收縮壓 × 100%': 'Morning Surge Index = (Morning Systolic - Evening Systolic) / Evening Systolic × 100%',
+  '• 小於0：無晨峰現象': '• Less than 0: No Morning Surge',
+  '• 0-10：輕度晨峰': '• 0-10: Mild Morning Surge',
+  '• 10-20：中度晨峰': '• 10-20: Moderate Morning Surge',
+  '• 大於20：重度晨峰': '• >20: Severe Morning Surge',
+  '輕度晨峰': 'Mild Surge',
+  '中度晨峰': 'Moderate Surge',
+  '重度晨峰': 'Severe Surge',
+  '未知': 'Unknown',
+  '晚間': 'Evening',
+  '早晚效應分析': 'Morning-Evening Effect Analysis',
+  'No Morning Surge': 'No Morning Surge',
+  'Morning': 'Morning',
+  'Systolic': 'Systolic',
+  'Diastolic': 'Diastolic',
+  'Morning Surge Index': 'Morning Surge Index',
+  'Morning Surge Magnitude': 'Morning Surge Magnitude',
+  'Morning Surge Explanation': 'Morning Surge Explanation',
+  'What is Morning Surge': 'What is Morning Surge',
+  '沒有足夠的數據進行分析': 'Not enough data for analysis',
+  'measurements': 'measurements',
+  '收縮壓': 'Systolic',
+  '舒張壓': 'Diastolic',
+
+  // 晨峰血壓說明
+  '晨峰血壓說明': 'Morning Surge Explanation',
+  '什麼是晨峰血壓': 'What is Morning Surge',
+  '晨峰血壓是指早晨起床後的血壓相比前一天晚上的血壓明顯升高的現象。研究顯示，過大的晨峰血壓與心血管疾病風險增加有關。':
+      'Morning surge refers to a significant increase in blood pressure in the morning after waking up compared to the previous evening\'s blood pressure. Research shows that excessive morning surge is associated with increased risk of cardiovascular disease.',
+
+  // 健康建議
+  '健康建議': 'Health Suggestions',
+  '您沒有晨峰血壓現象，請繼續保持良好的生活習慣。': 'You don\'t have a morning surge phenomenon. Please continue maintaining good lifestyle habits.',
+  '您有輕度晨峰血壓現象，建議規律服藥並監測血壓變化。': 'You have a mild morning surge. Regular medication and monitoring of blood pressure changes are recommended.',
+  '您有中度晨峰血壓現象，建議諮詢醫生調整藥物或服藥時間。': 'You have a moderate morning surge. Consulting your doctor for medication adjustment or timing is recommended.',
+  '您有重度晨峰血壓現象，請盡快諮詢醫生，可能需要24小時血壓監測和藥物調整。':
+      'You have a severe morning surge. Please consult your doctor as soon as possible. 24-hour blood pressure monitoring and medication adjustment may be needed.',
 };

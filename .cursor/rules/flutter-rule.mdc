@@ -1,7 +1,6 @@
 ---
 description: 
 globs: 
-alwaysApply: true
 ---
 
 # 要求
@@ -20,3 +19,4 @@ alwaysApply: true
 4、頁面程式碼大於600行時請自行拆分組件。
 5、程式裡面的 print 代碼不要移除。
 6、專案裡面的文字與佈局、排版，在開始寫時就要導入多國語系。
+7、語系檔放在 lib/l10n/translations 目錄下。
