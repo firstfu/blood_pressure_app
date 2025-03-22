@@ -72,6 +72,9 @@ const Map<String, String> zhTWAnalysis = {
   '無法儲存檔案': '無法儲存檔案',
   '暫無數據，無法匯出': '暫無數據，無法匯出',
   '血壓記錄數據': '血壓記錄數據',
+
+  // 其他
+  '至': '至',
 };
 
 // 英文分析頁面詞彙
@@ -144,4 +147,7 @@ const Map<String, String> enUSAnalysis = {
   '無法儲存檔案': 'Unable to save file',
   '暫無數據，無法匯出': 'No data available, cannot export',
   '血壓記錄數據': 'Blood Pressure Data',
+
+  // 其他
+  '至': 'To',
 };

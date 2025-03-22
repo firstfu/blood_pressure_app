@@ -294,7 +294,7 @@ class StatisticsCard extends StatelessWidget {
       case TimeRange.custom:
         if (startDate != null && endDate != null) {
           final dateFormat = DateFormat('yyyy/MM/dd');
-          return '${dateFormat.format(startDate!)} 至 ${dateFormat.format(endDate!)}';
+          return '${dateFormat.format(startDate!)} - ${dateFormat.format(endDate!)}';
         }
         return context.tr('自定義日期範圍');
     }
