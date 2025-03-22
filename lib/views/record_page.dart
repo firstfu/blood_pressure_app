@@ -347,7 +347,7 @@ class _RecordPageState extends State<RecordPage> {
           ),
           filled: true,
           fillColor: _cardColor,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         ),
         value: value,
         style: TextStyle(fontSize: _contentFontSize, color: _textColor),
@@ -355,6 +355,7 @@ class _RecordPageState extends State<RecordPage> {
         borderRadius: BorderRadius.circular(_borderRadius),
         items: items,
         onChanged: onChanged,
+        isExpanded: true,
       ),
     );
   }
