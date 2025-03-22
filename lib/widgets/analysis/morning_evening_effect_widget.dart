@@ -49,35 +49,9 @@ class MorningEveningEffectWidget extends StatelessWidget {
           decoration: BoxDecoration(color: Colors.orange.withAlpha(26), borderRadius: BorderRadius.circular(8)),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildTimeSummaryItem(
-                      context,
-                      context.tr('早晨'),
-                      '${(morningData['systolic'] ?? 0.0).toStringAsFixed(1)}/${(morningData['diastolic'] ?? 0.0).toStringAsFixed(1)}',
-                      (morningData['count'] ?? 0).toString(),
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildTimeSummaryItem(
-                      context,
-                      context.tr('晚間'),
-                      '${(eveningData['systolic'] ?? 0.0).toStringAsFixed(1)}/${(eveningData['diastolic'] ?? 0.0).toStringAsFixed(1)}',
-                      (eveningData['count'] ?? 0).toString(),
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildDifferenceSummaryItem(
-                      context,
-                      context.tr('晨峰幅度'),
-                      '${(difference['systolic'] ?? 0.0).abs().toStringAsFixed(1)}/${(difference['diastolic'] ?? 0.0).abs().toStringAsFixed(1)}',
-                      (difference['systolic'] ?? 0.0) > 0 ? context.tr('有晨峰現象') : context.tr('無晨峰現象'),
-                      (difference['systolic'] ?? 0.0) > 0 ? Colors.red : Colors.green,
-                    ),
-                  ),
-                ],
-              ),
+              _isChineseLocale(context)
+                  ? _buildHorizontalLayout(context, morningData, eveningData, difference)
+                  : _buildVerticalLayout(context, morningData, eveningData, difference),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -351,5 +325,87 @@ class MorningEveningEffectWidget extends StatelessWidget {
       default:
         return context.tr('未知');
     }
+  }
+
+  bool _isChineseLocale(BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    return locale == 'zh';
+  }
+
+  Widget _buildHorizontalLayout(
+    BuildContext context,
+    Map<String, dynamic> morningData,
+    Map<String, dynamic> eveningData,
+    Map<String, dynamic> difference,
+  ) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildTimeSummaryItem(
+            context,
+            context.tr('早晨'),
+            '${(morningData['systolic'] ?? 0.0).toStringAsFixed(1)}/${(morningData['diastolic'] ?? 0.0).toStringAsFixed(1)}',
+            (morningData['count'] ?? 0).toString(),
+          ),
+        ),
+        Expanded(
+          child: _buildTimeSummaryItem(
+            context,
+            context.tr('晚間'),
+            '${(eveningData['systolic'] ?? 0.0).toStringAsFixed(1)}/${(eveningData['diastolic'] ?? 0.0).toStringAsFixed(1)}',
+            (eveningData['count'] ?? 0).toString(),
+          ),
+        ),
+        Expanded(
+          child: _buildDifferenceSummaryItem(
+            context,
+            context.tr('晨峰幅度'),
+            '${(difference['systolic'] ?? 0.0).abs().toStringAsFixed(1)}/${(difference['diastolic'] ?? 0.0).abs().toStringAsFixed(1)}',
+            (difference['systolic'] ?? 0.0) > 0 ? context.tr('有晨峰現象') : context.tr('無晨峰現象'),
+            (difference['systolic'] ?? 0.0) > 0 ? Colors.red : Colors.green,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVerticalLayout(
+    BuildContext context,
+    Map<String, dynamic> morningData,
+    Map<String, dynamic> eveningData,
+    Map<String, dynamic> difference,
+  ) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildTimeSummaryItem(
+                context,
+                context.tr('早晨'),
+                '${(morningData['systolic'] ?? 0.0).toStringAsFixed(1)}/${(morningData['diastolic'] ?? 0.0).toStringAsFixed(1)}',
+                (morningData['count'] ?? 0).toString(),
+              ),
+            ),
+            Expanded(
+              child: _buildTimeSummaryItem(
+                context,
+                context.tr('晚間'),
+                '${(eveningData['systolic'] ?? 0.0).toStringAsFixed(1)}/${(eveningData['diastolic'] ?? 0.0).toStringAsFixed(1)}',
+                (eveningData['count'] ?? 0).toString(),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildDifferenceSummaryItem(
+          context,
+          context.tr('晨峰幅度'),
+          '${(difference['systolic'] ?? 0.0).abs().toStringAsFixed(1)}/${(difference['diastolic'] ?? 0.0).abs().toStringAsFixed(1)}',
+          (difference['systolic'] ?? 0.0) > 0 ? context.tr('有晨峰現象') : context.tr('無晨峰現象'),
+          (difference['systolic'] ?? 0.0) > 0 ? Colors.red : Colors.green,
+        ),
+      ],
+    );
   }
 }
