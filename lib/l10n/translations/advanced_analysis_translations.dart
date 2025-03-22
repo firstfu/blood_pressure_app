@@ -194,18 +194,17 @@ const Map<String, String> zhTWAdvancedAnalysis = {
   '風險較低': '風險較低',
   '風險輕微': '風險輕微',
   '風險中等': '風險中等',
-  '風險較高': 'High Risk',
-  '風險非常高': 'Very High Risk',
-  '總體風險評分標題': 'Overall Risk Score',
-  '健康風險低': 'Low Health Risk',
-  '健康風險中度': 'Moderate Health Risk',
-  '健康風險高': 'High Health Risk',
-  '風險因素分析': 'Risk Factor Analysis',
-  '健康生活方式建議': 'Healthy Lifestyle Recommendations',
-  '您的血壓狀況良好，總體心血管風險較低。': 'Your blood pressure condition is good, with low overall cardiovascular risk.',
-  '您有一定的心血管風險，建議關注血壓變化並保持健康生活方式。':
-      'You have a certain cardiovascular risk. It is recommended to pay attention to blood pressure changes and maintain a healthy lifestyle.',
-  '您的心血管風險較高，建議諮詢醫生並嚴格控制血壓。': 'Your cardiovascular risk is high. It is recommended to consult a doctor and strictly control your blood pressure.',
+  '風險較高': '風險較高',
+  '風險非常高': '風險非常高',
+  '總體風險評分標題': '總體風險評分',
+  '健康風險低': '健康風險低',
+  '健康風險中度': '健康風險中度',
+  '健康風險高': '健康風險高',
+  '風險因素分析': '風險因素分析',
+  '健康生活方式建議': '健康生活方式建議',
+  '您的血壓狀況良好，總體心血管風險較低。': '您的血壓狀況良好，總體心血管風險較低。',
+  '您有一定的心血管風險，建議關注血壓變化並保持健康生活方式。': '您有一定的心血管風險，建議關注血壓變化並保持健康生活方式。',
+  '您的心血管風險較高，建議諮詢醫生並嚴格控制血壓。': '您的心血管風險較高，建議諮詢醫生並嚴格控制血壓。',
   '個人資料': '個人資料',
   '年齡': '年齡',
   '性別': '性別',
@@ -223,54 +222,41 @@ const Map<String, String> zhTWAdvancedAnalysis = {
   '膽固醇值必須在2.0至10.0之間': '膽固醇值必須在2.0至10.0之間',
 
   // 風險類別和描述
-  '收縮壓風險': 'Systolic Pressure Risk',
-  '舒張壓風險': 'Diastolic Pressure Risk',
-  '脈壓差分析': 'Pulse Pressure Analysis',
-  '您的收縮壓處於理想範圍內。': 'Your systolic pressure is in the ideal range.',
-  '您的收縮壓處於正常範圍，但接近高血壓前期。': 'Your systolic pressure is in the normal range, but approaching pre-hypertension.',
-  '您的收縮壓處於高血壓前期，有發展為高血壓的風險。': 'Your systolic pressure is in the pre-hypertension range, with risk of developing hypertension.',
-  '您的收縮壓處於輕度高血壓範圍，建議定期監測並考慮諮詢醫生。':
-      'Your systolic pressure is in the mild hypertension range. Regular monitoring and consulting a doctor is recommended.',
-  '您的收縮壓處於中度至重度高血壓範圍，應該儘快諮詢醫生。':
-      'Your systolic pressure is in the moderate to severe hypertension range. You should consult a doctor as soon as possible.',
-  '您的舒張壓處於理想範圍內。': 'Your diastolic pressure is in the ideal range.',
-  '您的舒張壓處於正常範圍，但接近高血壓前期。': 'Your diastolic pressure is in the normal range, but approaching pre-hypertension.',
-  '您的舒張壓處於高血壓前期，有發展為高血壓的風險。': 'Your diastolic pressure is in the pre-hypertension range, with risk of developing hypertension.',
-  '您的舒張壓處於輕度高血壓範圍，建議定期監測並考慮諮詢醫生。':
-      'Your diastolic pressure is in the mild hypertension range. Regular monitoring and consulting a doctor is recommended.',
-  '您的舒張壓處於中度至重度高血壓範圍，應該儘快諮詢醫生。':
-      'Your diastolic pressure is in the moderate to severe hypertension range. You should consult a doctor as soon as possible.',
-  '您的脈壓差偏低，可能表示心臟輸出量減少。': 'Your pulse pressure is low, which may indicate decreased cardiac output.',
-  '您的脈壓差處於正常範圍。': 'Your pulse pressure is in the normal range.',
-  '您的脈壓差略高，可能表示動脈彈性降低，是心血管疾病的風險因素。':
-      'Your pulse pressure is slightly high, which may indicate reduced arterial elasticity, a risk factor for cardiovascular disease.',
-  '您的脈壓差明顯偏高，這通常與動脈硬化相關，是心血管疾病的重要風險因素。':
-      'Your pulse pressure is significantly high, which is usually associated with arterial stiffness, an important risk factor for cardiovascular disease.',
+  '收縮壓風險': '收縮壓風險',
+  '舒張壓風險': '舒張壓風險',
+  '脈壓差分析': '脈壓差分析',
+  '您的收縮壓處於理想範圍內。': '您的收縮壓處於理想範圍內。',
+  '您的收縮壓處於正常範圍，但接近高血壓前期。': '您的收縮壓處於正常範圍，但接近高血壓前期。',
+  '您的收縮壓處於高血壓前期，有發展為高血壓的風險。': '您的收縮壓處於高血壓前期，有發展為高血壓的風險。',
+  '您的收縮壓處於輕度高血壓範圍，建議定期監測並考慮諮詢醫生。': '您的收縮壓處於輕度高血壓範圍，建議定期監測並考慮諮詢醫生。',
+  '您的收縮壓處於中度至重度高血壓範圍，應該儘快諮詢醫生。': '您的收縮壓處於中度至重度高血壓範圍，應該儘快諮詢醫生。',
+  '您的舒張壓處於理想範圍內。': '您的舒張壓處於理想範圍內。',
+  '您的舒張壓處於正常範圍，但接近高血壓前期。': '您的舒張壓處於正常範圍，但接近高血壓前期。',
+  '您的舒張壓處於高血壓前期，有發展為高血壓的風險。': '您的舒張壓處於高血壓前期，有發展為高血壓的風險。',
+  '您的舒張壓處於輕度高血壓範圍，建議定期監測並考慮諮詢醫生。': '您的舒張壓處於輕度高血壓範圍，建議定期監測並考慮諮詢醫生。',
+  '您的舒張壓處於中度至重度高血壓範圍，應該儘快諮詢醫生。': '您的舒張壓處於中度至重度高血壓範圍，應該儘快諮詢醫生。',
+  '您的脈壓差偏低，可能表示心臟輸出量減少。': '您的脈壓差偏低，可能表示心臟輸出量減少。',
+  '您的脈壓差處於正常範圍。': '您的脈壓差處於正常範圍。',
+  '您的脈壓差略高，可能表示動脈彈性降低，是心血管疾病的風險因素。': '您的脈壓差略高，可能表示動脈彈性降低，是心血管疾病的風險因素。',
+  '您的脈壓差明顯偏高，這通常與動脈硬化相關，是心血管疾病的重要風險因素。': '您的脈壓差明顯偏高，這通常與動脈硬化相關，是心血管疾病的重要風險因素。',
 
   // 健康生活方式建議
-  '保持健康飲食': 'Maintain Healthy Diet',
-  '減少鹽分攝入，增加蔬果攝入，選擇全穀物和低脂蛋白質，避免加工食品和高糖飲料。':
-      'Reduce salt intake, increase fruit and vegetable intake, choose whole grains and low-fat protein, avoid processed foods and high-sugar drinks.',
-  '規律運動': 'Regular Exercise',
-  '每週至少進行150分鐘中等強度有氧運動，如快走、游泳或騎自行車。':
-      'Engage in at least 150 minutes of moderate-intensity aerobic exercise per week, such as brisk walking, swimming, or cycling.',
-  '減少鈉鹽攝入': 'Reduce Sodium Intake',
-  '每日鈉鹽攝入量控制在5克以下，減少使用加工食品和外賣食品。': 'Control daily sodium intake to below 5g, reduce consumption of processed foods and takeout meals.',
-  '定期監測血壓': 'Regular Blood Pressure Monitoring',
-  '每日固定時間測量血壓，並記錄變化趨勢，定期與醫生分享這些記錄。':
-      'Measure blood pressure at fixed times daily, record trends, and regularly share these records with your doctor.',
-  '控制體重': 'Weight Control',
-  '將體重維持在健康範圍內可以幫助降低血壓，每減少1kg體重可降低血壓約1mmHg。':
-      'Maintaining weight within a healthy range can help lower blood pressure. Each 1kg of weight loss can lower blood pressure by about 1mmHg.',
-  '減少壓力': 'Reduce Stress',
-  '嘗試冥想、深呼吸或瑜伽等放鬆技巧，有助於降低壓力和血壓。':
-      'Try relaxation techniques such as meditation, deep breathing, or yoga, which can help reduce stress and blood pressure.',
-  '限制酒精攝入': 'Limit Alcohol Intake',
-  '男性每日酒精攝入量不超過25g，女性不超過15g。過量飲酒會顯著提高血壓。':
-      'Daily alcohol intake should not exceed 25g for men and 15g for women. Excessive drinking significantly raises blood pressure.',
-  '諮詢醫療建議': 'Seek Medical Advice',
-  '您的血壓處於較高水平，建議儘快諮詢醫生獲取個人化的治療方案。':
-      'Your blood pressure is at a higher level. It is recommended to consult a doctor as soon as possible for a personalized treatment plan.',
+  '保持健康飲食': '保持健康飲食',
+  '減少鹽分攝入，增加蔬果攝入，選擇全穀物和低脂蛋白質，避免加工食品和高糖飲料。': '減少鹽分攝入，增加蔬果攝入，選擇全穀物和低脂蛋白質，避免加工食品和高糖飲料。',
+  '規律運動': '規律運動',
+  '每週至少進行150分鐘中等強度有氧運動，如快走、游泳或騎自行車。': '每週至少進行150分鐘中等強度有氧運動，如快走、游泳或騎自行車。',
+  '減少鈉鹽攝入': '減少鈉鹽攝入',
+  '每日鈉鹽攝入量控制在5克以下，減少使用加工食品和外賣食品。': '每日鈉鹽攝入量控制在5克以下，減少使用加工食品和外賣食品。',
+  '定期監測血壓': '定期監測血壓',
+  '每日固定時間測量血壓，並記錄變化趨勢，定期與醫生分享這些記錄。': '每日固定時間測量血壓，並記錄變化趨勢，定期與醫生分享這些記錄。',
+  '控制體重': '控制體重',
+  '將體重維持在健康範圍內可以幫助降低血壓，每減少1kg體重可降低血壓約1mmHg。': '將體重維持在健康範圍內可以幫助降低血壓，每減少1kg體重可降低血壓約1mmHg。',
+  '減少壓力': '減少壓力',
+  '嘗試冥想、深呼吸或瑜伽等放鬆技巧，有助於降低壓力和血壓。': '嘗試冥想、深呼吸或瑜伽等放鬆技巧，有助於降低壓力和血壓。',
+  '限制酒精攝入': '限制酒精攝入',
+  '男性每日酒精攝入量不超過25g，女性不超過15g。過量飲酒會顯著提高血壓。': '男性每日酒精攝入量不超過25g，女性不超過15g。過量飲酒會顯著提高血壓。',
+  '諮詢醫療建議': '諮詢醫療建議',
+  '您的血壓處於較高水平，建議儘快諮詢醫生獲取個人化的治療方案。': '您的血壓處於較高水平，建議儘快諮詢醫生獲取個人化的治療方案。',
 };
 
 // 英文深度分析詞彙
