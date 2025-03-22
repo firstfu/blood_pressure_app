@@ -1,6 +1,8 @@
-// @ Author: firstfu
-// @ Create Time: 2024-05-15 16:16:42
-// @ Description: 血壓管家 App 主入口檔案
+/*
+ * @ Author: firstfu
+ * @ Create Time: 2024-03-13 09:45:50
+ * @ Description: 血壓記錄 App 主入口檔案
+ */
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,7 @@ import 'themes/app_theme.dart';
 import 'views/main_page.dart';
 import 'views/onboarding_page.dart';
 
+// 主應用程式入口
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -31,6 +34,7 @@ void main() async {
   runApp(MultiProvider(providers: [ChangeNotifierProvider(create: (_) => localeProvider)], child: MyApp(onBoardingCompleted: onBoardingCompleted)));
 }
 
+// 主應用程式
 class MyApp extends StatelessWidget {
   final bool onBoardingCompleted;
 
@@ -47,8 +51,8 @@ class MyApp extends StatelessWidget {
       home: onBoardingCompleted ? const MainPage() : const OnboardingPage(),
       debugShowCheckedModeBanner: false,
       // 添加本地化支持
-      localizationsDelegates: const [
-        AppLocalizationsDelegate(), // 自定義語系代理
+      localizationsDelegates: [
+        AppLocalizations.delegate, // 使用靜態代理
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
