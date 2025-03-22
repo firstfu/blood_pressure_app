@@ -389,7 +389,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  '${context.tr('與血壓')}: $correlationText',
+                  hasData
+                      ? '${context.tr('與血壓')}: $correlationText (${correlationValue.toStringAsFixed(2)})'
+                      : '${context.tr('與血壓')}: $correlationText',
                   style: TextStyle(fontWeight: FontWeight.bold, color: color),
                   overflow: TextOverflow.visible,
                   softWrap: true,
@@ -397,13 +399,6 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               ),
             ],
           ),
-
-          // 相關性數值單獨顯示
-          if (hasData)
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-              child: Text('(${correlationValue.toStringAsFixed(2)})', style: TextStyle(color: color)),
-            ),
 
           // 描述文本 - 增加間距
           const SizedBox(height: 16),
