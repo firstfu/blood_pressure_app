@@ -295,12 +295,14 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
   Widget _buildCorrelationResults(Map<String, dynamic> factorData) {
     // 添加空值檢查
     final correlation = factorData['correlation'];
-    final description = factorData['description'];
-    final impact = factorData['impact'];
     final hasData = factorData['hasData'] == true;
 
+    // 從服務獲取的描述和影響，但我們將改為使用翻譯文件中的內容
+    final serviceDes = factorData['description'];
+    final serviceImpact = factorData['impact'];
+
     // 如果關鍵數據缺失，顯示錯誤訊息
-    if (correlation == null || description == null || impact == null) {
+    if (correlation == null || serviceDes == null || serviceImpact == null) {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -331,10 +333,78 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       );
     }
 
-    // 即使 hasData 為 false，只要有必要的字段，也顯示相關信息
+    // 根據選擇的因素和相關性值，從翻譯文件中獲取相應的描述和影響文本
+    String descriptionKey = '';
+    String impactKey = '';
+
+    // 根據相關性值和因素選擇對應的翻譯鍵
     final double correlationValue = correlation as double;
-    final String descriptionText = description as String;
-    final String impactText = impact as String;
+
+    // 為每種因素確定描述和影響的翻譯鍵
+    switch (_selectedFactor) {
+      case 'exercise':
+        if (correlationValue < 0) {
+          descriptionKey = '規律運動有助於降低血壓，提高心肺功能。';
+          impactKey = '缺乏運動可能導致血壓升高的風險增加。';
+        } else {
+          descriptionKey = '缺乏運動可能導致血壓升高的風險增加。';
+          impactKey = '規律運動有助於降低血壓，提高心肺功能。';
+        }
+        break;
+      case 'sleep':
+        if (correlationValue < 0) {
+          descriptionKey = '充足的睡眠有助於維持健康的血壓水平。';
+          impactKey = '睡眠不足或睡眠質量差可能導致血壓升高。';
+        } else {
+          descriptionKey = '睡眠不足或睡眠質量差可能導致血壓升高。';
+          impactKey = '充足的睡眠有助於維持健康的血壓水平。';
+        }
+        break;
+      case 'salt':
+        if (correlationValue > 0) {
+          descriptionKey = '攝入過多鹽分會導致血壓升高。';
+          impactKey = '適量減少鹽分攝入有助於控制血壓。';
+        } else {
+          descriptionKey = '適量減少鹽分攝入有助於控制血壓。';
+          impactKey = '攝入過多鹽分會導致血壓升高。';
+        }
+        break;
+      case 'stress':
+        if (correlationValue > 0) {
+          descriptionKey = '高壓力狀態下身體會釋放壓力荷爾蒙，可能導致血壓暫時升高。';
+          impactKey = '長期壓力可能導致持續性高血壓。';
+        } else {
+          descriptionKey = '長期壓力可能導致持續性高血壓。';
+          impactKey = '高壓力狀態下身體會釋放壓力荷爾蒙，可能導致血壓暫時升高。';
+        }
+        break;
+      case 'water':
+        if (correlationValue < 0) {
+          descriptionKey = '水分攝入與血壓呈現中等負相關，充足飲水的日子血壓略有降低。';
+          impactKey = '適當的水分攝入有助於維持正常的血容量和血壓。';
+        } else {
+          descriptionKey = '水分攝入不足可能導致血液濃縮，增加心臟負擔。';
+          impactKey = '適當的水分攝入有助於維持正常的血容量和血壓。';
+        }
+        break;
+      case 'alcohol':
+        if (correlationValue > 0) {
+          descriptionKey = '過量飲酒會導致血壓升高，增加心血管疾病風險。';
+          impactKey = '適量飲酒對某些人可能有輕微的保護作用，但不建議為降血壓而飲酒。';
+        } else {
+          descriptionKey = '適量飲酒對某些人可能有輕微的保護作用，但不建議為降血壓而飲酒。';
+          impactKey = '過量飲酒會導致血壓升高，增加心血管疾病風險。';
+        }
+        break;
+      default:
+        // 使用服務提供的描述和影響作為後備
+        descriptionKey = serviceDes;
+        impactKey = serviceImpact;
+    }
+
+    // 使用本地化文本
+    final String descriptionText = context.tr(descriptionKey);
+    final String impactText = context.tr(impactKey);
 
     // 根據 hasData 決定顯示樣式
     Color color;
@@ -450,6 +520,38 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       return Container();
     }
 
+    // 創建適當的建議列表
+    List<String> recommendationsList = [];
+
+    // 根據因素類型選擇合適的建議
+    switch (_selectedFactor) {
+      case 'exercise':
+        recommendationsList = ['每週進行至少150分鐘中等強度有氧運動', '選擇步行、游泳、騎自行車等有氧活動', '避免過度劇烈的運動，尤其是已有高血壓的人', '堅持規律運動，而非偶爾的高強度活動'];
+        break;
+      case 'sleep':
+        recommendationsList = ['保持每晚7-8小時的充足睡眠', '建立規律的睡眠時間表，包括週末', '創造安靜、黑暗、舒適的睡眠環境', '避免睡前使用電子設備和攝入咖啡因'];
+        break;
+      case 'salt':
+        recommendationsList = ['將每日鈉攝入量控制在2000毫克以下', '減少加工食品、罐頭和外賣食品的攝入', '閱讀食品標籤以了解鈉含量', '使用香草、香料代替鹽增添風味'];
+        break;
+      case 'stress':
+        recommendationsList = ['嘗試冥想、深呼吸或瑜伽等放鬆技巧', '保持適度的工作和休息平衡', '培養興趣愛好，尋找減壓方式', '必要時尋求專業心理支持'];
+        break;
+      case 'water':
+        recommendationsList = ['每日飲水2-2.5升（約8-10杯）', '保持全天均勻飲水的習慣', '限制含糖飲料和咖啡因飲品', '增加富含水分的蔬果攝入'];
+        break;
+      case 'alcohol':
+        recommendationsList = ['男性每日酒精攝入不超過25克（約2杯）', '女性每日酒精攝入不超過15克（約1杯）', '避免一次性大量飲酒', '高血壓患者考慮完全避免飲酒'];
+        break;
+      default:
+        // 如果服務提供了建議，則使用這些建議作為後備
+        if (recommendations is List) {
+          recommendationsList = List<String>.from(recommendations);
+        } else if (recommendations is String) {
+          recommendationsList = [recommendations];
+        }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -457,10 +559,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           padding: const EdgeInsets.only(bottom: 12.0),
           child: Text(context.tr('健康建議'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
-        if (recommendations is List)
-          ...recommendations.map((recommendation) => _buildRecommendationItem(recommendation))
-        else if (recommendations is String)
-          _buildRecommendationItem(recommendations),
+        ...recommendationsList.map((recommendation) => _buildRecommendationItem(context.tr(recommendation))),
       ],
     );
   }
