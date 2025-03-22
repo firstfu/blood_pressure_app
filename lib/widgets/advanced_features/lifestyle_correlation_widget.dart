@@ -139,7 +139,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           children: [
             const Icon(Icons.bar_chart, size: 48, color: Colors.grey),
             const SizedBox(height: 16),
-            Text(context.tr('${_factorNames[_selectedFactor]} 數據不足，無法顯示圖表'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(context.tr('數據不足，無法顯示圖表'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 8),
             Text(context.tr('請記錄更多數據或選擇其他因素'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           ],
@@ -162,7 +162,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.grey),
             const SizedBox(height: 16),
-            Text(context.tr('無法顯示 ${_factorNames[_selectedFactor]} 的圖表數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(context.tr('無法顯示的圖表數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -175,7 +175,10 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(padding: EdgeInsets.only(bottom: 12.0), child: Text('血壓平均值比較', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: Text(context.tr('血壓平均值比較'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
         SizedBox(
           height: 250,
           child: BarChart(
@@ -191,9 +194,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     String title = '';
                     if (rodIndex == 0) {
-                      title = '收縮壓';
+                      title = context.tr('收縮壓');
                     } else if (rodIndex == 1) {
-                      title = '舒張壓';
+                      title = context.tr('舒張壓');
                     }
                     return BarTooltipItem('$title: ${rod.toY.toStringAsFixed(1)}', const TextStyle(color: Colors.white));
                   },
@@ -207,7 +210,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                     getTitlesWidget: (value, meta) {
                       String text = '';
                       if (value < groupsList.length) {
-                        text = groupsList[value.toInt()]['name'] ?? '';
+                        text = context.tr(groupsList[value.toInt()]['name'] ?? '');
                       }
                       return Padding(padding: const EdgeInsets.only(top: 8.0), child: Text(text, style: const TextStyle(fontSize: 12)));
                     },
@@ -272,11 +275,11 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
           children: [
             Container(width: 12, height: 12, color: Colors.red.withAlpha(179)),
             const SizedBox(width: 4),
-            const Text('收縮壓', style: TextStyle(fontSize: 12)),
+            Text(context.tr('收縮壓'), style: const TextStyle(fontSize: 12)),
             const SizedBox(width: 16),
             Container(width: 12, height: 12, color: Colors.blue.withAlpha(179)),
             const SizedBox(width: 4),
-            const Text('舒張壓', style: TextStyle(fontSize: 12)),
+            Text(context.tr('舒張壓'), style: const TextStyle(fontSize: 12)),
           ],
         ),
       ],
@@ -308,7 +311,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                 const Icon(Icons.warning_amber_rounded, color: Colors.orange),
                 const SizedBox(width: 8),
                 Text(
-                  context.tr('${_factorNames[_selectedFactor]} 相關性數據不完整'),
+                  '${_factorNames[_selectedFactor]} ${context.tr('相關性數據不完整')}',
                   style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
                 ),
               ],
@@ -334,31 +337,31 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       // 數據不足但有基本信息時的樣式
       icon = Icons.info_outline;
       color = Colors.blue;
-      correlationText = '數據不足';
+      correlationText = context.tr('數據不足');
     } else if (correlationValue > 0.7) {
       icon = Icons.arrow_upward;
       color = Colors.red;
-      correlationText = '強正相關';
+      correlationText = context.tr('強正相關');
     } else if (correlationValue > 0.3) {
       icon = Icons.arrow_upward;
       color = Colors.orange;
-      correlationText = '中等正相關';
+      correlationText = context.tr('中等正相關');
     } else if (correlationValue > 0) {
       icon = Icons.arrow_upward;
       color = Colors.yellow.shade800;
-      correlationText = '弱正相關';
+      correlationText = context.tr('弱正相關');
     } else if (correlationValue > -0.3) {
       icon = Icons.arrow_downward;
       color = Colors.green.shade300;
-      correlationText = '弱負相關';
+      correlationText = context.tr('弱負相關');
     } else if (correlationValue > -0.7) {
       icon = Icons.arrow_downward;
       color = Colors.green.shade600;
-      correlationText = '中等負相關';
+      correlationText = context.tr('中等負相關');
     } else {
       icon = Icons.arrow_downward;
       color = Colors.green.shade900;
-      correlationText = '強負相關';
+      correlationText = context.tr('強負相關');
     }
 
     return Container(
@@ -371,14 +374,17 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
             children: [
               Icon(icon, color: color),
               const SizedBox(width: 8),
-              Text('${_factorNames[_selectedFactor]} 與血壓: $correlationText', style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+              Text(
+                '${_factorNames[_selectedFactor]} ${context.tr('與血壓')}: $correlationText',
+                style: TextStyle(fontWeight: FontWeight.bold, color: color),
+              ),
               if (hasData) ...[const SizedBox(width: 8), Text('(${correlationValue.toStringAsFixed(2)})', style: TextStyle(color: color))],
             ],
           ),
           const SizedBox(height: 8),
           Text(descriptionText),
           const SizedBox(height: 8),
-          Text('影響: $impactText', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text('${context.tr('影響')}: $impactText', style: const TextStyle(fontWeight: FontWeight.bold)),
           if (!hasData && factorData['message'] != null) ...[
             const SizedBox(height: 8),
             Text(factorData['message'], style: TextStyle(color: Colors.grey.shade700, fontStyle: FontStyle.italic)),

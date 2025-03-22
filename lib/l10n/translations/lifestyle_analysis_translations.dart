@@ -19,6 +19,11 @@ const Map<String, String> zhTWLifestyleAnalysis = {
   // 數據不足提示
   '沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。': '沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。',
   '暫無足夠數據，增加更多記錄以進行分析': '暫無足夠數據，增加更多記錄以進行分析',
+  '數據不足，無法顯示圖表': '數據不足，無法顯示圖表',
+  '請記錄更多數據或選擇其他因素': '請記錄更多數據或選擇其他因素',
+  '無法顯示的圖表數據': '無法顯示的圖表數據',
+  '相關性數據不完整': '相關性數據不完整',
+  '無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。': '無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。',
 
   // 相關性結果描述
   '與血壓': '與血壓',
@@ -30,6 +35,25 @@ const Map<String, String> zhTWLifestyleAnalysis = {
   '中等相關': '中等相關',
   '強相關': '強相關',
   '影響': '影響',
+  '數據不足': '數據不足',
+  '強正相關': '強正相關',
+  '中等正相關': '中等正相關',
+  '弱正相關': '弱正相關',
+  '弱負相關': '弱負相關',
+  '中等負相關': '中等負相關',
+  '強負相關': '強負相關',
+
+  // 水分攝取與血壓相關性描述
+  '水分攝入與血壓呈現中等負相關，充足飲水的日子血壓略有降低。': '水分攝入與血壓呈現中等負相關，充足飲水的日子血壓略有降低。',
+  '影響: 適當飲水有助於維持血液循環和血壓穩定。建議每日飲水量在1.5-2升。': '影響: 適當飲水有助於維持血液循環和血壓穩定。建議每日飲水量在1.5-2升。',
+
+  // 生活方式因素與血壓的相關性類型
+  '運動與血壓: 中等負相關': '運動與血壓: 中等負相關',
+  '睡眠與血壓: 中等負相關': '睡眠與血壓: 中等負相關',
+  '鹽分攝取與血壓: 中等正相關': '鹽分攝取與血壓: 中等正相關',
+  '壓力與血壓: 強正相關': '壓力與血壓: 強正相關',
+  '水分攝取與血壓: 中等負相關': '水分攝取與血壓: 中等負相關',
+  '酒精與血壓: 中等正相關': '酒精與血壓: 中等正相關',
 
   // 生活方式因素的影響描述
   '規律運動有助於降低血壓，提高心肺功能。': '規律運動有助於降低血壓，提高心肺功能。',
@@ -87,11 +111,43 @@ const Map<String, String> zhTWLifestyleAnalysis = {
   // 圖表和數據顯示
   '血壓差異': '血壓差異',
   '平均血壓比較': '平均血壓比較',
+  '血壓平均值比較': '血壓平均值比較',
   '收縮壓': '收縮壓',
   '舒張壓': '舒張壓',
   '日記錄數': '日記錄數',
   '相關性值': '相關性值',
   '相關性強度': '相關性強度',
+
+  // 運動分組名稱
+  '不運動': '不運動',
+  '偶爾運動': '偶爾運動',
+  '經常運動': '經常運動',
+
+  // 睡眠分組名稱
+  '睡眠不足': '睡眠不足',
+  '睡眠一般': '睡眠一般',
+  '睡眠充足': '睡眠充足',
+
+  // 鹽分攝取分組名稱
+  '低鹽飲食': '低鹽飲食',
+  '中等鹽分': '中等鹽分',
+  '高鹽飲食': '高鹽飲食',
+
+  // 壓力分組名稱
+  '壓力小': '壓力小',
+  '壓力中等': '壓力中等',
+  '壓力大': '壓力大',
+
+  // 飲水量特定項
+  '飲水少': '飲水少',
+  '飲水適中': '飲水適中',
+  '飲水充足': '飲水充足',
+
+  // 酒精分組名稱
+  '不飲酒': '不飲酒',
+  '少量飲酒': '少量飲酒',
+  '中量飲酒': '中量飲酒',
+  '大量飲酒': '大量飲酒',
 };
 
 // 英文生活方式分析詞彙
@@ -112,6 +168,11 @@ const Map<String, String> enUSLifestyleAnalysis = {
   '沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。':
       'Not enough data for lifestyle correlation analysis. Please record more blood pressure data with lifestyle tags.',
   '暫無足夠數據，增加更多記錄以進行分析': 'Insufficient data, add more records for analysis',
+  '數據不足，無法顯示圖表': 'Insufficient data, cannot display chart',
+  '請記錄更多數據或選擇其他因素': 'Please record more data or select another factor',
+  '無法顯示的圖表數據': 'Unable to display chart data',
+  '相關性數據不完整': 'Correlation data incomplete',
+  '無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。': 'Unable to display complete correlation analysis results. Please try again later or select another factor.',
 
   // 相關性結果描述
   '與血壓': 'and Blood Pressure',
@@ -123,6 +184,27 @@ const Map<String, String> enUSLifestyleAnalysis = {
   '中等相關': 'Moderate Correlation',
   '強相關': 'Strong Correlation',
   '影響': 'Impact',
+  '數據不足': 'Insufficient Data',
+  '強正相關': 'Strong Positive Correlation',
+  '中等正相關': 'Moderate Positive Correlation',
+  '弱正相關': 'Weak Positive Correlation',
+  '弱負相關': 'Weak Negative Correlation',
+  '中等負相關': 'Moderate Negative Correlation',
+  '強負相關': 'Strong Negative Correlation',
+
+  // 水分攝取與血壓相關性描述
+  '水分攝入與血壓呈現中等負相關，充足飲水的日子血壓略有降低。':
+      'Water intake shows a moderate negative correlation with blood pressure, with slightly lower blood pressure on days with adequate hydration.',
+  '影響: 適當飲水有助於維持血液循環和血壓穩定。建議每日飲水量在1.5-2升。':
+      'Impact: Proper hydration helps maintain blood circulation and stable blood pressure. Recommended daily water intake is 1.5-2 liters.',
+
+  // 生活方式因素與血壓的相關性類型
+  '運動與血壓: 中等負相關': 'Exercise and Blood Pressure: Moderate Negative Correlation',
+  '睡眠與血壓: 中等負相關': 'Sleep and Blood Pressure: Moderate Negative Correlation',
+  '鹽分攝取與血壓: 中等正相關': 'Salt Intake and Blood Pressure: Moderate Positive Correlation',
+  '壓力與血壓: 強正相關': 'Stress and Blood Pressure: Strong Positive Correlation',
+  '水分攝取與血壓: 中等負相關': 'Water Intake and Blood Pressure: Moderate Negative Correlation',
+  '酒精與血壓: 中等正相關': 'Alcohol and Blood Pressure: Moderate Positive Correlation',
 
   // 生活方式因素的影響描述
   '規律運動有助於降低血壓，提高心肺功能。': 'Regular exercise helps lower blood pressure and improves cardiovascular function.',
@@ -181,9 +263,41 @@ const Map<String, String> enUSLifestyleAnalysis = {
   // 圖表和數據顯示
   '血壓差異': 'Blood Pressure Difference',
   '平均血壓比較': 'Average BP Comparison',
+  '血壓平均值比較': 'Blood Pressure Average Comparison',
   '收縮壓': 'Systolic',
   '舒張壓': 'Diastolic',
   '日記錄數': 'Records/Day',
   '相關性值': 'Correlation Value',
   '相關性強度': 'Correlation Strength',
+
+  // 運動分組名稱
+  '不運動': 'No Exercise',
+  '偶爾運動': 'Occasional Exercise',
+  '經常運動': 'Regular Exercise',
+
+  // 睡眠分組名稱
+  '睡眠不足': 'Insufficient Sleep',
+  '睡眠一般': 'Average Sleep',
+  '睡眠充足': 'Sufficient Sleep',
+
+  // 鹽分攝取分組名稱
+  '低鹽飲食': 'Low Salt Diet',
+  '中等鹽分': 'Moderate Salt',
+  '高鹽飲食': 'High Salt Diet',
+
+  // 壓力分組名稱
+  '壓力小': 'Low Stress',
+  '壓力中等': 'Moderate Stress',
+  '壓力大': 'High Stress',
+
+  // 飲水量特定項
+  '飲水少': 'Low Water Intake',
+  '飲水適中': 'Moderate Water Intake',
+  '飲水充足': 'Sufficient Water Intake',
+
+  // 酒精分組名稱
+  '不飲酒': 'No Alcohol',
+  '少量飲酒': 'Light Drinking',
+  '中量飲酒': 'Moderate Drinking',
+  '大量飲酒': 'Heavy Drinking',
 };
