@@ -25,42 +25,35 @@ class AdvancedFeaturesPage extends StatefulWidget {
   State<AdvancedFeaturesPage> createState() => _AdvancedFeaturesPageState();
 }
 
-class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with SingleTickerProviderStateMixin {
+class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with TickerProviderStateMixin {
   late TabController _tabController;
-  bool _isLoading = true;
-  String? _errorMessage;
-
-  // 服務實例
   final RecordService _recordService = RecordService();
-  final PredictionService _predictionService = PredictionService();
-  final RiskAssessmentService _riskAssessmentService = RiskAssessmentService();
   final LifestyleAnalysisService _lifestyleAnalysisService = LifestyleAnalysisService();
+  late PredictionService _predictionService;
+  late RiskAssessmentService _riskAssessmentService;
 
-  // 分析結果
-  Map<String, dynamic> _predictionResults = {'hasData': false, 'message': '正在加載數據...'};
-  Map<String, dynamic> _riskAssessmentResults = {'hasData': false, 'message': '正在加載數據...'};
-  Map<String, dynamic> _correlationResults = {'hasData': false, 'message': '正在加載數據...'};
+  // 分析結果數據
+  Map<String, dynamic> _medicationAnalysis = {'hasData': false};
+  Map<String, dynamic> _positionArmAnalysis = {'hasData': false};
+  Map<String, dynamic> _morningEveningAnalysis = {'hasData': false};
+  Map<String, dynamic> _predictionResults = {'hasData': false};
+  Map<String, dynamic> _riskAssessmentResults = {'hasData': false};
+  Map<String, dynamic> _correlationResults = {'hasData': false};
 
-  // 深度分析結果，添加預設欄位避免空值錯誤
-  late Map<String, dynamic> _medicationAnalysis = {'hasData': false, 'message': '正在加載數據...'};
-  late Map<String, dynamic> _positionArmAnalysis = {'hasData': false, 'message': '正在加載數據...'};
-  late Map<String, dynamic> _morningEveningAnalysis = {
-    'hasData': false,
-    'message': '正在加載數據...',
-    'morningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
-    'eveningData': {'systolic': 0.0, 'diastolic': 0.0, 'count': 0},
-    'difference': {'systolic': 0.0, 'diastolic': 0.0},
-    'surgeIndex': 0.0,
-    'surgeDegree': 'none',
-  };
-
-  // 用戶健康信息
-  Map<String, dynamic> _userInfo = {'age': 45, 'gender': '男', 'hasDiabetes': false, 'isSmoker': false, 'cholesterolLevel': 180.0};
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _predictionService = PredictionService(context);
+    _riskAssessmentService = RiskAssessmentService(context);
     _loadData();
   }
 
@@ -71,76 +64,42 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
   }
 
   // 加載數據
-  Future<void> _loadData() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
+  void _loadData() async {
     try {
-      // 加載血壓記錄
-      await _recordService.getRecords();
-      final records = _recordService.records;
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
 
-      if (records.isEmpty) {
+      // 加載血壓記錄
+      final records = await _recordService.getRecords();
+
+      // 進行高級分析
+      _medicationAnalysis = AnalysisService.analyzeMedicationEffect(records);
+      _positionArmAnalysis = AnalysisService.analyzePositionArmEffect(records);
+      _morningEveningAnalysis = AnalysisService.analyzeMorningEveningEffect(records);
+
+      // 血壓預測
+      _predictionResults = await _predictionService.predictBloodPressureTrend(records);
+
+      // 健康風險評估
+      _riskAssessmentResults = await _riskAssessmentService.assessHealthRisk(records);
+
+      // 生活方式相關性分析
+      _correlationResults = await _lifestyleAnalysisService.analyzeLifestyleCorrelation(records);
+
+      if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = context.tr('沒有可用的血壓記錄數據');
         });
-        return;
       }
-
-      // 進行血壓趨勢預測
-      final predictionResults = await _predictionService.predictBloodPressureTrend(records);
-
-      // 進行健康風險評估
-      final riskAssessmentResults = await _riskAssessmentService.assessHealthRisk(records, userInfo: _userInfo);
-
-      // 進行生活方式相關性分析
-      final correlationResults = await _lifestyleAnalysisService.analyzeLifestyleCorrelation(records);
-
-      // 執行深度分析
-      final medicationAnalysis = AnalysisService.analyzeMedicationEffect(records);
-      final positionArmAnalysis = AnalysisService.analyzePositionArmEffect(records);
-      final morningEveningAnalysis = AnalysisService.analyzeMorningEveningEffect(records);
-
-      setState(() {
-        _predictionResults = predictionResults;
-        _riskAssessmentResults = riskAssessmentResults;
-        _correlationResults = correlationResults;
-        _medicationAnalysis = medicationAnalysis;
-        _positionArmAnalysis = positionArmAnalysis;
-        _morningEveningAnalysis = morningEveningAnalysis;
-        _isLoading = false;
-      });
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = '${context.tr('加載數據時發生錯誤')}: $e';
-      });
-    }
-  }
-
-  // 更新用戶健康信息
-  void _updateUserInfo(Map<String, dynamic> userInfo) async {
-    setState(() {
-      _userInfo = userInfo;
-      _isLoading = true;
-    });
-
-    // 重新計算健康風險評估
-    try {
-      final riskAssessmentResults = await _riskAssessmentService.assessHealthRisk(_recordService.records, userInfo: _userInfo);
-
-      setState(() {
-        _riskAssessmentResults = riskAssessmentResults;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = '${context.tr('更新風險評估時發生錯誤')}: $e';
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -303,10 +262,7 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Single
 
                   // 健康風險評估
                   SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: HealthRiskAssessmentWidget(riskAssessmentResults: _riskAssessmentResults, onUpdateUserInfo: _updateUserInfo),
-                    ),
+                    child: Padding(padding: const EdgeInsets.all(16.0), child: HealthRiskAssessmentWidget(assessmentResult: _riskAssessmentResults)),
                   ),
 
                   // 生活方式相關性分析

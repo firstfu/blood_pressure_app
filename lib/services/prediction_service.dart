@@ -7,13 +7,19 @@
 import 'dart:math';
 import '../models/blood_pressure_record.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import '../l10n/app_localizations_extension.dart';
 
 class PredictionService {
+  final BuildContext context;
+
+  PredictionService(this.context);
+
   // 預測血壓趨勢
   Future<Map<String, dynamic>> predictBloodPressureTrend(List<BloodPressureRecord> records) async {
     // 如果記錄不足，無法進行預測
     if (records.length < 7) {
-      return {'hasData': false, 'message': '需要至少7天的血壓記錄才能進行預測分析'};
+      return {'hasData': false, 'message': context.tr('需要至少7天的血壓記錄才能進行預測分析')};
     }
 
     // 按日期排序
@@ -179,118 +185,62 @@ class PredictionService {
     return <double>[slope, intercept];
   }
 
+  // 分析趨勢
+  Map<String, dynamic> _analyzeTrend(List<Map<String, dynamic>> dailyData, List<Map<String, dynamic>> predictions) {
+    // 獲取最近7天的數據（如果有的話）
+    final recentData = dailyData.length >= 7 ? dailyData.sublist(dailyData.length - 7) : dailyData;
+
+    // 計算收縮壓和舒張壓的平均變化
+    double systolicChange = 0;
+    double diastolicChange = 0;
+
+    if (recentData.length >= 3) {
+      // 計算最近幾天的平均值和第一天的值的差異
+      final recentSystolicAvg = recentData.sublist(recentData.length - 3).map((data) => data['systolic'] as int).reduce((a, b) => a + b) / 3;
+      final recentDiastolicAvg = recentData.sublist(recentData.length - 3).map((data) => data['diastolic'] as int).reduce((a, b) => a + b) / 3;
+
+      final firstSystolic = recentData.first['systolic'] as int;
+      final firstDiastolic = recentData.first['diastolic'] as int;
+
+      systolicChange = recentSystolicAvg - firstSystolic;
+      diastolicChange = recentDiastolicAvg - firstDiastolic;
+    }
+
+    // 確定趨勢類型
+    String trendType;
+    String description;
+
+    if (systolicChange.abs() < 3 && diastolicChange.abs() < 3) {
+      trendType = 'stable';
+      description = context.tr('您的血壓在近期顯示為穩定狀態，變化範圍在正常波動範圍內。');
+    } else if (systolicChange > 5 || diastolicChange > 5) {
+      trendType = 'rising';
+      description = context.tr('您的血壓呈上升趨勢，可能需要更密切關注並考慮咨詢醫生。');
+    } else if (systolicChange < -5 || diastolicChange < -5) {
+      trendType = 'falling';
+      description = context.tr('您的血壓呈下降趨勢，如果這是治療的效果，這是個好消息。');
+    } else {
+      trendType = 'unstable';
+      description = context.tr('您的血壓顯示出一些波動，建議定期監測並保持良好的生活習慣。');
+    }
+
+    return {'type': trendType, 'description': description};
+  }
+
   // 識別高風險日
   List<Map<String, dynamic>> _identifyRiskDays(List<Map<String, dynamic>> predictions) {
-    final List<Map<String, dynamic>> riskDays = [];
+    final riskDays = <Map<String, dynamic>>[];
 
     for (final prediction in predictions) {
       final systolic = prediction['systolic'] as int;
       final diastolic = prediction['diastolic'] as int;
-      final pulse = prediction['pulse'] as int;
 
-      // 判斷風險等級
-      String riskLevel = 'normal';
-      if (systolic >= 140 || diastolic >= 90 || pulse >= 100 || pulse <= 55) {
-        riskLevel = 'high';
-      } else if (systolic >= 130 || diastolic >= 85 || pulse >= 90 || pulse <= 60) {
-        riskLevel = 'elevated';
-      }
-
-      // 如果是高風險或風險升高，添加到風險日列表
-      if (riskLevel != 'normal') {
-        riskDays.add({'date': prediction['date'], 'systolic': systolic, 'diastolic': diastolic, 'pulse': pulse, 'riskLevel': riskLevel});
+      // 如果收縮壓 >= 140 或舒張壓 >= 90，認為是高風險日
+      if (systolic >= 140 || diastolic >= 90) {
+        riskDays.add({'date': (prediction['date'] as DateTime).toIso8601String(), 'systolic': systolic, 'diastolic': diastolic});
       }
     }
 
     return riskDays;
-  }
-
-  // 分析趨勢
-  Map<String, dynamic> _analyzeTrend(List<Map<String, dynamic>> dailyData, List<Map<String, dynamic>> predictions) {
-    // 如果數據不足，無法分析趨勢
-    if (dailyData.length < 5 || predictions.isEmpty) {
-      return {'systolicTrend': 'stable', 'diastolicTrend': 'stable', 'pulseTrend': 'stable', 'message': '數據不足，無法確定趨勢'};
-    }
-
-    // 計算過去數據的平均值
-    double pastSystolicSum = 0;
-    double pastDiastolicSum = 0;
-    double pastPulseSum = 0;
-
-    for (final data in dailyData) {
-      pastSystolicSum += data['systolic'] as int;
-      pastDiastolicSum += data['diastolic'] as int;
-      pastPulseSum += data['pulse'] as int;
-    }
-
-    final pastSystolicAvg = pastSystolicSum / dailyData.length;
-    final pastDiastolicAvg = pastDiastolicSum / dailyData.length;
-    final pastPulseAvg = pastPulseSum / dailyData.length;
-
-    // 計算預測數據的平均值
-    double futureSystolicSum = 0;
-    double futureDiastolicSum = 0;
-    double futurePulseSum = 0;
-
-    for (final prediction in predictions) {
-      futureSystolicSum += prediction['systolic'] as int;
-      futureDiastolicSum += prediction['diastolic'] as int;
-      futurePulseSum += prediction['pulse'] as int;
-    }
-
-    final futureSystolicAvg = futureSystolicSum / predictions.length;
-    final futureDiastolicAvg = futureDiastolicSum / predictions.length;
-    final futurePulseAvg = futurePulseSum / predictions.length;
-
-    // 計算變化百分比
-    final systolicChangePercent = ((futureSystolicAvg - pastSystolicAvg) / pastSystolicAvg * 100).round();
-    final diastolicChangePercent = ((futureDiastolicAvg - pastDiastolicAvg) / pastDiastolicAvg * 100).round();
-    final pulseChangePercent = ((futurePulseAvg - pastPulseAvg) / pastPulseAvg * 100).round();
-
-    // 確定趨勢
-    String systolicTrend = 'stable';
-    String diastolicTrend = 'stable';
-    String pulseTrend = 'stable';
-    String message = '';
-
-    if (systolicChangePercent > 5) {
-      systolicTrend = 'rising';
-      message = '收縮壓呈上升趨勢，預計增加約 $systolicChangePercent%';
-    } else if (systolicChangePercent < -5) {
-      systolicTrend = 'falling';
-      message = '收縮壓呈下降趨勢，預計減少約 ${-systolicChangePercent}%';
-    } else {
-      message = '收縮壓趨勢穩定';
-    }
-
-    if (diastolicChangePercent > 5) {
-      diastolicTrend = 'rising';
-      message += '，舒張壓呈上升趨勢，預計增加約 $diastolicChangePercent%';
-    } else if (diastolicChangePercent < -5) {
-      diastolicTrend = 'falling';
-      message += '，舒張壓呈下降趨勢，預計減少約 ${-diastolicChangePercent}%';
-    } else {
-      message += '，舒張壓趨勢穩定';
-    }
-
-    if (pulseChangePercent > 5) {
-      pulseTrend = 'rising';
-      message += '，心率呈上升趨勢，預計增加約 $pulseChangePercent%';
-    } else if (pulseChangePercent < -5) {
-      pulseTrend = 'falling';
-      message += '，心率呈下降趨勢，預計減少約 ${-pulseChangePercent}%';
-    } else {
-      message += '，心率趨勢穩定';
-    }
-
-    return {
-      'systolicTrend': systolicTrend,
-      'diastolicTrend': diastolicTrend,
-      'pulseTrend': pulseTrend,
-      'systolicChangePercent': systolicChangePercent,
-      'diastolicChangePercent': diastolicChangePercent,
-      'pulseChangePercent': pulseChangePercent,
-      'message': message,
-    };
   }
 }
