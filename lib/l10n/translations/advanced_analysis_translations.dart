@@ -30,6 +30,7 @@ const Map<String, String> zhTWAdvancedAnalysis = {
   '指標': '指標',
   '未服藥': '未服藥',
   '服藥後': '服藥後',
+  '請確保您有記錄服藥和未服藥時的血壓數據': '請確保您有記錄服藥和未服藥時的血壓數據',
 
   // 測量條件分析組件
   '請確保您有記錄不同測量條件下的血壓數據': '請確保您有記錄不同測量條件下的血壓數據',
@@ -164,6 +165,7 @@ const Map<String, String> enUSAdvancedAnalysis = {
   '指標': 'Metrics',
   '未服藥': 'No Medication',
   '服藥後': 'After Medication',
+  '請確保您有記錄服藥和未服藥時的血壓數據': 'Please ensure you have recorded blood pressure data both with and without medication',
 
   // 測量條件分析組件
   '請確保您有記錄不同測量條件下的血壓數據': 'Please ensure you have recorded blood pressure data under different measurement conditions',
