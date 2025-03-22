@@ -653,61 +653,6 @@ class LifestyleAnalysisService {
     return {'systolic': systolicSum / records.length, 'diastolic': diastolicSum / records.length};
   }
 
-  // TODO: 可能用到，也可能沒用到
-  // 生成改善建議
-  // ignore: unused_element
-  List<String> _generateRecommendations(
-    Map<String, dynamic> exerciseCorrelation,
-    Map<String, dynamic> sleepCorrelation,
-    Map<String, dynamic> saltCorrelation,
-    Map<String, dynamic> stressCorrelation,
-    Map<String, dynamic> waterCorrelation,
-    Map<String, dynamic> alcoholCorrelation,
-  ) {
-    final List<String> recommendations = [];
-
-    // 運動建議
-    if (exerciseCorrelation['hasData'] == true && exerciseCorrelation['direction'] == 'negative' && exerciseCorrelation['strength'] != 'weak') {
-      recommendations.add('規律運動對降低血壓有明顯幫助，建議每週至少進行150分鐘中等強度有氧運動。');
-    }
-
-    // 睡眠建議
-    if (sleepCorrelation['hasData'] == true && sleepCorrelation['direction'] == 'negative' && sleepCorrelation['strength'] != 'weak') {
-      recommendations.add('充足的睡眠對控制血壓很重要，建議每晚保持7-8小時的優質睡眠。');
-    }
-
-    // 鹽分攝入建議
-    if (saltCorrelation['hasData'] == true && saltCorrelation['direction'] == 'positive' && saltCorrelation['strength'] != 'weak') {
-      recommendations.add('高鹽飲食會顯著提高血壓，建議每日鹽攝入量控制在5克以下。');
-    }
-
-    // 壓力管理建議
-    if (stressCorrelation['hasData'] == true && stressCorrelation['direction'] == 'positive' && stressCorrelation['strength'] != 'weak') {
-      recommendations.add('壓力會導致血壓升高，建議學習壓力管理技巧，如冥想、深呼吸或瑜伽。');
-    }
-
-    // 飲水建議
-    if (waterCorrelation['hasData'] == true && waterCorrelation['direction'] == 'negative' && waterCorrelation['strength'] != 'weak') {
-      recommendations.add('充足的飲水有助於維持健康血壓，建議每日飲水2000-2500毫升。');
-    }
-
-    // 飲酒建議
-    if (alcoholCorrelation['hasData'] == true && alcoholCorrelation['effect'] != 'mild') {
-      recommendations.add('飲酒會影響血壓，建議限制酒精攝入，男性每日不超過兩個標準杯，女性不超過一個標準杯。');
-    }
-
-    // 如果沒有足夠的相關性數據，提供一般建議
-    if (recommendations.isEmpty) {
-      recommendations.add('保持健康的生活方式：規律運動、充足睡眠、減少鹽分攝入、管理壓力、充足飲水和限制酒精攝入。');
-      recommendations.add('建議每日記錄更多生活習慣信息，以便進行更準確的關聯分析。');
-    }
-
-    // 添加一般健康建議
-    recommendations.add('定期監測血壓，並在血壓異常時及時諮詢醫生。');
-
-    return recommendations;
-  }
-
   // 生成模擬鹽分相關性數據
   Map<String, dynamic> _generateMockSaltCorrelation() {
     final groups = [
@@ -792,7 +737,7 @@ class LifestyleAnalysisService {
       'strength': 'strong',
       'correlation': 0.68,
       'description': '飲酒量與血壓呈現強正相關，飲酒量越大，血壓普遍越高。',
-      'impact': '過量飲酒會導致血壓升高，增加心血管疾病風險。建議限制酒精攝入，男性每日不超過兩個標準酒精單位，女性不超過一個。',
+      'impact': '過量飲酒會導致血壓升高，增加心血管疾病風險。建議限制酒精攝入，男性每日不超過兩個標準酒精單位，女性不超過一個標準杯。',
       'groups': groups,
     };
   }
