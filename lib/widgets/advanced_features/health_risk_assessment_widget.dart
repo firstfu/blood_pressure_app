@@ -70,13 +70,13 @@ class HealthRiskAssessmentWidget extends StatelessWidget {
 
     if (score <= 2.0) {
       scoreColor = Colors.green;
-      riskLevel = context.tr('低風險');
+      riskLevel = context.tr('健康風險低');
     } else if (score <= 3.5) {
       scoreColor = Colors.orange;
-      riskLevel = context.tr('中度風險');
+      riskLevel = context.tr('健康風險中度');
     } else {
       scoreColor = Colors.red;
-      riskLevel = context.tr('高風險');
+      riskLevel = context.tr('健康風險高');
     }
 
     return Container(
@@ -88,7 +88,7 @@ class HealthRiskAssessmentWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(context.tr('總體風險評分'), style: const TextStyle(fontSize: 16)),
+          Text(context.tr('總體風險評分標題'), style: const TextStyle(fontSize: 16)),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
