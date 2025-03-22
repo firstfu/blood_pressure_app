@@ -89,17 +89,12 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
         ],
 
         // 預測數據表格
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              child: Text(context.tr('未來7天血壓預測'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), overflow: TextOverflow.ellipsis),
-            ),
-            if (_showPulse)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(context.tr('包含心率'), style: const TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold)),
-              ),
+            Text(context.tr('未來7天血壓預測'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), overflow: TextOverflow.ellipsis),
+            const SizedBox(height: 4),
+            if (_showPulse) Text(context.tr('包含心率'), style: const TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 8),
@@ -166,6 +161,9 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
   // 構建預測圖表
   Widget _buildPredictionChart(List<dynamic> dailyData, List<dynamic> predictions, List<dynamic> riskDays) {
+    // 獲取當前語系
+    final isChineseLocale = _isChineseLocale();
+
     // 合併歷史數據和預測數據
     final allData = [...dailyData, ...predictions];
 
@@ -316,7 +314,10 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
                 final date = minDate.add(Duration(days: value.toInt()));
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(DateFormat('MM-dd').format(date), style: const TextStyle(fontSize: 10)),
+                  child: Text(
+                    isChineseLocale ? DateFormat('MM-dd').format(date) : DateFormat('MMM d').format(date),
+                    style: const TextStyle(fontSize: 10),
+                  ),
                 );
               },
             ),
@@ -358,9 +359,12 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
           touchTooltipData: LineTouchTooltipData(
             tooltipBgColor: Colors.white.withAlpha(204),
             getTooltipItems: (touchedSpots) {
+              // 獲取當前語系
+              final isChineseLocale = _isChineseLocale();
+
               return touchedSpots.map((spot) {
                 final date = minDate.add(Duration(days: spot.x.toInt()));
-                final dateStr = DateFormat('MM-dd').format(date);
+                final dateStr = isChineseLocale ? DateFormat('MM-dd').format(date) : DateFormat('MMM d').format(date);
                 final isHistory = spot.x < dailyData.length;
 
                 String title;
@@ -471,6 +475,9 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
     // 始終顯示心率列
     final hasPulseData = true;
 
+    // 檢查當前語系
+    final isChineseLocale = _isChineseLocale();
+
     // 確保所有預測都有心率數據
     final processedPredictions =
         predictions.map((prediction) {
@@ -499,9 +506,18 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
             ),
             child: Row(
               children: [
-                Expanded(flex: 2, child: Text(context.tr('日期'), style: const TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(flex: 1, child: Text(context.tr('收縮壓'), style: const TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(flex: 1, child: Text(context.tr('舒張壓'), style: const TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(
+                  flex: isChineseLocale ? 2 : 3, // 英文語系時日期列更寬
+                  child: Text(context.tr('日期'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                Expanded(
+                  flex: isChineseLocale ? 1 : 2, // 英文語系時收縮壓列更寬
+                  child: Text(context.tr('收縮壓'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                Expanded(
+                  flex: isChineseLocale ? 1 : 2, // 英文語系時舒張壓列更寬
+                  child: Text(context.tr('舒張壓'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
                 if (hasPulseData)
                   Expanded(flex: 1, child: Text(context.tr('心率'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
               ],
@@ -523,9 +539,21 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
               decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade300))),
               child: Row(
                 children: [
-                  Expanded(flex: 2, child: Text(DateFormat('yyyy-MM-dd').format(date), overflow: TextOverflow.ellipsis)),
-                  Expanded(flex: 1, child: Text('$systolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor))),
-                  Expanded(flex: 1, child: Text('$diastolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor))),
+                  Expanded(
+                    flex: isChineseLocale ? 2 : 3, // 英文語系時日期列更寬
+                    child: Text(
+                      isChineseLocale ? DateFormat('yyyy-MM-dd').format(date) : DateFormat('MMM d, yyyy').format(date),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Expanded(
+                    flex: isChineseLocale ? 1 : 2, // 英文語系時收縮壓列更寬
+                    child: Text('$systolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                  ),
+                  Expanded(
+                    flex: isChineseLocale ? 1 : 2, // 英文語系時舒張壓列更寬
+                    child: Text('$diastolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                  ),
                   if (hasPulseData)
                     Expanded(flex: 1, child: Text('$pulse', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
                 ],
@@ -535,5 +563,11 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
         ],
       ),
     );
+  }
+
+  // 檢查是否為中文語系
+  bool _isChineseLocale() {
+    final locale = Localizations.localeOf(context).languageCode;
+    return locale == 'zh';
   }
 }
