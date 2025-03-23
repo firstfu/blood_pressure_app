@@ -18,7 +18,7 @@ import '../help_feedback/help_feedback_page.dart';
 import '../language_settings/language_settings_page.dart';
 import '../../onboarding/onboarding_page.dart';
 import '../privacy_settings/privacy_settings_page.dart';
-import '../../theme_settings_page.dart';
+import '../theme_settings/theme_settings_page.dart';
 
 /// ProfilePage 類
 ///

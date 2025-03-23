@@ -3,9 +3,9 @@
 // @ Description: 血壓管家 App 主題設定頁面，用於自定義應用外觀
 
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations_extension.dart';
-import '../themes/app_theme.dart';
-import '../services/shared_prefs_service.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../themes/app_theme.dart';
+import '../../../services/shared_prefs_service.dart';
 
 /// ThemeSettingsPage 類
 ///

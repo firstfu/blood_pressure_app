@@ -3,8 +3,8 @@
 ## 文件資訊
 
 - **文件名稱**：血壓管家 App 文檔目錄說明
-- **版本**：1.0
-- **最後更新日期**：2024 年 5 月 16 日
+- **版本**：1.1
+- **最後更新日期**：2024 年 5 月 23 日
 
 ## 目錄結構
 
@@ -13,24 +13,22 @@ docs/
   ├── demand/                                # 需求文檔目錄
   │   ├── todo/                              # 待實現的需求
   │   │   ├── multi_language_implementation.md  # 多語言實現需求
+  │   │   ├── 多國語系實現.md                    # 多語言實現需求 (繁體中文版)
   │   │   └── onboarding_feature_implementation.md  # 引導頁面功能實現需求
   │   ├── ok/                                # 已完成的需求
-  │   │   └── typography_system_implementation.md  # 排版系統實現需求
+  │   │   ├── typography_system_implementation.md  # 排版系統實現需求
+  │   │   └── export_feature.md              # 資料匯出功能需求
   │   └── cancel/                            # 已取消的需求
   ├── imgs/                                  # 圖片資源目錄
   ├── blood_pressure_app_ui_ux_design.md     # UI/UX 設計文件
   ├── typography_guidelines.md               # 排版指南
   ├── typography_implementation.md           # 排版系統實現指南
-  ├── multi_language_implementation.md       # 多語言實現方案
-  ├── 多國語系實現.md                         # 多語言實現方案 (繁體中文版)
-  ├── onboarding_feature.md                  # 引導頁面功能文檔
-  ├── onboarding_images_guide.md             # 引導頁面圖片指南
-  ├── onboarding_image_prompts.md            # 引導頁面圖片提示詞
   ├── development_plan.md                    # 開發計劃
   ├── blood_pressure_app_technical_architecture.md  # 技術架構文檔
   ├── blood_pressure_app_implementation_plan.md     # 實現計劃
   ├── blood_pressure_app_prd.md              # 產品需求文檔
-  └── blood_pressure_app_ui_prototype.md     # UI 原型文檔
+  ├── blood_pressure_app_ui_prototype.md     # UI 原型文檔
+  └── project_status_summary.md              # 專案進度摘要
 ```
 
 ## 文檔說明
@@ -51,7 +49,7 @@ docs/
 
 1. **待實現 (todo)** - 尚未實現的需求
 
-   - **[多語言實現需求](demand/todo/multi_language_implementation.md)** - 多語言支援功能的需求文檔
+   - **[多語言實現需求](multi_language_implementation.md)** - 多語言支援功能的需求文檔
    - **[引導頁面功能實現需求](onboarding_feature_implementation.md)** - 引導頁面功能的需求文檔
 
 2. **已完成 (ok)** - 已經實現的需求
