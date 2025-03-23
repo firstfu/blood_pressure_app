@@ -311,12 +311,12 @@ class AppTheme {
       // 使用深色模式的排版主題
       textTheme: TypographyTheme.darkTextTheme,
       appBarTheme: const AppBarTheme(
-        backgroundColor: darkPrimaryDarkColor,
-        foregroundColor: Colors.white,
+        backgroundColor: darkBackgroundColor,
+        foregroundColor: darkTextPrimaryColor,
         elevation: 0,
         centerTitle: true,
         // 使用深色模式的頁面標題樣式
-        titleTextStyle: TypographyTheme.pageTitle,
+        titleTextStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'NotoSansTC'),
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
@@ -324,11 +324,12 @@ class AppTheme {
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFF121212),
-        selectedItemColor: Color(0xFF42A5F5),
-        unselectedItemColor: darkTextSecondaryColor,
-        selectedLabelStyle: TypographyTheme.bottomNavSelectedDark,
-        unselectedLabelStyle: TypographyTheme.bottomNavUnselectedDark,
+        backgroundColor: darkCardColor,
+        selectedItemColor: darkPrimaryLightColor,
+        unselectedItemColor: Colors.white70,
+        // 使用深色模式的底部導航欄樣式
+        selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'NotoSansTC'),
+        unselectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, fontFamily: 'NotoSansTC'),
         elevation: 8,
         type: BottomNavigationBarType.fixed,
       ),

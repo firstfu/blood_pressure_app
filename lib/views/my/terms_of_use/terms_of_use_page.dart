@@ -118,15 +118,17 @@ class TermsOfUsePage extends StatelessWidget {
   /// 構建段落文字
   Widget _buildParagraph(BuildContext context, String text) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: theme.textTheme.bodyMedium?.color)),
+      child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color)),
     );
   }
 
   /// 構建項目符號點
   Widget _buildBulletPoint(BuildContext context, String text) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(left: 16, bottom: 8),
       child: Row(
@@ -134,7 +136,9 @@ class TermsOfUsePage extends StatelessWidget {
         children: [
           Padding(padding: const EdgeInsets.only(top: 8), child: Icon(Icons.circle, size: 6, color: theme.primaryColor)),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: theme.textTheme.bodyMedium?.color))),
+          Expanded(
+            child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color)),
+          ),
         ],
       ),
     );

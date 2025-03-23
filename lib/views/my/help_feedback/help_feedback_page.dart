@@ -113,6 +113,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   /// 構建常見問題頁面
   Widget _buildFaqTab() {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -157,6 +159,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   /// 構建意見反饋頁面
   Widget _buildFeedbackTab() {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -176,7 +179,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 反饋類型
-                  Text(context.tr('反饋類型'), style: TypographyTheme.formLabel),
+                  Text(context.tr('反饋類型'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white70 : null)),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -190,9 +193,13 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                         value: _selectedFeedbackType,
                         isExpanded: true,
                         icon: Icon(Icons.arrow_drop_down, color: theme.primaryColor),
+                        dropdownColor: theme.cardColor,
                         items:
                             _feedbackTypes.map((String type) {
-                              return DropdownMenuItem<String>(value: type, child: Text(type, style: TypographyTheme.body));
+                              return DropdownMenuItem<String>(
+                                value: type,
+                                child: Text(type, style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null)),
+                              );
                             }).toList(),
                         onChanged: (String? newValue) {
                           if (newValue != null) {
@@ -208,15 +215,15 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   const SizedBox(height: 16),
 
                   // 反饋內容
-                  Text(context.tr('反饋內容'), style: TypographyTheme.formLabel),
+                  Text(context.tr('反饋內容'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white70 : null)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _feedbackController,
                     maxLines: 5,
-                    style: TypographyTheme.body,
+                    style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null),
                     decoration: InputDecoration(
                       hintText: context.tr('請描述您的問題或建議...'),
-                      hintStyle: TypographyTheme.inputHint,
+                      hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : null),
                       filled: true,
                       fillColor: theme.cardColor,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
@@ -230,15 +237,18 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   const SizedBox(height: 16),
 
                   // 聯絡郵箱
-                  Text(context.tr('聯絡郵箱（選填）'), style: TypographyTheme.formLabel),
+                  Text(
+                    context.tr('聯絡郵箱（選填）'),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white70 : null),
+                  ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    style: TypographyTheme.body,
+                    style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null),
                     decoration: InputDecoration(
                       hintText: context.tr('請輸入您的電子郵箱'),
-                      hintStyle: TypographyTheme.inputHint,
+                      hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : null),
                       filled: true,
                       fillColor: theme.cardColor,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
@@ -281,11 +291,13 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   /// 構建章節標題
   Widget _buildSectionTitle(String title, IconData icon) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Row(
       children: [
         Icon(icon, color: Theme.of(context).primaryColor, size: 20),
         const SizedBox(width: 8),
-        Text(title, style: TypographyTheme.subtitle.copyWith(color: Theme.of(context).primaryColor)),
+        Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.white : Theme.of(context).primaryColor)),
       ],
     );
   }
@@ -293,6 +305,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   /// 構建 FAQ 項目
   Widget _buildFaqItem(int index, String question, String answer) {
     final bool isExpanded = _expandedFaqIndex == index;
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -316,14 +330,19 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 children: [
                   Icon(isExpanded ? Icons.remove_circle_outline : Icons.add_circle_outline, color: Theme.of(context).primaryColor, size: 20),
                   const SizedBox(width: 12),
-                  Expanded(child: Text(question, style: TypographyTheme.emphasized)),
+                  Expanded(
+                    child: Text(question, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white : null)),
+                  ),
                 ],
               ),
               if (isExpanded) ...[
                 const SizedBox(height: 12),
                 const Divider(height: 1, thickness: 1),
                 const SizedBox(height: 12),
-                Padding(padding: const EdgeInsets.only(left: 32), child: Text(answer, style: TypographyTheme.body)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 32),
+                  child: Text(answer, style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null)),
+                ),
               ],
             ],
           ),
@@ -334,6 +353,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   /// 構建聯絡方式項目
   Widget _buildContactItem(IconData icon, String title, String value, VoidCallback onTap) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 1,
@@ -352,14 +374,18 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TypographyTheme.secondary),
+                    Text(title, style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white70 : null)),
                     const SizedBox(height: 4),
-                    Text(value, style: TypographyTheme.emphasized.copyWith(color: Theme.of(context).primaryColor), overflow: TextOverflow.ellipsis),
+                    Text(
+                      value,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).primaryColor),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(Icons.arrow_forward_ios, color: Theme.of(context).textTheme.bodySmall?.color, size: 14),
+              Icon(Icons.arrow_forward_ios, color: isDarkMode ? Colors.white70 : theme.textTheme.bodySmall?.color, size: 14),
             ],
           ),
         ),
@@ -385,7 +411,11 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           (context) => AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(), const SizedBox(height: 16), Text(context.tr('正在提交反饋...'))],
+              children: [
+                CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(context.tr('正在提交反饋...'), style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : null)),
+              ],
             ),
           ),
     );
@@ -407,10 +437,20 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 children: [
                   Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
-                  Text(context.tr('提交成功'), style: TypographyTheme.subtitle),
+                  Text(
+                    context.tr('提交成功'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : null,
+                    ),
+                  ),
                 ],
               ),
-              content: Text(context.tr('感謝您的反饋，我們會認真考慮您的意見和建議。'), style: TypographyTheme.body),
+              content: Text(
+                context.tr('感謝您的反饋，我們會認真考慮您的意見和建議。'),
+                style: TextStyle(fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : null),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {

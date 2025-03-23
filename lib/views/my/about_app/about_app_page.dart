@@ -152,6 +152,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
   /// 構建應用介紹
   Widget _buildAppDescription() {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Card(
       elevation: 2,
       shadowColor: theme.primaryColor.withAlpha(51),
@@ -171,10 +172,13 @@ class _AboutAppPageState extends State<AboutAppPage> {
             const SizedBox(height: 16),
             Text(
               context.tr('血壓管家是一款專為高血壓患者和關注血壓健康的用戶設計的應用程式。它提供了簡單易用的血壓記錄功能，幫助用戶追蹤血壓變化趨勢，並提供數據分析和健康建議。'),
-              style: TextStyle(fontSize: 15, height: 1.6, color: theme.textTheme.bodyMedium?.color),
+              style: TextStyle(fontSize: 15, height: 1.6, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color),
             ),
             const SizedBox(height: 12),
-            Text(context.tr('主要功能包括：'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: theme.textTheme.bodyMedium?.color)),
+            Text(
+              context.tr('主要功能包括：'),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color),
+            ),
             const SizedBox(height: 8),
             _buildFeatureItem(context.tr('血壓記錄與追蹤')),
             _buildFeatureItem(context.tr('數據統計與分析')),
@@ -189,6 +193,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
   /// 構建功能項目
   Widget _buildFeatureItem(String text) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
@@ -196,7 +201,9 @@ class _AboutAppPageState extends State<AboutAppPage> {
         children: [
           Padding(padding: const EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 8, color: theme.primaryColor)),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: theme.textTheme.bodyMedium?.color))),
+          Expanded(
+            child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color)),
+          ),
         ],
       ),
     );
@@ -277,11 +284,15 @@ class _AboutAppPageState extends State<AboutAppPage> {
   /// 構建版權信息
   Widget _buildCopyright() {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Column(
       children: [
-        Text('© ${DateTime.now().year} ${context.tr('血壓管家')}', style: TextStyle(fontSize: 14, color: theme.textTheme.bodySmall?.color)),
+        Text(
+          '© ${DateTime.now().year} ${context.tr('血壓管家')}',
+          style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white70 : theme.textTheme.bodySmall?.color),
+        ),
         const SizedBox(height: 4),
-        Text(context.tr('保留所有權利'), style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
+        Text(context.tr('保留所有權利'), style: TextStyle(fontSize: 12, color: isDarkMode ? Colors.white70 : theme.textTheme.bodySmall?.color)),
       ],
     );
   }
@@ -289,6 +300,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
   /// 構建信息行
   Widget _buildInfoRow(IconData icon, String label, String value) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -305,9 +317,12 @@ class _AboutAppPageState extends State<AboutAppPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: TextStyle(fontSize: 14, color: theme.textTheme.bodySmall?.color)),
+                Text(label, style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white70 : theme.textTheme.bodySmall?.color)),
                 const SizedBox(height: 2),
-                Text(value, style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500)),
+                Text(
+                  value,
+                  style: TextStyle(fontSize: 16, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500),
+                ),
               ],
             ),
           ),
@@ -319,6 +334,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
   /// 構建法律按鈕
   Widget _buildLegalButton(String title, IconData icon, VoidCallback onTap) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -332,8 +348,13 @@ class _AboutAppPageState extends State<AboutAppPage> {
               child: Icon(icon, size: 20, color: theme.primaryColor),
             ),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500))),
-            Icon(Icons.arrow_forward_ios, size: 16, color: theme.textTheme.bodySmall?.color),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(fontSize: 16, color: isDarkMode ? Colors.white : theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500),
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: isDarkMode ? Colors.white70 : theme.textTheme.bodySmall?.color),
           ],
         ),
       ),
