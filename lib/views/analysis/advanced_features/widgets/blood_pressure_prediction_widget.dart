@@ -27,9 +27,6 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? AppTheme.darkTextPrimaryColor : AppTheme.lightTextPrimaryColor;
     final secondaryTextColor = isDarkMode ? AppTheme.darkTextSecondaryColor : AppTheme.lightTextSecondaryColor;
-    final dividerColor = isDarkMode ? AppTheme.darkDividerColor : AppTheme.lightDividerColor;
-    final cardColor = isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor;
-    final backgroundColor = isDarkMode ? AppTheme.darkBackgroundColor : AppTheme.lightBackgroundColor;
 
     if (widget.predictionResult['hasData'] != true) {
       return Center(
