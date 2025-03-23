@@ -55,10 +55,16 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
   }
 
   Widget _buildBloodPressureTrendCard() {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Card(
       elevation: 2,
-      shadowColor: AppTheme.primaryColor.withAlpha(77),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shadowColor: theme.primaryColor.withAlpha(77),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: isDarkMode ? BorderSide(color: theme.dividerColor, width: 1) : BorderSide.none,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -70,16 +76,16 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
               children: [
                 Row(
                   children: [
-                    Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
+                    Container(width: 4, height: 20, decoration: BoxDecoration(color: theme.primaryColor, borderRadius: BorderRadius.circular(2))),
                     const SizedBox(width: 8),
-                    Text(context.tr('近 2 週趨勢'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text(context.tr('近 2 週趨勢'), style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
                   ],
                 ),
                 // 心率切換開關
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(context.tr('顯示心率'), style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 14)),
+                    Text(context.tr('顯示心率'), style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 14)),
                     const SizedBox(width: 4),
                     Transform.scale(
                       scale: 0.8,
@@ -133,14 +139,16 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
 
   // 根據選擇的圖表類型構建對應的圖表
   Widget _buildChart() {
+    final theme = Theme.of(context);
+
     if (widget.records.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
+            Icon(Icons.timeline_outlined, size: 48, color: theme.textTheme.bodySmall?.color?.withAlpha(128)),
             const SizedBox(height: 16),
-            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodySmall?.color?.withAlpha(179))),
           ],
         ),
       );
@@ -155,10 +163,16 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
   }
 
   Widget _buildBloodPressureCategoryCard() {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Card(
       elevation: 2,
-      shadowColor: AppTheme.primaryColor.withAlpha(77),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shadowColor: theme.primaryColor.withAlpha(77),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: isDarkMode ? BorderSide(color: theme.dividerColor, width: 1) : BorderSide.none,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -166,9 +180,9 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
           children: [
             Row(
               children: [
-                Container(width: 4, height: 20, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
+                Container(width: 4, height: 20, decoration: BoxDecoration(color: theme.primaryColor, borderRadius: BorderRadius.circular(2))),
                 const SizedBox(width: 8),
-                Text(context.tr('血壓分類統計'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
+                Text(context.tr('血壓分類統計'), style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
               ],
             ),
             const SizedBox(height: 20),

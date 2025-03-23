@@ -19,12 +19,14 @@ class TimeRangeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
+        border: isDarkMode ? Border(bottom: BorderSide(color: theme.dividerColor, width: 0.5)) : null,
       ),
       child: Row(
         children: [
@@ -43,6 +45,7 @@ class TimeRangeSelector extends StatelessWidget {
   Widget _buildTimeRangeButton(BuildContext context, TimeRange timeRange, String label) {
     final theme = Theme.of(context);
     final isSelected = selectedTimeRange == timeRange;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () {
@@ -56,10 +59,13 @@ class TimeRangeSelector extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor : theme.cardColor,
+          color: isSelected ? theme.primaryColor : theme.cardColor,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: isSelected ? AppTheme.primaryColor : AppTheme.dividerColor, width: 1.5),
-          boxShadow: isSelected ? [BoxShadow(color: AppTheme.primaryColor.withAlpha(77), blurRadius: 8, offset: const Offset(0, 2))] : null,
+          border: Border.all(
+            color: isSelected ? theme.primaryColor : (isDarkMode ? theme.dividerColor.withOpacity(0.8) : theme.dividerColor),
+            width: 1.5,
+          ),
+          boxShadow: isSelected ? [BoxShadow(color: theme.primaryColor.withAlpha(77), blurRadius: 8, offset: const Offset(0, 2))] : null,
         ),
         child: Text(
           label,

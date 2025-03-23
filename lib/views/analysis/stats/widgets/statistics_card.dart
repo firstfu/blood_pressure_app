@@ -21,20 +21,26 @@ class StatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     if (records.isEmpty) {
       return Card(
         elevation: 3,
-        shadowColor: AppTheme.primaryColor.withAlpha(100),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shadowColor: theme.primaryColor.withAlpha(100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: isDarkMode ? BorderSide(color: theme.dividerColor, width: 1) : BorderSide.none,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.bar_chart_outlined, size: 48, color: Colors.grey[400]),
+                Icon(Icons.bar_chart_outlined, size: 48, color: theme.disabledColor),
                 const SizedBox(height: 16),
-                Text(context.tr('暫無數據'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey)),
+                Text(context.tr('暫無數據'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: theme.disabledColor)),
               ],
             ),
           ),
@@ -58,8 +64,11 @@ class StatisticsCard extends StatelessWidget {
 
     return Card(
       elevation: 3,
-      shadowColor: AppTheme.primaryColor.withAlpha(100),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shadowColor: theme.primaryColor.withAlpha(100),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: isDarkMode ? BorderSide(color: theme.dividerColor, width: 1) : BorderSide.none,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -68,14 +77,14 @@ class StatisticsCard extends StatelessWidget {
             // 標題區域
             Container(
               padding: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[200]!, width: 1.5))),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: theme.dividerColor, width: 1.5))),
               child: Row(
                 children: [
-                  Container(width: 4, height: 24, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(2))),
+                  Container(width: 4, height: 24, decoration: BoxDecoration(color: theme.primaryColor, borderRadius: BorderRadius.circular(2))),
                   const SizedBox(width: 12),
                   Text(
                     context.tr('統計數據'),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 0.5),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 0.5),
                   ),
                 ],
               ),
@@ -88,7 +97,7 @@ class StatisticsCard extends StatelessWidget {
             SizedBox(
               height: 150, // 增加高度以避免溢出
               child: _buildStatsGrid(context, [
-                StatsItem(label: context.tr('平均收縮壓'), value: '$avgSystolic', unit: 'mmHg', color: AppTheme.primaryColor, icon: Icons.arrow_upward),
+                StatsItem(label: context.tr('平均收縮壓'), value: '$avgSystolic', unit: 'mmHg', color: theme.primaryColor, icon: Icons.arrow_upward),
                 StatsItem(label: context.tr('平均舒張壓'), value: '$avgDiastolic', unit: 'mmHg', color: AppTheme.successColor, icon: Icons.arrow_downward),
                 StatsItem(label: context.tr('平均心率'), value: '$avgPulse', unit: 'bpm', color: Colors.orange, icon: Icons.favorite),
               ]),
@@ -107,7 +116,7 @@ class StatisticsCard extends StatelessWidget {
               minValue: '$minSystolic',
               maxValue: '$maxSystolic',
               unit: 'mmHg',
-              color: AppTheme.primaryColor,
+              color: theme.primaryColor,
               icon: Icons.arrow_upward,
             ),
             const SizedBox(height: 16),
@@ -141,9 +150,9 @@ class StatisticsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: isDarkMode ? theme.cardColor.withOpacity(0.3) : theme.cardColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey[200]!),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Column(
                 children: [
@@ -160,11 +169,13 @@ class StatisticsCard extends StatelessWidget {
   }
 
   Widget _buildSectionTitle(BuildContext context, String title) {
+    final theme = Theme.of(context);
+
     return Row(
       children: [
-        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color)),
         const SizedBox(width: 8),
-        Expanded(child: Container(height: 1, color: Colors.grey[300])),
+        Expanded(child: Container(height: 1, color: theme.dividerColor)),
       ],
     );
   }
@@ -174,6 +185,8 @@ class StatisticsCard extends StatelessWidget {
   }
 
   Widget _buildStatCard(BuildContext context, StatsItem item) {
+    final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
@@ -193,7 +206,7 @@ class StatisticsCard extends StatelessWidget {
           const SizedBox(height: 6),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(item.label, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey[700])),
+            child: Text(item.label, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: theme.textTheme.bodySmall?.color)),
           ),
         ],
       ),
@@ -209,12 +222,16 @@ class StatisticsCard extends StatelessWidget {
     required Color color,
     required IconData icon,
   }) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.withAlpha(26), spreadRadius: 1, blurRadius: 3, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), spreadRadius: 1, blurRadius: 3, offset: const Offset(0, 1))],
+        border: isDarkMode ? Border.all(color: theme.dividerColor.withOpacity(0.5), width: 0.5) : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +240,7 @@ class StatisticsCard extends StatelessWidget {
             children: [
               Icon(icon, color: color, size: 18),
               const SizedBox(width: 8),
-              Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+              Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color)),
             ],
           ),
           const SizedBox(height: 12),
@@ -233,31 +250,31 @@ class StatisticsCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(context.tr('最低值'), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    Text(context.tr('最低值'), style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
                     const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(text: minValue, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color.withAlpha(204))),
-                          TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                          TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(height: 40, width: 1, color: Colors.grey[300]),
+              Container(height: 40, width: 1, color: theme.dividerColor),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(context.tr('最高值'), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    Text(context.tr('最高值'), style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
                     const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(text: maxValue, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-                          TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                          TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
                         ],
                       ),
                     ),
@@ -272,13 +289,15 @@ class StatisticsCard extends StatelessWidget {
   }
 
   Widget _buildInfoRow(BuildContext context, {required IconData icon, required String label, required String value}) {
+    final theme = Theme.of(context);
+
     return Row(
       children: [
-        Icon(icon, size: 18, color: Colors.grey[600]),
+        Icon(icon, size: 18, color: theme.textTheme.bodySmall?.color),
         const SizedBox(width: 12),
-        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+        Text(label, style: TextStyle(fontSize: 14, color: theme.textTheme.bodyMedium?.color)),
         const Spacer(),
-        Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+        Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color)),
       ],
     );
   }

@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 import '../../../models/blood_pressure_record.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../services/report_service.dart';
-import '../../../themes/app_theme.dart';
 import '../../../utils/stats_utils.dart';
 import '../advanced_features/advanced_features_page.dart';
 import 'widgets/time_range_selector.dart';

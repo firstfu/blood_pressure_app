@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../../themes/app_theme.dart';
 import '../../../../l10n/app_localizations_extension.dart';
 import '../../../../providers/locale_provider.dart';
 
