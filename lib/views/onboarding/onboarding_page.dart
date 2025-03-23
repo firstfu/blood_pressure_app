@@ -1,18 +1,17 @@
-// @ Author: firstfu
-// @ Create Time: 2024-05-15 16:16:42
-// @ Description: 血壓管家 App 引導頁面，用於首次啟動時向用戶介紹應用功能
+/*
+ * @ Author: firstfu
+ * @ Create Time: 2024-03-23 17:31:42
+ * @ Description: 血壓記錄 App 引導頁面
+ */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../constants/app_constants.dart';
 import '../../services/shared_prefs_service.dart';
 import '../../themes/app_theme.dart';
 import '../main_page.dart';
-import 'dart:math' as math;
 
-/// OnboardingPage 類
-///
-/// 實現應用程式的引導頁面，用於首次啟動時向用戶介紹應用功能
-/// 包含頁面滑動、跳過和完成功能
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
 
@@ -21,149 +20,124 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  // 頁面控制器
   final PageController _pageController = PageController();
-
-  // 當前頁面索引
   int _currentPage = 0;
+  final int _totalPages = 4;
 
-  // 頁面總數
-  final int _totalPages = AppConstants.onBoardingTitles.length;
-
-  // 頁面背景顏色
-  final List<Color> _backgroundColors = [
-    AppTheme.primaryColor.withAlpha(15),
-    AppTheme.successColor.withAlpha(15),
-    AppTheme.primaryDarkColor.withAlpha(15),
-    AppTheme.alertColor.withAlpha(15),
+  final List<OnboardingItem> _onboardingItems = [
+    OnboardingItem(image: 'assets/images/onboarding_welcome.png', title: '歡迎使用血壓管家', description: '專業的血壓監測助手，幫助您更好地管理健康數據。隨時隨地記錄、分析您的血壓數據，讓健康管理更輕鬆。'),
+    OnboardingItem(image: 'assets/images/onboarding_record.png', title: '簡單記錄血壓數據', description: '通過簡潔直觀的界面，輕鬆記錄您的收縮壓、舒張壓和心率數據。支持手動輸入和藍牙設備連接。'),
+    OnboardingItem(image: 'assets/images/onboarding_analysis.png', title: '專業數據分析', description: '通過圖表和趨勢分析，直觀了解您的血壓變化。系統會提供專業建議，幫助您更好地理解健康狀況。'),
+    OnboardingItem(image: 'assets/images/onboarding_reminder.png', title: '智能提醒功能', description: '設置測量提醒，養成規律監測血壓的習慣。您也可以設置用藥提醒，確保按時服藥。'),
   ];
 
-  // 頁面主色調
-  final List<Color> _primaryColors = [AppTheme.primaryColor, AppTheme.successColor, AppTheme.primaryDarkColor, AppTheme.alertColor];
-
-  // 3D 模型圖標（臨時替代）
-  final List<IconData> _tempIcons = [Icons.favorite, Icons.add_chart, Icons.bar_chart, Icons.notifications_active];
-
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  /// 完成 onBoarding 流程
-  void _completeOnboarding() async {
-    await SharedPrefsService.setOnBoardingCompleted();
-    if (mounted) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainPage()));
-    }
-  }
-
-  /// 跳到下一頁
-  void _nextPage() {
-    if (_currentPage == _totalPages - 1) {
-      _completeOnboarding();
-    } else {
-      _pageController.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
-    }
-  }
-
-  /// 跳過 onBoarding 流程
-  void _skipOnboarding() {
-    _completeOnboarding();
+  void initState() {
+    super.initState();
+    // 設置狀態欄為透明
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark));
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final primaryColor = Theme.of(context).primaryColor;
+
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // 背景漸變
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
+          Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors:
-                    Theme.of(context).brightness == Brightness.dark
-                        ? [_backgroundColors[_currentPage].withAlpha(80), Theme.of(context).scaffoldBackgroundColor]
-                        : [_backgroundColors[_currentPage], Colors.white],
-                stops: const [0.3, 1.0],
+                colors: [Colors.blue.withOpacity(0.05), Colors.white],
               ),
             ),
           ),
-
-          // 頁面內容
+          // 主要內容
           SafeArea(
             child: Column(
               children: [
                 // 頂部跳過按鈕
                 Align(
                   alignment: Alignment.topRight,
-                  child:
-                      _currentPage < _totalPages - 1
-                          ? Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: TextButton(
-                              onPressed: _skipOnboarding,
-                              style: TextButton.styleFrom(
-                                foregroundColor: _primaryColors[_currentPage],
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                              ),
-                              child: Text(AppConstants.onBoardingSkip, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                            ),
-                          )
-                          : const SizedBox(height: 56),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0, top: 8.0),
+                    child: TextButton(
+                      onPressed: _completeOnboarding,
+                      style: TextButton.styleFrom(
+                        foregroundColor: primaryColor.withOpacity(0.8),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      ),
+                      child: const Text('跳過', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+                    ),
+                  ),
                 ),
 
-                // 主要內容區域
+                // 內容區域
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    onPageChanged: (int page) {
+                    onPageChanged: (index) {
                       setState(() {
-                        _currentPage = page;
+                        _currentPage = index;
                       });
                     },
-                    itemCount: _totalPages,
+                    itemCount: _onboardingItems.length,
                     itemBuilder: (context, index) {
-                      return _buildOnboardingPage(
-                        title: AppConstants.onBoardingTitles[index],
-                        description: AppConstants.onBoardingDescriptions[index],
-                        imagePath: AppConstants.onBoardingImages[index],
-                        index: index,
-                      );
+                      return _buildOnboardingPage(_onboardingItems[index]);
                     },
                   ),
                 ),
 
-                // 底部導航區域
+                // 底部按鈕區域
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding: const EdgeInsets.only(bottom: 40.0, left: 24.0, right: 24.0),
                   child: Column(
                     children: [
                       // 頁面指示器
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(_totalPages, (index) => _buildPageIndicator(index == _currentPage, index)),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // 下一步按鈕
-                      ElevatedButton(
-                        onPressed: _nextPage,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _primaryColors[_currentPage],
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          elevation: 0,
-                          minimumSize: const Size(double.infinity, 56),
+                      SmoothPageIndicator(
+                        controller: _pageController,
+                        count: _totalPages,
+                        effect: ExpandingDotsEffect(
+                          dotHeight: 10,
+                          dotWidth: 10,
+                          activeDotColor: primaryColor,
+                          dotColor: Colors.grey.withOpacity(0.3),
+                          spacing: 10,
+                          expansionFactor: 3,
                         ),
-                        child: Text(
-                          _currentPage == _totalPages - 1 ? AppConstants.onBoardingStart : AppConstants.onBoardingNext,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 30),
+                      // 下一步或完成按鈕
+                      Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          boxShadow: [BoxShadow(color: primaryColor.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_currentPage < _totalPages - 1) {
+                              _pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                            } else {
+                              _completeOnboarding();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                          ),
+                          child: Text(
+                            _currentPage < _totalPages - 1 ? '下一步' : '開始使用',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: 1),
+                          ),
                         ),
                       ),
                     ],
@@ -177,173 +151,70 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  /// 構建單個引導頁面
-  Widget _buildOnboardingPage({required String title, required String description, required String imagePath, required int index}) {
+  // 構建引導頁面
+  Widget _buildOnboardingPage(OnboardingItem item) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 3D 圖片區域
-          Expanded(flex: 5, child: _buildImageContainer(imagePath, index)),
-
+          // 圖像容器
+          Expanded(
+            flex: 6,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 20.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 4))],
+              ),
+              child: ClipRRect(borderRadius: BorderRadius.circular(24), child: Image.asset(item.image, fit: BoxFit.contain)),
+            ),
+          ),
           const SizedBox(height: 40),
-
           // 標題
-          Text(title, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.textPrimaryColor), textAlign: TextAlign.center),
-
-          const SizedBox(height: 16),
-
+          Text(
+            item.title,
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: 26, letterSpacing: 0.5),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
           // 描述
-          Text(description, style: TextStyle(fontSize: 16, color: AppTheme.textSecondaryColor, height: 1.5), textAlign: TextAlign.center),
-
-          const SizedBox(height: 40),
+          Text(
+            item.description,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black87, height: 1.5, fontSize: 16, letterSpacing: 0.3),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 50),
         ],
       ),
     );
   }
 
-  /// 構建圖片容器
-  Widget _buildImageContainer(String imagePath, int index) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: _primaryColors[index].withAlpha(40), blurRadius: 20, spreadRadius: 2, offset: const Offset(0, 10))],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            // 背景圓形裝飾
-            Positioned(
-              top: -40,
-              right: -40,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(color: _primaryColors[index].withAlpha(15), shape: BoxShape.circle),
-              ),
-            ),
+  // 完成引導
+  void _completeOnboarding() async {
+    // 保存引導完成狀態
+    await SharedPrefsService.setOnBoardingCompleted();
 
-            Positioned(
-              bottom: -30,
-              left: -30,
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(color: _primaryColors[index].withAlpha(10), shape: BoxShape.circle),
-              ),
-            ),
-
-            // 浮動裝飾元素
-            ..._buildFloatingElements(index),
-
-            // 主圖片
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    print('無法加載圖片: $imagePath, 使用臨時圖標替代');
-                    return _buildFallbackImage(index);
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 構建浮動裝飾元素
-  List<Widget> _buildFloatingElements(int index) {
-    final List<Widget> elements = [];
-    final random = math.Random(index);
-
-    // 添加3-5個浮動元素
-    for (int i = 0; i < 4; i++) {
-      final size = 8.0 + random.nextDouble() * 12;
-      elements.add(
-        Positioned(
-          left: random.nextDouble() * 300,
-          top: random.nextDouble() * 300,
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(color: _primaryColors[index].withAlpha(100 + random.nextInt(155)), shape: BoxShape.circle),
-          ),
-        ),
-      );
+    // 導航到主頁面
+    if (mounted) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainPage()));
     }
-
-    return elements;
   }
 
-  /// 構建備用圖片（當無法加載圖片時）
-  Widget _buildFallbackImage(int index) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // 3D 風格的圖標容器
-        Container(
-          width: 180,
-          height: 180,
-          decoration: BoxDecoration(color: _primaryColors[index].withAlpha(15), borderRadius: BorderRadius.circular(30)),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // 背景圓形
-              Container(width: 140, height: 140, decoration: BoxDecoration(color: _primaryColors[index].withAlpha(30), shape: BoxShape.circle)),
-
-              // 主圖標
-              Icon(_tempIcons[index], size: 80, color: _primaryColors[index]),
-
-              // 裝飾元素
-              Positioned(
-                top: 30,
-                right: 30,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(color: _primaryColors[index].withAlpha(80), shape: BoxShape.circle),
-                ),
-              ),
-
-              Positioned(
-                bottom: 40,
-                left: 30,
-                child: Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(color: _primaryColors[index].withAlpha(120), shape: BoxShape.circle),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 構建頁面指示器
-  Widget _buildPageIndicator(bool isActive, int index) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      height: 8,
-      width: isActive ? 24 : 8,
-      decoration: BoxDecoration(
-        color: isActive ? _primaryColors[_currentPage] : _primaryColors[_currentPage].withAlpha(40),
-        borderRadius: BorderRadius.circular(4),
-      ),
-    );
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }
 
-// 輔助函數 - 計算角度的正弦和餘弦
-double sin(double angle) => math.sin(angle);
-double cos(double angle) => math.cos(angle);
+// 引導頁面項目模型
+class OnboardingItem {
+  final String image;
+  final String title;
+  final String description;
+
+  OnboardingItem({required this.image, required this.title, required this.description});
+}

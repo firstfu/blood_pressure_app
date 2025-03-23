@@ -55,6 +55,8 @@ dependencies:
   excel: ^4.0.6
   image_picker: ^1.1.2
   app_settings: ^5.2.0
+  # 頁面指示器
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
