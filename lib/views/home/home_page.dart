@@ -181,9 +181,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         HapticFeedback.mediumImpact();
         // 導航到記錄頁面
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecordPage())).then((value) {
-          // 如果有新記錄添加，刷新頁面
-          if (value == true) {
-            setState(() {});
+          // 如果有記錄被添加，刷新頁面
+          if (value != null) {
+            // 使用異步方式更新UI，避免在導航過程中更新
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                setState(() {
+                  // 刷新頁面數據
+                });
+              }
+            });
           }
         });
       },

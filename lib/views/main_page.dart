@@ -21,7 +21,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [const HomePage(), const RecordPage(isFromTabNav: true), const StatsPage(), const ProfilePage()];
+  // 修改頁面列表，移除記錄頁面
+  final List<Widget> _pages = [const HomePage(), const SizedBox(), const StatsPage(), const ProfilePage()];
 
   @override
   void initState() {
@@ -29,6 +30,39 @@ class _MainPageState extends State<MainPage> {
 
     // 設置沉浸式狀態欄 - 根據當前主題調整狀態欄圖標亮度
     // 這裡不再硬編碼設置，而是在 build 方法中根據當前主題動態設置
+  }
+
+  // 處理底部導航欄點擊
+  void _onTabTapped(int index) {
+    // 如果點擊的是記錄標籤（索引為1）
+    if (index == 1) {
+      // 導航到記錄頁面
+      _navigateToRecordPage();
+    } else {
+      // 其他標籤正常切換
+      setState(() {
+        _currentIndex = index;
+      });
+    }
+  }
+
+  // 導航到記錄頁面
+  void _navigateToRecordPage() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecordPage(isFromTabNav: true))).then((value) {
+      // 如果返回數據為 true，則刷新當前頁面
+      if (value == true && _currentIndex == 0) {
+        setState(() {
+          // 刷新首頁
+        });
+      }
+
+      // 保持在首頁標籤
+      if (_currentIndex == 1) {
+        setState(() {
+          _currentIndex = 0;
+        });
+      }
+    });
   }
 
   @override
@@ -49,11 +83,7 @@ class _MainPageState extends State<MainPage> {
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onTabTapped,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('首頁')),

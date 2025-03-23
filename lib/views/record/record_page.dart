@@ -229,19 +229,35 @@ class _RecordPageState extends State<RecordPage> {
         isMedicated: _isMedicated,
       );
 
-      // 顯示成功消息
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+      try {
+        // 先顯示成功消息
+        final snackBar = SnackBar(
           content: Text(_isEditing ? context.tr('記錄已更新') : context.tr('記錄已保存'), style: TextStyle(fontSize: _contentFontSize)),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           margin: const EdgeInsets.all(8),
-        ),
-      );
+          duration: const Duration(milliseconds: 1500),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-      // 返回上一頁
-      Navigator.pop(context, record);
+        // 使用延遲來確保 SnackBar 顯示完整
+        Future.delayed(const Duration(milliseconds: 200), () {
+          // 檢查 widget 是否仍然掛載
+          if (mounted) {
+            // 返回記錄對象
+            Navigator.of(context).pop(record);
+          }
+        });
+      } catch (e) {
+        // 捕獲導航過程中可能出現的異常
+        debugPrint('保存記錄時發生錯誤: $e');
+
+        // 最後嘗試直接返回
+        if (mounted) {
+          Navigator.of(context).pop(record);
+        }
+      }
     }
   }
 
