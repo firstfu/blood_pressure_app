@@ -103,18 +103,21 @@ lib/
 ├── services/        # 服務層
 ├── themes/          # 主題和樣式
 ├── utils/           # 工具類
-├── views/           # 頁面視圖
-├── widgets/         # 可重用組件
+├── views/           # 頁面視圖和相關組件
+│   ├── home/        # 首頁視圖及其組件
+│   ├── record/      # 記錄頁視圖及其組件
+│   └── analysis/    # 分析頁視圖及其組件
+├── widgets/         # 通用可重用組件
 └── main.dart        # 應用入口
 ```
 
 ### UI 組件化
 
-應用採用組件化設計，將 UI 拆分為可重用的小組件：
+應用採用組件化設計，將 UI 拆分為可重用的小組件，並根據功能和使用範圍進行組織：
 
-1. **頁面組件**：完整的頁面，如 `HomePage`, `RecordPage`
-2. **功能組件**：特定功能的組件，如 `TrendChart`, `BloodPressureCard`
-3. **基礎組件**：通用的 UI 元素，如 `HealthTipCard`
+1. **頁面級組件**：與特定頁面相關的組件放在該頁面目錄下的 `widgets` 子目錄中
+2. **功能組件**：特定功能的組件，如 `TrendChart`, `HealthTipCard` 等
+3. **通用組件**：整個應用中共用的基礎 UI 元素，放在 `widgets` 目錄下
 
 ## 數據架構
 

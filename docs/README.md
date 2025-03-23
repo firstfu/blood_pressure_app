@@ -52,7 +52,7 @@ docs/
 1. **待實現 (todo)** - 尚未實現的需求
 
    - **[多語言實現需求](demand/todo/multi_language_implementation.md)** - 多語言支援功能的需求文檔
-   - **[引導頁面功能實現需求](demand/todo/onboarding_feature_implementation.md)** - 引導頁面功能的需求文檔
+   - **[引導頁面功能實現需求](onboarding_feature_implementation.md)** - 引導頁面功能的需求文檔
 
 2. **已完成 (ok)** - 已經實現的需求
 
