@@ -114,7 +114,7 @@ lib/
 
 1. **頁面組件**：完整的頁面，如 `HomePage`, `RecordPage`
 2. **功能組件**：特定功能的組件，如 `TrendChart`, `BloodPressureCard`
-3. **基礎組件**：通用的 UI 元素，如 `StatusBadge`, `HealthTipCard`
+3. **基礎組件**：通用的 UI 元素，如 `HealthTipCard`
 
 ## 數據架構
 
