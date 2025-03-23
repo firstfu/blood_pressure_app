@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart';
 import '../../../../models/blood_pressure_record.dart';
-import '../../../../themes/app_theme.dart';
 import '../../../../widgets/charts/trend_chart.dart';
 import '../../../../widgets/charts/bar_chart.dart';
 import '../../../../widgets/charts/bp_category_pie_chart.dart';
