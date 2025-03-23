@@ -532,7 +532,7 @@ class _RecordPageState extends State<RecordPage> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        backgroundColor: brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
         foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(

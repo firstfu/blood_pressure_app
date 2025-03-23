@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text(context.tr('我的')),
         centerTitle: true,
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
         foregroundColor: theme.appBarTheme.foregroundColor,
       ),
       body:

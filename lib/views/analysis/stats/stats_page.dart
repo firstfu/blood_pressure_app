@@ -143,7 +143,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.primaryColor,
+        backgroundColor: brightness == Brightness.dark ? const Color(0xFF121212) : theme.primaryColor,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
