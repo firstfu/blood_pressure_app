@@ -28,7 +28,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   // 當前頁面索引
   int _currentPage = 0;
   // 總頁數
-  static const int _totalPages = 3;
+  static const int _totalPages = 4;
 
   @override
   void dispose() {
@@ -58,12 +58,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    context.formatTr('onboarding_page_indicator', [(_currentPage + 1).toString(), _totalPages.toString()]),
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
+                children: [Text('${_currentPage + 1}/$_totalPages', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))],
               ),
             ),
 
@@ -91,6 +86,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     image: 'assets/images/onboarding_analysis.png',
                     titleKey: 'onboarding_todo_list_title',
                     descriptionKey: 'onboarding_todo_list_description',
+                  ),
+                  OnboardingPageContent(
+                    image: 'assets/images/onboarding_welcome.png',
+                    titleKey: 'onboarding_share_data_title',
+                    descriptionKey: 'onboarding_share_data_description',
                   ),
                 ],
               ),
