@@ -15,17 +15,28 @@ class MedicationEffectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     if (!analysis['hasData']) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const Icon(Icons.info_outline, size: 48, color: Colors.grey),
+              Icon(Icons.info_outline, size: 48, color: isDarkMode ? Colors.grey.shade400 : Colors.grey),
               const SizedBox(height: 16),
-              Text(analysis['message'] ?? context.tr('沒有足夠的數據進行分析'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+              Text(
+                analysis['message'] ?? context.tr('沒有足夠的數據進行分析'),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: isDarkMode ? Colors.grey.shade400 : Colors.grey),
+              ),
               const SizedBox(height: 8),
-              Text(context.tr('請確保您有記錄服藥和未服藥時的血壓數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+              Text(
+                context.tr('請確保您有記錄服藥和未服藥時的血壓數據'),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: isDarkMode ? Colors.grey.shade400 : Colors.grey, fontSize: 12),
+              ),
             ],
           ),
         ),
@@ -47,19 +58,29 @@ class MedicationEffectWidget extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.blue.withAlpha(26), Colors.lightBlue.withAlpha(13)],
+              colors:
+                  isDarkMode
+                      ? [theme.colorScheme.primary.withAlpha(60), theme.colorScheme.primary.withAlpha(30)]
+                      : [Colors.blue.withAlpha(26), Colors.lightBlue.withAlpha(13)],
             ),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
+            boxShadow: [BoxShadow(color: Colors.black.withAlpha(isDarkMode ? 20 : 13), blurRadius: 4, offset: const Offset(0, 2))],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(Icons.medication_outlined, color: Colors.blue.withAlpha(179), size: 18),
+                  Icon(
+                    Icons.medication_outlined,
+                    color: isDarkMode ? theme.colorScheme.primary.withAlpha(230) : Colors.blue.withAlpha(179),
+                    size: 18,
+                  ),
                   const SizedBox(width: 8),
-                  Text(context.tr('服藥效果摘要'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  Text(
+                    context.tr('服藥效果摘要'),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: isDarkMode ? theme.textTheme.titleMedium?.color : null),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -72,24 +93,30 @@ class MedicationEffectWidget extends StatelessWidget {
                       '${difference['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
                       percentChange['systolic'].toStringAsFixed(1) + context.tr('%'),
                       difference['systolic'] > 0,
+                      isDarkMode,
+                      theme,
                     ),
                   ),
-                  Container(height: 40, width: 1, color: Colors.grey.withAlpha(51)),
+                  Container(height: 40, width: 1, color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
                   Expanded(
                     child: _buildEffectSummaryItem(
                       context.tr('舒張壓'),
                       '${difference['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
                       percentChange['diastolic'].toStringAsFixed(1) + context.tr('%'),
                       difference['diastolic'] > 0,
+                      isDarkMode,
+                      theme,
                     ),
                   ),
-                  Container(height: 40, width: 1, color: Colors.grey.withAlpha(51)),
+                  Container(height: 40, width: 1, color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
                   Expanded(
                     child: _buildEffectSummaryItem(
                       context.tr('心率'),
                       '${difference['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
                       percentChange['pulse'].toStringAsFixed(1) + context.tr('%'),
                       difference['pulse'] > 0,
+                      isDarkMode,
+                      theme,
                     ),
                   ),
                 ],
@@ -102,17 +129,20 @@ class MedicationEffectWidget extends StatelessWidget {
         // 服藥效果對比圖
         Row(
           children: [
-            Icon(Icons.bar_chart_outlined, color: Colors.blue.withAlpha(179), size: 16),
+            Icon(Icons.bar_chart_outlined, color: isDarkMode ? theme.colorScheme.primary.withAlpha(230) : Colors.blue.withAlpha(179), size: 16),
             const SizedBox(width: 6),
-            Text(context.tr('服藥效果對比'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(
+              context.tr('服藥效果對比'),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: isDarkMode ? theme.textTheme.titleMedium?.color : null),
+            ),
           ],
         ),
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: Colors.white,
-            boxShadow: [BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 4, offset: const Offset(0, 2))],
+            color: isDarkMode ? theme.cardColor : Colors.white,
+            boxShadow: [BoxShadow(color: Colors.black.withAlpha(isDarkMode ? 15 : 5), blurRadius: 4, offset: const Offset(0, 2))],
           ),
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -126,7 +156,7 @@ class MedicationEffectWidget extends StatelessWidget {
                     barTouchData: BarTouchData(
                       enabled: true,
                       touchTooltipData: BarTouchTooltipData(
-                        tooltipBgColor: Colors.blueGrey,
+                        tooltipBgColor: isDarkMode ? theme.colorScheme.surfaceVariant : Colors.blueGrey,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                           String title;
                           String value;
@@ -140,7 +170,10 @@ class MedicationEffectWidget extends StatelessWidget {
                             title = context.tr('心率');
                             value = rod.toY.toStringAsFixed(1);
                           }
-                          return BarTooltipItem('$title\n$value', const TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+                          return BarTooltipItem(
+                            '$title\n$value',
+                            TextStyle(color: isDarkMode ? theme.colorScheme.onSurfaceVariant : Colors.white, fontWeight: FontWeight.bold),
+                          );
                         },
                       ),
                     ),
@@ -160,7 +193,14 @@ class MedicationEffectWidget extends StatelessWidget {
                             }
                             return Padding(
                               padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(text, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+                              child: Text(
+                                text,
+                                style: TextStyle(
+                                  color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.6) : Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -171,7 +211,10 @@ class MedicationEffectWidget extends StatelessWidget {
                           reservedSize: 30,
                           getTitlesWidget: (value, meta) {
                             if (value % 50 == 0) {
-                              return Text(value.toInt().toString(), style: const TextStyle(color: Colors.grey, fontSize: 10));
+                              return Text(
+                                value.toInt().toString(),
+                                style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.6) : Colors.grey, fontSize: 10),
+                              );
                             }
                             return const Text('');
                           },
@@ -184,7 +227,11 @@ class MedicationEffectWidget extends StatelessWidget {
                       show: true,
                       horizontalInterval: 50,
                       getDrawingHorizontalLine: (value) {
-                        return FlLine(color: Colors.grey.withAlpha(26), strokeWidth: 1, dashArray: [5, 5]);
+                        return FlLine(
+                          color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(26),
+                          strokeWidth: 1,
+                          dashArray: [5, 5],
+                        );
                       },
                     ),
                     borderData: FlBorderData(show: false),
@@ -195,13 +242,13 @@ class MedicationEffectWidget extends StatelessWidget {
                         barRods: [
                           BarChartRodData(
                             toY: nonMedicatedAvg['systolic'],
-                            color: Colors.red.withAlpha(204),
+                            color: isDarkMode ? Colors.red.withAlpha(230) : Colors.red.withAlpha(204),
                             width: 18,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
                           ),
                           BarChartRodData(
                             toY: medicatedAvg['systolic'],
-                            color: Colors.blue.withAlpha(204),
+                            color: isDarkMode ? Colors.blue.withAlpha(230) : Colors.blue.withAlpha(204),
                             width: 18,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
                           ),
@@ -213,13 +260,13 @@ class MedicationEffectWidget extends StatelessWidget {
                         barRods: [
                           BarChartRodData(
                             toY: nonMedicatedAvg['diastolic'],
-                            color: Colors.red.withAlpha(204),
+                            color: isDarkMode ? Colors.red.withAlpha(230) : Colors.red.withAlpha(204),
                             width: 18,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
                           ),
                           BarChartRodData(
                             toY: medicatedAvg['diastolic'],
-                            color: Colors.blue.withAlpha(204),
+                            color: isDarkMode ? Colors.blue.withAlpha(230) : Colors.blue.withAlpha(204),
                             width: 18,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
                           ),
@@ -231,13 +278,13 @@ class MedicationEffectWidget extends StatelessWidget {
                         barRods: [
                           BarChartRodData(
                             toY: nonMedicatedAvg['pulse'],
-                            color: Colors.red.withAlpha(204),
+                            color: isDarkMode ? Colors.red.withAlpha(230) : Colors.red.withAlpha(204),
                             width: 18,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
                           ),
                           BarChartRodData(
                             toY: medicatedAvg['pulse'],
-                            color: Colors.blue.withAlpha(204),
+                            color: isDarkMode ? Colors.blue.withAlpha(230) : Colors.blue.withAlpha(204),
                             width: 18,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
                           ),
@@ -251,9 +298,9 @@ class MedicationEffectWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildLegendItem(context.tr('未服藥'), Colors.red),
+                  _buildLegendItem(context.tr('未服藥'), Colors.red, isDarkMode),
                   const SizedBox(width: 24),
-                  _buildLegendItem(context.tr('服藥後'), Colors.blue),
+                  _buildLegendItem(context.tr('服藥後'), Colors.blue, isDarkMode),
                 ],
               ),
             ],
@@ -264,24 +311,27 @@ class MedicationEffectWidget extends StatelessWidget {
         // 服藥效果詳細數據
         Row(
           children: [
-            Icon(Icons.analytics_outlined, color: Colors.blue.withAlpha(179), size: 16),
+            Icon(Icons.analytics_outlined, color: isDarkMode ? theme.colorScheme.primary.withAlpha(230) : Colors.blue.withAlpha(179), size: 16),
             const SizedBox(width: 6),
-            Text(context.tr('詳細數據'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(
+              context.tr('詳細數據'),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: isDarkMode ? theme.textTheme.titleMedium?.color : null),
+            ),
           ],
         ),
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.withAlpha(51)),
-            boxShadow: [BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 2, offset: const Offset(0, 1))],
+            border: Border.all(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
+            boxShadow: [BoxShadow(color: Colors.black.withAlpha(isDarkMode ? 15 : 5), blurRadius: 2, offset: const Offset(0, 1))],
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.withAlpha(51)),
-                verticalInside: BorderSide(color: Colors.grey.withAlpha(51)),
+                horizontalInside: BorderSide(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
+                verticalInside: BorderSide(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
               ),
               columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(3), 2: FlexColumnWidth(3)},
               children: [
@@ -290,80 +340,101 @@ class MedicationEffectWidget extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Colors.blue.withAlpha(77), Colors.blue.withAlpha(51)],
+                      colors:
+                          isDarkMode
+                              ? [theme.colorScheme.primary.withAlpha(100), theme.colorScheme.primary.withAlpha(70)]
+                              : [Colors.blue.withAlpha(77), Colors.blue.withAlpha(51)],
                     ),
                   ),
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(context.tr('指標'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                      child: Text(
+                        context.tr('指標'),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? theme.colorScheme.onSurface : Colors.white),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(context.tr('未服藥'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                      child: Text(
+                        context.tr('未服藥'),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? theme.colorScheme.onSurface : Colors.white),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(context.tr('服藥後'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                      child: Text(
+                        context.tr('服藥後'),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? theme.colorScheme.onSurface : Colors.white),
+                      ),
                     ),
                   ],
                 ),
                 TableRow(
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: BoxDecoration(color: isDarkMode ? theme.cardColor : Colors.white),
                   children: [
-                    Padding(padding: const EdgeInsets.all(10.0), child: Text(context.tr('收縮壓'), style: const TextStyle(color: Colors.black87))),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(context.tr('收縮壓'), style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface : Colors.black87)),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${nonMedicatedAvg['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
-                        style: TextStyle(color: Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
+                        style: TextStyle(color: isDarkMode ? Colors.red.withAlpha(255) : Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${medicatedAvg['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
-                        style: TextStyle(color: Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
+                        style: TextStyle(color: isDarkMode ? Colors.blue.withAlpha(255) : Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
                 ),
                 TableRow(
-                  decoration: BoxDecoration(color: Colors.grey.withAlpha(13)),
+                  decoration: BoxDecoration(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.05) : Colors.grey.withAlpha(13)),
                   children: [
-                    Padding(padding: const EdgeInsets.all(10.0), child: Text(context.tr('舒張壓'), style: const TextStyle(color: Colors.black87))),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(context.tr('舒張壓'), style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface : Colors.black87)),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${nonMedicatedAvg['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
-                        style: TextStyle(color: Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
+                        style: TextStyle(color: isDarkMode ? Colors.red.withAlpha(255) : Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${medicatedAvg['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
-                        style: TextStyle(color: Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
+                        style: TextStyle(color: isDarkMode ? Colors.blue.withAlpha(255) : Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
                 ),
                 TableRow(
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: BoxDecoration(color: isDarkMode ? theme.cardColor : Colors.white),
                   children: [
-                    Padding(padding: const EdgeInsets.all(10.0), child: Text(context.tr('心率'), style: const TextStyle(color: Colors.black87))),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(context.tr('心率'), style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface : Colors.black87)),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${nonMedicatedAvg['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
-                        style: TextStyle(color: Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
+                        style: TextStyle(color: isDarkMode ? Colors.red.withAlpha(255) : Colors.red.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${medicatedAvg['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
-                        style: TextStyle(color: Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
+                        style: TextStyle(color: isDarkMode ? Colors.blue.withAlpha(255) : Colors.blue.withAlpha(204), fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -376,16 +447,23 @@ class MedicationEffectWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEffectSummaryItem(String title, String value, String percent, bool isPositive) {
-    final Color valueColor = isPositive ? Colors.green : Colors.red;
-    final Color percentColor = isPositive ? Colors.green.withAlpha(204) : Colors.red.withAlpha(204);
+  Widget _buildEffectSummaryItem(String title, String value, String percent, bool isPositive, bool isDarkMode, ThemeData theme) {
+    final Color valueColor = isPositive ? (isDarkMode ? Colors.green.shade300 : Colors.green) : (isDarkMode ? Colors.red.shade300 : Colors.red);
+    final Color percentColor =
+        isPositive
+            ? (isDarkMode ? Colors.green.shade300.withAlpha(204) : Colors.green.withAlpha(204))
+            : (isDarkMode ? Colors.red.shade300.withAlpha(204) : Colors.red.withAlpha(204));
     final IconData arrowIcon = isPositive ? Icons.arrow_downward : Icons.arrow_upward;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(title, style: const TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w500), textAlign: TextAlign.center),
+        Text(
+          title,
+          style: TextStyle(fontSize: 13, color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey, fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: 6),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -406,27 +484,36 @@ class MedicationEffectWidget extends StatelessWidget {
         const SizedBox(height: 2),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration: BoxDecoration(color: percentColor.withAlpha(26), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: percentColor.withAlpha(isDarkMode ? 40 : 26), borderRadius: BorderRadius.circular(10)),
           child: Text(percent, style: TextStyle(fontSize: 10, color: percentColor, fontWeight: FontWeight.w500), textAlign: TextAlign.center),
         ),
       ],
     );
   }
 
-  Widget _buildLegendItem(String label, Color color) {
+  Widget _buildLegendItem(String label, Color color, bool isDarkMode) {
+    final effectiveColor = isDarkMode ? color.withAlpha(255) : color;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withAlpha(26),
+        color: effectiveColor.withAlpha(26),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withAlpha(51), width: 1),
+        border: Border.all(color: effectiveColor.withAlpha(51), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(5))),
+          Container(width: 10, height: 10, decoration: BoxDecoration(color: effectiveColor, borderRadius: BorderRadius.circular(5))),
           const SizedBox(width: 4),
-          Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color.withAlpha(204))),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: isDarkMode ? effectiveColor.withAlpha(255) : effectiveColor.withAlpha(204),
+            ),
+          ),
         ],
       ),
     );

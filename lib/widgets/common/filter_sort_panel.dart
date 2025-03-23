@@ -75,6 +75,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
   Widget build(BuildContext context) {
     // 獲取主題顏色
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     // 獲取螢幕尺寸和安全區域
     final mediaQuery = MediaQuery.of(context);
@@ -110,7 +111,10 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   width: 40,
                   height: 4,
-                  decoration: BoxDecoration(color: theme.dividerColor, borderRadius: BorderRadius.circular(2)),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? theme.colorScheme.onSurfaceVariant.withOpacity(0.5) : theme.dividerColor,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
               // 頂部標題和關閉按鈕
@@ -195,7 +199,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: theme.primaryColor,
-                            foregroundColor: theme.colorScheme.onPrimary,
+                            foregroundColor: isDarkMode ? Colors.white : theme.colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             elevation: 2,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -278,6 +282,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     required Function(RangeValues) onChanged,
   }) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,12 +296,13 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
               child: SliderTheme(
                 data: SliderThemeData(
                   activeTrackColor: theme.primaryColor,
-                  inactiveTrackColor: theme.dividerColor,
-                  thumbColor: Colors.white,
+                  inactiveTrackColor: isDarkMode ? theme.primaryColor.withAlpha(51) : theme.dividerColor,
+                  thumbColor: isDarkMode ? theme.primaryColor : Colors.white,
                   thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
                   overlayColor: theme.primaryColor.withAlpha(32), // 0.125 * 255 ≈ 32
-                  valueIndicatorColor: theme.primaryColor,
+                  valueIndicatorColor: isDarkMode ? theme.colorScheme.primary : theme.primaryColor,
                   showValueIndicator: ShowValueIndicator.always,
+                  valueIndicatorTextStyle: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 child: RangeSlider(
                   values: rangeValues,
@@ -346,6 +352,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
 
   Widget _buildSortFieldOption(SortField field, String label) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return RadioListTile<SortField>(
       title: Text(label),
@@ -359,13 +366,14 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
         }
       },
       contentPadding: EdgeInsets.zero,
-      activeColor: theme.primaryColor,
+      activeColor: isDarkMode ? theme.colorScheme.secondary : theme.primaryColor,
       dense: true,
     );
   }
 
   Widget _buildSortOrderOption(SortOrder order, String label) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return RadioListTile<SortOrder>(
       title: Text(label),
@@ -379,7 +387,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
         }
       },
       contentPadding: EdgeInsets.zero,
-      activeColor: theme.primaryColor,
+      activeColor: isDarkMode ? theme.colorScheme.secondary : theme.primaryColor,
       dense: true,
     );
   }
