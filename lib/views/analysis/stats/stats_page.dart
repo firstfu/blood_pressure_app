@@ -56,7 +56,10 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     _selectedTimeRange = widget.initialTimeRange;
     _startDate = widget.initialStartDate;
     _endDate = widget.initialEndDate;
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+
+    // 添加標籤切換事件監聽
+    _tabController.addListener(_handleTabSelection);
 
     // 如果初始時間範圍是自定義範圍，則設置默認的日期範圍
     if (_selectedTimeRange == TimeRange.custom && _startDate == null && _endDate == null) {
@@ -77,8 +80,26 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     _loadRecords();
   }
 
+  // 處理標籤切換事件
+  void _handleTabSelection() {
+    // 只有當標籤索引為 2（高級功能）且不是由程式自動設置時才跳轉
+    if (_tabController.index == 2 && _tabController.indexIsChanging) {
+      // 延遲執行以避免在動畫過程中進行導航
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          // 將標籤切換回之前的標籤（避免重複導航）
+          _tabController.animateTo(0);
+          // 導航到高級功能頁面
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
+        }
+      });
+    }
+  }
+
   @override
   void dispose() {
+    // 移除標籤切換事件監聽
+    _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     super.dispose();
   }
@@ -152,14 +173,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
         title: Text(context.tr('血壓統計'), style: TextStyle(color: theme.appBarTheme.foregroundColor, fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
         actions: [
-          // 添加進階功能按鈕
-          IconButton(
-            icon: Icon(Icons.auto_graph, color: theme.appBarTheme.foregroundColor),
-            tooltip: context.tr('高級功能'),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
-            },
-          ),
           // 添加匯出按鈕
           IconButton(
             icon: Icon(Icons.file_download, color: theme.appBarTheme.foregroundColor),
@@ -180,7 +193,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
           labelColor: theme.appBarTheme.foregroundColor,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           unselectedLabelColor: theme.appBarTheme.foregroundColor?.withAlpha(179),
-          tabs: [Tab(text: context.tr('趨勢圖')), Tab(text: context.tr('歷史記錄'))],
+          tabs: [Tab(text: context.tr('趨勢圖')), Tab(text: context.tr('歷史記錄')), Tab(text: context.tr('高級功能'))],
         ),
       ),
       body: Column(
@@ -216,6 +229,12 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                   onResetFiltersAndSort: _resetFiltersAndSort,
                   onApplyFiltersAndSort: _applyFiltersAndSort,
                   onExportData: () => _showExportOptions(context),
+                ),
+                Builder(
+                  builder: (context) {
+                    // 顯示一個loading視圖，因為會立即跳轉
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
               ],
             ),
