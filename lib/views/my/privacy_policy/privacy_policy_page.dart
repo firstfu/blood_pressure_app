@@ -16,10 +16,10 @@ class PrivacyPolicyPage extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.tr('Privacy Policy')),
+        title: Text(context.tr('隱私政策')),
         centerTitle: true,
         backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(

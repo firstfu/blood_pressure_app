@@ -34,18 +34,17 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
     // 獲取主題提供者
     final themeProvider = Provider.of<ThemeProvider>(context);
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     // 獲取當前主題設定
-    final String selectedThemeColor = themeProvider.themeColor;
     final bool useDarkMode = themeProvider.useDarkMode;
-    final bool useSystemTheme = themeProvider.useSystemTheme;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('主題設定')),
         centerTitle: true,
-        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.primaryColor,
-        foregroundColor: theme.colorScheme.onPrimary,
+        backgroundColor: isDarkMode ? const Color(0xFF121212) : theme.primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(
@@ -55,17 +54,15 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 主題顏色選擇
-              _buildSectionTitle(context.tr('主題顏色')),
-              _buildThemeColorGrid(context, selectedThemeColor, themeProvider),
-
-              const SizedBox(height: 24),
-
               // 深淺模式設定
-              _buildSectionTitle(context.tr('深淺模式')),
-              _buildSwitchItem(context.tr('跟隨系統'), context.tr('自動跟隨系統深淺模式設定'), useSystemTheme, (value) => themeProvider.setUseSystemTheme(value)),
-              if (!useSystemTheme)
-                _buildSwitchItem(context.tr('深色模式'), context.tr('使用深色主題，適合夜間使用'), useDarkMode, (value) => themeProvider.setUseDarkMode(value)),
+              _buildSectionTitle(context.tr('深淺模式'), isDarkMode),
+              _buildSwitchItem(
+                context.tr('深色模式'),
+                context.tr('使用深色主題，適合夜間使用'),
+                useDarkMode,
+                (value) => themeProvider.setUseDarkMode(value),
+                isDarkMode,
+              ),
 
               const SizedBox(height: 24),
             ],
@@ -76,20 +73,22 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   }
 
   /// 構建章節標題
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, bool isDarkMode) {
     final theme = Theme.of(context);
-    final themeColor = theme.primaryColor;
+    final textColor = isDarkMode ? Colors.white : theme.primaryColor;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: themeColor)),
+      child: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
     );
   }
 
   /// 構建開關設定項
-  Widget _buildSwitchItem(String title, String subtitle, bool value, Function(bool) onChanged) {
+  Widget _buildSwitchItem(String title, String subtitle, bool value, Function(bool) onChanged, bool isDarkMode) {
     final theme = Theme.of(context);
     final themeColor = theme.primaryColor;
+    final titleColor = isDarkMode ? Colors.white : theme.textTheme.titleMedium?.color;
+    final subtitleColor = isDarkMode ? Colors.white70 : theme.textTheme.bodySmall?.color;
 
     return Card(
       elevation: 0,
@@ -97,8 +96,8 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
       child: SwitchListTile(
-        title: Text(title, style: TextStyle(color: theme.textTheme.titleMedium?.color)),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
+        title: Text(title, style: TextStyle(color: titleColor)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: subtitleColor)),
         value: value,
         onChanged: onChanged,
         activeColor: themeColor,
@@ -110,6 +109,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   /// 構建主題顏色網格
   Widget _buildThemeColorGrid(BuildContext context, String selectedThemeColor, ThemeProvider themeProvider) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -124,10 +124,11 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
       itemBuilder: (context, index) {
         final themeColor = _themeColors[index];
         final isSelected = selectedThemeColor == themeColor['name'];
+        final textColor = isDarkMode ? Colors.white : (isSelected ? themeColor['color'] : theme.textTheme.bodyMedium?.color);
 
         return GestureDetector(
           onTap: () {
-            themeProvider.setThemeColor(themeColor['name']);
+            // 已移除此功能，但保留代碼結構
           },
           child: Container(
             decoration: BoxDecoration(
@@ -148,16 +149,12 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
                     border: Border.all(color: theme.cardColor, width: 2),
                     boxShadow: [BoxShadow(color: themeColor['color'].withAlpha(100), blurRadius: 4, spreadRadius: 1)],
                   ),
-                  child: isSelected ? Icon(Icons.check, color: theme.colorScheme.onPrimary, size: 20) : null,
+                  child: isSelected ? Icon(Icons.check, color: Colors.white, size: 20) : null,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   context.tr(themeColor['displayName']),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected ? themeColor['color'] : theme.textTheme.bodyMedium?.color,
-                  ),
+                  style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: textColor),
                 ),
               ],
             ),

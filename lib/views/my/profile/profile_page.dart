@@ -92,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text(context.tr('我的')),
         centerTitle: true,
         backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        foregroundColor: Colors.white,
       ),
       body:
           _isLoading

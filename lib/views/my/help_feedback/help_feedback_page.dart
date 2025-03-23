@@ -61,8 +61,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       appBar: AppBar(
         title: Text(context.tr('幫助與反饋')),
         centerTitle: true,
-        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(

@@ -59,7 +59,7 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
         title: Text(context.tr('隱私偏好')),
         centerTitle: true,
         backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(

@@ -56,7 +56,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
         title: Text(context.tr('關於應用')),
         centerTitle: true,
         backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(

@@ -268,17 +268,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        title: Text(context.tr('編輯個人資料')),
+        centerTitle: true,
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.of(context).pop(_profile)),
+        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: brightness == Brightness.light ? Brightness.dark : Brightness.light,
           statusBarBrightness: brightness == Brightness.light ? Brightness.light : Brightness.dark,
         ),
-        title: Text(context.tr('編輯個人資料'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: _titleFontSize)),
-        centerTitle: true,
-        actions: [TextButton(onPressed: _saveProfile, child: Text(context.tr('保存'), style: TextStyle(fontWeight: FontWeight.bold)))],
       ),
       body: Container(
         color: theme.scaffoldBackgroundColor,

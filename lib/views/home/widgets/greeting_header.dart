@@ -36,12 +36,9 @@ class GreetingHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$greeting，${context.tr('用戶')}',
-            style: theme.textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 26, color: theme.colorScheme.onPrimary),
-          ),
+          Text('$greeting，${context.tr('用戶')}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
           const SizedBox(height: 4),
-          Text(currentDate, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onPrimary.withAlpha(204), fontSize: 15)),
+          Text(currentDate, style: TextStyle(color: Colors.white.withAlpha(204), fontSize: 15)),
         ],
       ),
     );

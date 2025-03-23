@@ -16,10 +16,10 @@ class TermsOfUsePage extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.tr('Terms of Use')),
+        title: Text(context.tr('使用條款')),
         centerTitle: true,
         backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(
