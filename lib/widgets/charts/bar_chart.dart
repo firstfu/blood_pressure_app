@@ -42,6 +42,16 @@ class BloodPressureBarChart extends StatelessWidget {
     // 根據記錄數量調整顯示間隔
     final interval = _calculateInterval(sortedRecords.length);
 
+    // 對於顯示1個月的資料，篩選顯示有代表性的點
+    final List<BloodPressureRecord> displayRecords = [];
+    for (int i = 0; i < sortedRecords.length; i++) {
+      // 對於大量資料，只顯示間隔點
+      if (sortedRecords.length > 14 && i % interval.toInt() != 0 && i != sortedRecords.length - 1) {
+        continue;
+      }
+      displayRecords.add(sortedRecords[i]);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: BarChart(
@@ -49,7 +59,7 @@ class BloodPressureBarChart extends StatelessWidget {
           alignment: BarChartAlignment.spaceAround,
           maxY: _getMaxY(),
           minY: 0,
-          groupsSpace: 35,
+          groupsSpace: sortedRecords.length > 20 ? 20 : 35,
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
               tooltipBgColor: theme.cardColor,
@@ -95,16 +105,13 @@ class BloodPressureBarChart extends StatelessWidget {
                 reservedSize: 30,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
-                  if (index >= sortedRecords.length || index < 0) {
+                  // 檢查索引是否超出範圍
+                  if (index >= displayRecords.length || index < 0) {
                     return const SizedBox();
                   }
 
-                  // 根據記錄數量決定是否顯示所有標籤
-                  if (sortedRecords.length > 7 && index % interval.toInt() != 0) {
-                    return const SizedBox();
-                  }
-
-                  final record = sortedRecords[index];
+                  // 對於大量資料，我們已經在前面篩選了顯示的點，這裡直接顯示標籤即可
+                  final record = displayRecords[index];
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
@@ -150,7 +157,7 @@ class BloodPressureBarChart extends StatelessWidget {
               return FlLine(color: Colors.transparent);
             },
           ),
-          barGroups: _getBarGroups(sortedRecords, theme),
+          barGroups: _getBarGroups(displayRecords, theme),
           extraLinesData: ExtraLinesData(
             horizontalLines: [
               // 高血壓參考線
@@ -186,17 +193,23 @@ class BloodPressureBarChart extends StatelessWidget {
       return 1; // 7天內顯示所有點
     } else if (recordCount <= 14) {
       return 2; // 2週顯示每隔一天
+    } else if (recordCount <= 20) {
+      return 3; // 3週左右顯示每隔兩天
     } else {
-      return 3; // 1個月顯示每隔兩天
+      return 5; // 1個月顯示每隔四天
     }
   }
 
   // 獲取長條圖組
-  List<BarChartGroupData> _getBarGroups(List<BloodPressureRecord> sortedRecords, ThemeData theme) {
+  List<BarChartGroupData> _getBarGroups(List<BloodPressureRecord> displayRecords, ThemeData theme) {
     final List<BarChartGroupData> barGroups = [];
 
-    for (int i = 0; i < sortedRecords.length; i++) {
-      final record = sortedRecords[i];
+    // 根據資料量調整長條寬度
+    final double barWidth = records.length > 20 ? 3.5 : 5.5;
+    final double barsSpace = records.length > 20 ? 1.0 : 1.5;
+
+    for (int i = 0; i < displayRecords.length; i++) {
+      final record = displayRecords[i];
       final rods = <BarChartRodData>[];
 
       // 收縮壓長條
@@ -204,7 +217,7 @@ class BloodPressureBarChart extends StatelessWidget {
         BarChartRodData(
           toY: record.systolic.toDouble(),
           color: theme.primaryColor,
-          width: 5.5,
+          width: barWidth,
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
           backDrawRodData: BackgroundBarChartRodData(show: false),
         ),
@@ -215,7 +228,7 @@ class BloodPressureBarChart extends StatelessWidget {
         BarChartRodData(
           toY: record.diastolic.toDouble(),
           color: theme.colorScheme.secondary,
-          width: 5.5,
+          width: barWidth,
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
           backDrawRodData: BackgroundBarChartRodData(show: false),
         ),
@@ -227,14 +240,14 @@ class BloodPressureBarChart extends StatelessWidget {
           BarChartRodData(
             toY: record.pulse.toDouble(),
             color: Colors.orange,
-            width: 5.5,
+            width: barWidth,
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
             backDrawRodData: BackgroundBarChartRodData(show: false),
           ),
         );
       }
 
-      barGroups.add(BarChartGroupData(x: i, barRods: rods, groupVertically: false, barsSpace: 1.5, showingTooltipIndicators: []));
+      barGroups.add(BarChartGroupData(x: i, barRods: rods, groupVertically: false, barsSpace: barsSpace, showingTooltipIndicators: []));
     }
 
     return barGroups;
