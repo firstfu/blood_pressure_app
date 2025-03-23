@@ -9,7 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../l10n/app_localizations_extension.dart';
 import '../../../services/shared_prefs_service.dart';
-import '../../../themes/app_theme.dart';
 import '../../../constants/app_constants.dart';
 import '../../../models/user_profile.dart';
 import '../about_app/about_app_page.dart';
@@ -86,31 +85,38 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr('我的')), centerTitle: true),
+      appBar: AppBar(
+        title: Text(context.tr('我的')),
+        centerTitle: true,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
+      ),
       body:
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator(color: theme.primaryColor))
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 用戶資料卡片
-                    _buildUserProfileCard(),
+                    _buildUserProfileCard(theme),
 
                     const SizedBox(height: 24),
 
                     // 設置選項
-                    _buildSettingsSection(),
+                    _buildSettingsSection(theme),
 
                     const SizedBox(height: 24),
 
                     // 關於應用
-                    _buildAboutSection(),
+                    _buildAboutSection(theme),
 
                     // 開發者選項（隱藏）
-                    if (_showDevOptions) _buildDeveloperOptions(),
+                    if (_showDevOptions) _buildDeveloperOptions(theme),
                   ],
                 ),
               ),
@@ -118,9 +124,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   /// 構建用戶資料卡片
-  Widget _buildUserProfileCard() {
+  Widget _buildUserProfileCard(ThemeData theme) {
     return Card(
       elevation: 2,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -131,9 +138,9 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: _incrementDevModeCounter,
               child: CircleAvatar(
                 radius: 40,
-                backgroundColor: AppTheme.primaryColor.withAlpha(26),
+                backgroundColor: theme.primaryColor.withAlpha(26),
                 backgroundImage: _avatarFile != null ? FileImage(_avatarFile!) : null,
-                child: _avatarFile == null ? const Icon(Icons.person, size: 40, color: AppTheme.primaryColor) : null,
+                child: _avatarFile == null ? Icon(Icons.person, size: 40, color: theme.primaryColor) : null,
               ),
             ),
             const SizedBox(width: 16),
@@ -144,15 +151,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Text(
                     _userProfile?.name.isNotEmpty == true ? _userProfile!.name : context.tr('姓名'),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color),
                   ),
                   const SizedBox(height: 4),
-                  Text(context.tr('點擊編輯個人資料'), style: const TextStyle(color: AppTheme.textSecondaryColor)),
+                  Text(context.tr('點擊編輯個人資料'), style: TextStyle(color: theme.textTheme.bodySmall?.color)),
                 ],
               ),
             ),
             // 編輯按鈕
-            IconButton(icon: const Icon(Icons.edit, color: AppTheme.primaryColor), onPressed: _navigateToEditProfile),
+            IconButton(icon: Icon(Icons.edit, color: theme.primaryColor), onPressed: _navigateToEditProfile),
           ],
         ),
       ),
@@ -174,50 +181,50 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   /// 構建設置選項
-  Widget _buildSettingsSection() {
+  Widget _buildSettingsSection(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(context.tr('設定'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(context.tr('設定'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
         const SizedBox(height: 12),
-        _buildSettingItem(Icons.notifications, context.tr('提醒設定'), context.tr('設置測量提醒時間'), () {}),
-        _buildSettingItem(Icons.language, context.tr('語言設定'), context.tr('切換應用語言'), _navigateToLanguageSettings),
-        _buildSettingItem(Icons.color_lens, context.tr('主題設定'), context.tr('自定義應用外觀'), _navigateToThemeSettings),
-        _buildSettingItem(Icons.security, context.tr('隱私偏好'), context.tr('管理應用通知與提示'), _navigateToPrivacySettings),
+        _buildSettingItem(theme, Icons.notifications, context.tr('提醒設定'), context.tr('設置測量提醒時間'), () {}),
+        _buildSettingItem(theme, Icons.language, context.tr('語言設定'), context.tr('切換應用語言'), _navigateToLanguageSettings),
+        _buildSettingItem(theme, Icons.color_lens, context.tr('主題設定'), context.tr('自定義應用外觀'), _navigateToThemeSettings),
+        _buildSettingItem(theme, Icons.security, context.tr('隱私偏好'), context.tr('管理應用通知與提示'), _navigateToPrivacySettings),
       ],
     );
   }
 
   /// 構建關於應用部分
-  Widget _buildAboutSection() {
+  Widget _buildAboutSection(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(context.tr('關於我們'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(context.tr('關於我們'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
         const SizedBox(height: 12),
-        _buildSettingItem(Icons.info, context.tr('關於應用'), context.tr('版本信息和開發者'), () {
+        _buildSettingItem(theme, Icons.info, context.tr('關於應用'), context.tr('版本信息和開發者'), () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AboutAppPage()));
         }),
-        _buildSettingItem(Icons.help, context.tr('幫助與反饋'), context.tr('獲取幫助或提交反饋'), () {
+        _buildSettingItem(theme, Icons.help, context.tr('幫助與反饋'), context.tr('獲取幫助或提交反饋'), () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HelpFeedbackPage()));
         }),
-        _buildSettingItem(Icons.star, context.tr('評分應用'), context.tr('在應用商店評分'), _rateApp),
-        _buildSettingItem(Icons.share, context.tr('分享應用'), context.tr('與朋友分享此應用'), _shareApp),
+        _buildSettingItem(theme, Icons.star, context.tr('評分應用'), context.tr('在應用商店評分'), _rateApp),
+        _buildSettingItem(theme, Icons.share, context.tr('分享應用'), context.tr('與朋友分享此應用'), _shareApp),
       ],
     );
   }
 
   /// 構建開發者選項
-  Widget _buildDeveloperOptions() {
+  Widget _buildDeveloperOptions(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(),
+        Divider(color: theme.dividerColor),
         const SizedBox(height: 12),
-        Text(context.tr('開發者選項'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
+        Text('開發者選項', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.colorScheme.error)),
         const SizedBox(height: 12),
-        _buildDevSettingItem(Icons.refresh, context.tr('重置 OnBoarding'), context.tr('重置引導頁面狀態'), _resetOnboarding),
-        _buildDevSettingItem(Icons.delete, context.tr('清除所有數據'), context.tr('刪除應用所有數據'), () {
+        _buildDevSettingItem(theme, Icons.refresh, context.tr('重置 OnBoarding'), context.tr('重置引導頁面狀態'), _resetOnboarding),
+        _buildDevSettingItem(theme, Icons.delete, context.tr('清除所有數據'), context.tr('刪除應用所有數據'), () {
           // TODO: 實現清除所有數據功能
         }),
       ],
@@ -225,34 +232,36 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   /// 構建設置項
-  Widget _buildSettingItem(IconData icon, String title, String subtitle, VoidCallback onTap) {
+  Widget _buildSettingItem(ThemeData theme, IconData icon, String title, String subtitle, VoidCallback onTap) {
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: Icon(icon, color: AppTheme.primaryColor),
-        title: Text(title),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        leading: Icon(icon, color: theme.primaryColor),
+        title: Text(title, style: TextStyle(color: theme.textTheme.titleMedium?.color)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
+        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: theme.iconTheme.color?.withOpacity(0.5)),
         onTap: onTap,
       ),
     );
   }
 
   /// 構建開發者設置項
-  Widget _buildDevSettingItem(IconData icon, String title, String subtitle, VoidCallback onTap) {
+  Widget _buildDevSettingItem(ThemeData theme, IconData icon, String title, String subtitle, VoidCallback onTap) {
+    final errorColor = theme.colorScheme.error;
+
     return Card(
       elevation: 0,
-      color: Colors.red.withAlpha(26),
+      color: errorColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: Icon(icon, color: Colors.red),
-        title: Text(title, style: const TextStyle(color: Colors.red)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.red),
+        leading: Icon(icon, color: errorColor),
+        title: Text(title, style: TextStyle(color: errorColor)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: errorColor.withOpacity(0.7))),
+        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: errorColor),
         onTap: onTap,
       ),
     );

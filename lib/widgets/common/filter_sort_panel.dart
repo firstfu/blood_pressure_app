@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
-import '../../themes/app_theme.dart';
 import '../../l10n/app_localizations_extension.dart';
 
 enum SortField { time, systolic, diastolic, pulse }
@@ -74,6 +73,9 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    // 獲取主題顏色
+    final theme = Theme.of(context);
+
     // 獲取螢幕尺寸和安全區域
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
@@ -91,7 +93,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     return Container(
       constraints: BoxConstraints(maxHeight: maxPanelHeight),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
         boxShadow: [
           BoxShadow(
@@ -110,11 +112,11 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(context.tr('篩選與排序'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[800])),
+                Text(context.tr('篩選與排序'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.of(context).pop(),
-                  color: Colors.grey[600],
+                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
@@ -123,12 +125,12 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           ),
           // 標籤頁
           Container(
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[200]!))),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: theme.dividerColor))),
             child: TabBar(
               controller: _tabController,
-              indicatorColor: AppTheme.primaryColor,
-              labelColor: AppTheme.primaryColor,
-              unselectedLabelColor: Colors.grey[600],
+              indicatorColor: theme.primaryColor,
+              labelColor: theme.primaryColor,
+              unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               indicatorWeight: 3,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               tabs: [Tab(text: context.tr('篩選')), Tab(text: context.tr('排序'))],
@@ -140,8 +142,8 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           Container(
             padding: EdgeInsets.fromLTRB(16, 8, 16, buttonBottomPadding),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey[200]!)),
+              color: theme.cardColor,
+              border: Border(top: BorderSide(color: theme.dividerColor)),
               boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 4, offset: const Offset(0, -1))],
             ),
             child: SafeArea(
@@ -164,8 +166,8 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                         widget.onReset();
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.primaryColor,
-                        side: BorderSide(color: AppTheme.primaryColor),
+                        foregroundColor: theme.primaryColor,
+                        side: BorderSide(color: theme.primaryColor),
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
@@ -185,8 +187,8 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                         Navigator.of(context).pop();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
+                        backgroundColor: theme.primaryColor,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         elevation: 2,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -263,113 +265,107 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     required RangeValues rangeValues,
     required Function(RangeValues) onChanged,
   }) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
-        const SizedBox(height: 4),
+        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.titleMedium?.color)),
+        const SizedBox(height: 8),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.grey[300]!),
+            Text('${rangeValues.start.round()}', style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+            Expanded(
+              child: SliderTheme(
+                data: SliderThemeData(
+                  activeTrackColor: theme.primaryColor,
+                  inactiveTrackColor: theme.dividerColor,
+                  thumbColor: Colors.white,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                  overlayColor: theme.primaryColor.withAlpha(32), // 0.125 * 255 ≈ 32
+                  valueIndicatorColor: theme.primaryColor,
+                  showValueIndicator: ShowValueIndicator.always,
+                ),
+                child: RangeSlider(
+                  values: rangeValues,
+                  min: min,
+                  max: max,
+                  divisions: divisions,
+                  labels: RangeLabels('${rangeValues.start.round()}', '${rangeValues.end.round()}'),
+                  onChanged: onChanged,
+                ),
               ),
-              child: Text(rangeValues.start.round().toString(), style: TextStyle(color: Colors.grey[700], fontSize: 13, fontWeight: FontWeight.w500)),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Text(rangeValues.end.round().toString(), style: TextStyle(color: Colors.grey[700], fontSize: 13, fontWeight: FontWeight.w500)),
-            ),
+            Text('${rangeValues.end.round()}', style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
           ],
-        ),
-        SliderTheme(
-          data: SliderThemeData(
-            activeTrackColor: AppTheme.primaryColor,
-            inactiveTrackColor: Colors.grey[300],
-            thumbColor: Colors.white,
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-            overlayColor: AppTheme.primaryColor.withAlpha(32), // 0.125 * 255 ≈ 32
-            valueIndicatorColor: AppTheme.primaryColor,
-            valueIndicatorTextStyle: const TextStyle(color: Colors.white),
-            trackHeight: 4,
-          ),
-          child: RangeSlider(
-            values: rangeValues,
-            min: min,
-            max: max,
-            divisions: divisions,
-            labels: RangeLabels(rangeValues.start.round().toString(), rangeValues.end.round().toString()),
-            onChanged: onChanged,
-          ),
         ),
       ],
     );
   }
 
   Widget _buildSortTab() {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(context.tr('排序依據'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
-            const SizedBox(height: 4),
-            _buildSortFieldRadio(SortField.time, context.tr('測量時間')),
-            _buildSortFieldRadio(SortField.systolic, context.tr('收縮壓')),
-            _buildSortFieldRadio(SortField.diastolic, context.tr('舒張壓')),
-            _buildSortFieldRadio(SortField.pulse, context.tr('心率')),
-            const SizedBox(height: 12),
-            Text(context.tr('排序方式'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey[800])),
-            const SizedBox(height: 4),
-            _buildSortOrderRadio(SortOrder.descending, context.tr('從高到低')),
-            _buildSortOrderRadio(SortOrder.ascending, context.tr('從低到高')),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 排序欄位
+          Text(context.tr('排序欄位'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.titleMedium?.color)),
+          const SizedBox(height: 8),
+          _buildSortFieldOption(SortField.time, context.tr('時間')),
+          _buildSortFieldOption(SortField.systolic, context.tr('收縮壓')),
+          _buildSortFieldOption(SortField.diastolic, context.tr('舒張壓')),
+          _buildSortFieldOption(SortField.pulse, context.tr('心率')),
+          const SizedBox(height: 16),
+          // 排序方式
+          Text(context.tr('排序方式'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.titleMedium?.color)),
+          const SizedBox(height: 8),
+          _buildSortOrderOption(SortOrder.ascending, context.tr('升序（小到大）')),
+          _buildSortOrderOption(SortOrder.descending, context.tr('降序（大到小）')),
+        ],
       ),
     );
   }
 
-  Widget _buildSortFieldRadio(SortField value, String title) {
+  Widget _buildSortFieldOption(SortField field, String label) {
+    final theme = Theme.of(context);
+
     return RadioListTile<SortField>(
-      title: Text(title, style: const TextStyle(fontSize: 14)),
-      value: value,
+      title: Text(label),
+      value: field,
       groupValue: _sortField,
-      onChanged: (newValue) {
-        setState(() {
-          _sortField = newValue!;
-        });
+      onChanged: (SortField? value) {
+        if (value != null) {
+          setState(() {
+            _sortField = value;
+          });
+        }
       },
-      activeColor: AppTheme.primaryColor,
       contentPadding: EdgeInsets.zero,
+      activeColor: theme.primaryColor,
       dense: true,
-      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
     );
   }
 
-  Widget _buildSortOrderRadio(SortOrder value, String title) {
+  Widget _buildSortOrderOption(SortOrder order, String label) {
+    final theme = Theme.of(context);
+
     return RadioListTile<SortOrder>(
-      title: Text(title, style: const TextStyle(fontSize: 14)),
-      value: value,
+      title: Text(label),
+      value: order,
       groupValue: _sortOrder,
-      onChanged: (newValue) {
-        setState(() {
-          _sortOrder = newValue!;
-        });
+      onChanged: (SortOrder? value) {
+        if (value != null) {
+          setState(() {
+            _sortOrder = value;
+          });
+        }
       },
-      activeColor: AppTheme.primaryColor,
       contentPadding: EdgeInsets.zero,
+      activeColor: theme.primaryColor,
       dense: true,
-      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
     );
   }
 }

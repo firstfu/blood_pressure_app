@@ -57,11 +57,12 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('幫助與反饋'), style: TypographyTheme.pageTitle),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -70,7 +71,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppTheme.primaryColor.withAlpha(26), AppTheme.backgroundColor, AppTheme.backgroundColor],
+            colors: [theme.primaryColor.withAlpha(26), theme.scaffoldBackgroundColor, theme.scaffoldBackgroundColor],
           ),
         ),
         child: DefaultTabController(
@@ -78,11 +79,11 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           child: Column(
             children: [
               Container(
-                color: Colors.white,
+                color: theme.cardColor,
                 child: TabBar(
-                  labelColor: AppTheme.primaryColor,
-                  unselectedLabelColor: AppTheme.textSecondaryColor,
-                  indicatorColor: AppTheme.primaryColor,
+                  labelColor: theme.primaryColor,
+                  unselectedLabelColor: theme.textTheme.bodySmall?.color,
+                  indicatorColor: theme.primaryColor,
                   indicatorWeight: 3,
                   labelStyle: TypographyTheme.secondary.copyWith(fontWeight: FontWeight.w500),
                   unselectedLabelStyle: TypographyTheme.secondary,
@@ -167,7 +168,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           // 反饋表單
           Card(
             elevation: 2,
-            shadowColor: AppTheme.primaryColor.withAlpha(51),
+            shadowColor: Theme.of(context).primaryColor.withAlpha(51),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -188,7 +189,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                       child: DropdownButton<String>(
                         value: _selectedFeedbackType,
                         isExpanded: true,
-                        icon: const Icon(Icons.arrow_drop_down, color: AppTheme.primaryColor),
+                        icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).primaryColor),
                         items:
                             _feedbackTypes.map((String type) {
                               return DropdownMenuItem<String>(value: type, child: Text(type, style: TypographyTheme.body));
@@ -221,7 +222,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppTheme.primaryColor, width: 1.5),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
                       ),
                     ),
                   ),
@@ -243,9 +244,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppTheme.primaryColor, width: 1.5),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
                       ),
-                      prefixIcon: const Icon(Icons.email_outlined, color: AppTheme.primaryColor, size: 18),
+                      prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).primaryColor, size: 18),
                     ),
                   ),
 
@@ -255,7 +256,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   ElevatedButton(
                     onPressed: _submitFeedback,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
+                      backgroundColor: Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -282,9 +283,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, color: AppTheme.primaryColor, size: 20),
+        Icon(icon, color: Theme.of(context).primaryColor, size: 20),
         const SizedBox(width: 8),
-        Text(title, style: TypographyTheme.subtitle.copyWith(color: AppTheme.primaryColor)),
+        Text(title, style: TypographyTheme.subtitle.copyWith(color: Theme.of(context).primaryColor)),
       ],
     );
   }
@@ -296,7 +297,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 1,
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
+      shadowColor: Theme.of(context).primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
@@ -313,7 +314,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(isExpanded ? Icons.remove_circle_outline : Icons.add_circle_outline, color: AppTheme.primaryColor, size: 20),
+                  Icon(isExpanded ? Icons.remove_circle_outline : Icons.add_circle_outline, color: Theme.of(context).primaryColor, size: 20),
                   const SizedBox(width: 12),
                   Expanded(child: Text(question, style: TypographyTheme.emphasized)),
                 ],
@@ -336,7 +337,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 1,
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
+      shadowColor: Theme.of(context).primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: onTap,
@@ -345,7 +346,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Icon(icon, color: AppTheme.primaryColor, size: 20),
+              Icon(icon, color: Theme.of(context).primaryColor, size: 20),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -353,12 +354,12 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   children: [
                     Text(title, style: TypographyTheme.secondary),
                     const SizedBox(height: 4),
-                    Text(value, style: TypographyTheme.emphasized.copyWith(color: AppTheme.primaryColor), overflow: TextOverflow.ellipsis),
+                    Text(value, style: TypographyTheme.emphasized.copyWith(color: Theme.of(context).primaryColor), overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.arrow_forward_ios, color: AppTheme.textSecondaryColor, size: 14),
+              Icon(Icons.arrow_forward_ios, color: Theme.of(context).textTheme.bodySmall?.color, size: 14),
             ],
           ),
         ),
@@ -370,7 +371,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   void _submitFeedback() {
     // 檢查反饋內容是否為空
     if (_feedbackController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('請輸入反饋內容')), backgroundColor: AppTheme.warningColor));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.tr('請輸入反饋內容')), backgroundColor: Theme.of(context).colorScheme.error));
       return;
     }
 
@@ -382,7 +385,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           (context) => AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [const CircularProgressIndicator(), const SizedBox(height: 16), Text(context.tr('正在提交反饋...'))],
+              children: [CircularProgressIndicator(), const SizedBox(height: 16), Text(context.tr('正在提交反饋...'))],
             ),
           ),
     );
@@ -402,7 +405,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             (context) => AlertDialog(
               title: Row(
                 children: [
-                  const Icon(Icons.check_circle, color: AppTheme.successColor),
+                  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
                   Text(context.tr('提交成功'), style: TypographyTheme.subtitle),
                 ],
@@ -434,7 +437,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       await launchUrl(uri);
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開連結')), backgroundColor: AppTheme.warningColor));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(context.tr('無法打開連結')), backgroundColor: Theme.of(context).colorScheme.error));
       }
     }
   }

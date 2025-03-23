@@ -6,8 +6,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:math';
 import '../../models/blood_pressure_record.dart';
-import '../../themes/app_theme.dart';
+// import '../../themes/app_theme.dart'; // 移除不必要的引用
 import '../../utils/date_time_utils.dart';
 import '../../l10n/app_localizations_extension.dart';
 
@@ -19,14 +20,16 @@ class BloodPressureBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (records.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bar_chart, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
+            Icon(Icons.bar_chart, size: 48, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.5)),
             const SizedBox(height: 16),
-            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7))),
           ],
         ),
       );
@@ -48,9 +51,9 @@ class BloodPressureBarChart extends StatelessWidget {
           groupsSpace: 35,
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: Colors.white,
+              tooltipBgColor: theme.cardColor,
               tooltipRoundedRadius: 8,
-              tooltipBorder: BorderSide(color: AppTheme.primaryColor.withAlpha(51), width: 1),
+              tooltipBorder: BorderSide(color: theme.primaryColor.withAlpha(51), width: 1),
               tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final record = sortedRecords[groupIndex];
@@ -61,11 +64,11 @@ class BloodPressureBarChart extends StatelessWidget {
                 if (rodIndex == 0) {
                   title = '收縮壓';
                   value = record.systolic;
-                  color = AppTheme.primaryColor;
+                  color = theme.primaryColor;
                 } else if (rodIndex == 1) {
                   title = '舒張壓';
                   value = record.diastolic;
-                  color = AppTheme.successColor;
+                  color = theme.colorScheme.secondary;
                 } else {
                   title = '心率';
                   value = record.pulse;
@@ -105,7 +108,7 @@ class BloodPressureBarChart extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       DateTimeUtils.formatDateMMDD(record.measureTime),
-                      style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 10, fontWeight: FontWeight.w500),
+                      style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 10, fontWeight: FontWeight.w500),
                     ),
                   );
                 },
@@ -118,7 +121,7 @@ class BloodPressureBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   return Text(
                     value.toInt().toString(),
-                    style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 10, fontWeight: FontWeight.w500),
+                    style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 10, fontWeight: FontWeight.w500),
                   );
                 },
                 reservedSize: 30,
@@ -128,8 +131,8 @@ class BloodPressureBarChart extends StatelessWidget {
           borderData: FlBorderData(
             show: true,
             border: Border(
-              bottom: BorderSide(color: Colors.grey[300]!),
-              left: BorderSide(color: Colors.grey[300]!),
+              bottom: BorderSide(color: theme.dividerColor),
+              left: BorderSide(color: theme.dividerColor),
               top: BorderSide.none,
               right: BorderSide.none,
             ),
@@ -141,18 +144,18 @@ class BloodPressureBarChart extends StatelessWidget {
             getDrawingHorizontalLine: (value) {
               // 只在特定值處顯示網格線
               if (value % 20 == 0 && value > 0) {
-                return FlLine(color: Colors.grey[200], strokeWidth: 0.5);
+                return FlLine(color: theme.dividerColor.withOpacity(0.5), strokeWidth: 0.5);
               }
               return FlLine(color: Colors.transparent);
             },
           ),
-          barGroups: _getBarGroups(sortedRecords),
+          barGroups: _getBarGroups(sortedRecords, theme),
           extraLinesData: ExtraLinesData(
             horizontalLines: [
               // 高血壓參考線
               HorizontalLine(
                 y: 140,
-                color: Colors.red.withAlpha(128),
+                color: theme.colorScheme.error.withAlpha(128),
                 strokeWidth: 0.8,
                 dashArray: [4, 4],
                 label: HorizontalLineLabel(
@@ -162,7 +165,7 @@ class BloodPressureBarChart extends StatelessWidget {
               // 正常血壓上限參考線
               HorizontalLine(
                 y: 120,
-                color: AppTheme.successColor.withAlpha(128),
+                color: theme.colorScheme.secondary.withAlpha(128),
                 strokeWidth: 0.8,
                 dashArray: [4, 4],
                 label: HorizontalLineLabel(
@@ -188,7 +191,7 @@ class BloodPressureBarChart extends StatelessWidget {
   }
 
   // 獲取長條圖組
-  List<BarChartGroupData> _getBarGroups(List<BloodPressureRecord> sortedRecords) {
+  List<BarChartGroupData> _getBarGroups(List<BloodPressureRecord> sortedRecords, ThemeData theme) {
     final List<BarChartGroupData> barGroups = [];
 
     for (int i = 0; i < sortedRecords.length; i++) {
@@ -199,7 +202,7 @@ class BloodPressureBarChart extends StatelessWidget {
       rods.add(
         BarChartRodData(
           toY: record.systolic.toDouble(),
-          color: AppTheme.primaryColor,
+          color: theme.primaryColor,
           width: 5.5,
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
           backDrawRodData: BackgroundBarChartRodData(show: false),
@@ -210,7 +213,7 @@ class BloodPressureBarChart extends StatelessWidget {
       rods.add(
         BarChartRodData(
           toY: record.diastolic.toDouble(),
-          color: AppTheme.successColor,
+          color: theme.colorScheme.secondary,
           width: 5.5,
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
           backDrawRodData: BackgroundBarChartRodData(show: false),
@@ -249,7 +252,4 @@ class BloodPressureBarChart extends StatelessWidget {
 
     return (maxSystolic + 30).toDouble().clamp(double.negativeInfinity, 200);
   }
-
-  // 取最大值
-  int max(int a, int b) => a > b ? a : b;
 }

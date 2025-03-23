@@ -5,7 +5,6 @@
  */
 
 import 'package:flutter/material.dart';
-import '../../themes/app_theme.dart';
 import '../../l10n/app_localizations_extension.dart';
 
 class HealthTipCard extends StatelessWidget {
@@ -15,9 +14,11 @@ class HealthTipCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
       elevation: 1,
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
+      shadowColor: theme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -26,20 +27,17 @@ class HealthTipCard extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(12)),
-              child: Icon(Icons.lightbulb_outline, color: AppTheme.primaryColor, size: 20),
+              decoration: BoxDecoration(color: theme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(12)),
+              child: Icon(Icons.lightbulb_outline, color: theme.primaryColor, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    context.tr('健康小貼士'),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
-                  ),
+                  Text(context.tr('健康小貼士'), style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.primaryColor)),
                   const SizedBox(height: 4),
-                  Text(context.tr(tip), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textPrimaryColor)),
+                  Text(context.tr(tip), style: theme.textTheme.bodyMedium),
                 ],
               ),
             ),

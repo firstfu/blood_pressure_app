@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'constants/app_constants.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
+import 'providers/theme_provider.dart';
 import 'services/shared_prefs_service.dart';
 import 'themes/app_theme.dart';
 import 'views/main_page.dart';
@@ -20,8 +21,14 @@ import 'views/onboarding/onboarding_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 設置狀態欄顏色
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark));
+  // 初始狀態欄設置為透明
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light, // iOS
+    ),
+  );
 
   // 檢查用戶是否已完成 onBoarding
   final bool onBoardingCompleted = await SharedPrefsService.isOnBoardingCompleted();
@@ -31,7 +38,16 @@ void main() async {
   final localeProvider = LocaleProvider();
   await localeProvider.init();
 
-  runApp(MultiProvider(providers: [ChangeNotifierProvider(create: (_) => localeProvider)], child: MyApp(onBoardingCompleted: onBoardingCompleted)));
+  // 初始化主題提供者
+  final themeProvider = ThemeProvider();
+  await themeProvider.init();
+
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => localeProvider), ChangeNotifierProvider(create: (_) => themeProvider)],
+      child: MyApp(onBoardingCompleted: onBoardingCompleted),
+    ),
+  );
 }
 
 // 主應用程式
@@ -44,10 +60,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // 獲取當前語系
     final localeProvider = Provider.of<LocaleProvider>(context);
+    // 獲取當前主題
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
       title: AppConstants.appName,
+      themeMode: themeProvider.themeMode,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       home: onBoardingCompleted ? const MainPage() : const OnboardingPage(),
       debugShowCheckedModeBanner: false,
       // 添加本地化支持

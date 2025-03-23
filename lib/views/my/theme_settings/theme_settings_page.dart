@@ -3,9 +3,10 @@
 // @ Description: 血壓管家 App 主題設定頁面，用於自定義應用外觀
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations_extension.dart';
-import '../../../themes/app_theme.dart';
-import '../../../services/shared_prefs_service.dart';
+import '../../../providers/theme_provider.dart';
+// import '../../../themes/app_theme.dart'; // 移除不必要的引用
 
 /// ThemeSettingsPage 類
 ///
@@ -18,11 +19,6 @@ class ThemeSettingsPage extends StatefulWidget {
 }
 
 class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
-  // 主題設定選項狀態
-  String _selectedThemeColor = 'blue'; // 預設藍色
-  bool _useDarkMode = false; // 預設淺色模式
-  bool _useSystemTheme = true; // 預設跟隨系統
-
   // 可選的主題顏色
   final List<Map<String, dynamic>> _themeColors = [
     {'name': 'blue', 'color': const Color(0xFF1976D2), 'displayName': '醫療藍'},
@@ -34,47 +30,26 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _loadThemeSettings();
-  }
-
-  /// 加載主題設定
-  Future<void> _loadThemeSettings() async {
-    // 從 SharedPreferences 加載設定
-    final settings = await SharedPrefsService.getThemeSettings();
-    setState(() {
-      _selectedThemeColor = settings['themeColor'] ?? 'blue';
-      _useDarkMode = settings['useDarkMode'] ?? false;
-      _useSystemTheme = settings['useSystemTheme'] ?? true;
-    });
-  }
-
-  /// 保存主題設定
-  Future<void> _saveThemeSettings() async {
-    // 保存設定到 SharedPreferences
-    final settings = {'themeColor': _selectedThemeColor, 'useDarkMode': _useDarkMode, 'useSystemTheme': _useSystemTheme};
-    await SharedPrefsService.saveThemeSettings(settings);
-
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(context.tr('主題設定已保存，重啟應用後生效')), action: SnackBarAction(label: context.tr('確定'), onPressed: () {})));
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // 獲取主題提供者
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final theme = Theme.of(context);
+
+    // 獲取當前主題設定
+    final String selectedThemeColor = themeProvider.themeColor;
+    final bool useDarkMode = themeProvider.useDarkMode;
+    final bool useSystemTheme = themeProvider.useSystemTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('主題設定')),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: theme.primaryColor,
+        foregroundColor: theme.colorScheme.onPrimary,
         elevation: 0,
       ),
       body: Container(
-        color: AppTheme.backgroundColor,
+        color: theme.scaffoldBackgroundColor,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -82,43 +57,17 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
             children: [
               // 主題顏色選擇
               _buildSectionTitle(context.tr('主題顏色')),
-              _buildThemeColorGrid(),
+              _buildThemeColorGrid(context, selectedThemeColor, themeProvider),
 
               const SizedBox(height: 24),
 
               // 深淺模式設定
               _buildSectionTitle(context.tr('深淺模式')),
-              _buildSwitchItem(context.tr('跟隨系統'), context.tr('自動跟隨系統深淺模式設定'), _useSystemTheme, (value) {
-                setState(() {
-                  _useSystemTheme = value;
-                  // 如果啟用跟隨系統，則禁用手動深色模式設定
-                  if (value) {
-                    _useDarkMode = false;
-                  }
-                });
-              }),
-              if (!_useSystemTheme)
-                _buildSwitchItem(context.tr('深色模式'), context.tr('使用深色主題，適合夜間使用'), _useDarkMode, (value) {
-                  setState(() => _useDarkMode = value);
-                }),
+              _buildSwitchItem(context.tr('跟隨系統'), context.tr('自動跟隨系統深淺模式設定'), useSystemTheme, (value) => themeProvider.setUseSystemTheme(value)),
+              if (!useSystemTheme)
+                _buildSwitchItem(context.tr('深色模式'), context.tr('使用深色主題，適合夜間使用'), useDarkMode, (value) => themeProvider.setUseDarkMode(value)),
 
               const SizedBox(height: 24),
-
-              // 保存按鈕
-              Center(
-                child: ElevatedButton(
-                  onPressed: _saveThemeSettings,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(context.tr('保存設定')),
-                ),
-              ),
-
-              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -128,32 +77,40 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
 
   /// 構建章節標題
   Widget _buildSectionTitle(String title) {
+    final theme = Theme.of(context);
+    final themeColor = theme.primaryColor;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+      child: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: themeColor)),
     );
   }
 
   /// 構建開關設定項
   Widget _buildSwitchItem(String title, String subtitle, bool value, Function(bool) onChanged) {
+    final theme = Theme.of(context);
+    final themeColor = theme.primaryColor;
+
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
       child: SwitchListTile(
-        title: Text(title),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        title: Text(title, style: TextStyle(color: theme.textTheme.titleMedium?.color)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
         value: value,
         onChanged: onChanged,
-        activeColor: AppTheme.primaryColor,
+        activeColor: themeColor,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
     );
   }
 
   /// 構建主題顏色網格
-  Widget _buildThemeColorGrid() {
+  Widget _buildThemeColorGrid(BuildContext context, String selectedThemeColor, ThemeProvider themeProvider) {
+    final theme = Theme.of(context);
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -166,20 +123,18 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
       itemCount: _themeColors.length,
       itemBuilder: (context, index) {
         final themeColor = _themeColors[index];
-        final isSelected = _selectedThemeColor == themeColor['name'];
+        final isSelected = selectedThemeColor == themeColor['name'];
 
         return GestureDetector(
           onTap: () {
-            setState(() {
-              _selectedThemeColor = themeColor['name'];
-            });
+            themeProvider.setThemeColor(themeColor['name']);
           },
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: isSelected ? themeColor['color'] : Colors.transparent, width: 2),
-              boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 4, offset: const Offset(0, 2))],
+              boxShadow: [BoxShadow(color: theme.shadowColor.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +145,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
                   decoration: BoxDecoration(
                     color: themeColor['color'],
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
+                    border: Border.all(color: theme.cardColor, width: 2),
                     boxShadow: [BoxShadow(color: themeColor['color'].withAlpha(100), blurRadius: 4, spreadRadius: 1)],
                   ),
                   child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
@@ -201,7 +156,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected ? themeColor['color'] : AppTheme.textPrimaryColor,
+                    color: isSelected ? themeColor['color'] : theme.textTheme.bodyMedium?.color,
                   ),
                 ),
               ],

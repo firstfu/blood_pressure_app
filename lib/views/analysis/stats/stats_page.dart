@@ -137,35 +137,50 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: theme.primaryColor,
         elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        title: Text(context.tr('血壓統計'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: brightness == Brightness.light ? Brightness.dark : Brightness.light,
+          statusBarBrightness: brightness == Brightness.light ? Brightness.light : Brightness.dark,
+        ),
+        title: Text(context.tr('血壓統計'), style: TextStyle(color: theme.appBarTheme.foregroundColor, fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
         actions: [
           // 添加進階功能按鈕
           IconButton(
-            icon: const Icon(Icons.auto_graph),
+            icon: Icon(Icons.auto_graph, color: theme.appBarTheme.foregroundColor),
             tooltip: context.tr('高級功能'),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvancedFeaturesPage()));
             },
           ),
           // 添加匯出按鈕
-          IconButton(icon: const Icon(Icons.file_download), tooltip: context.tr('匯出數據'), onPressed: () => _showExportOptions(context)),
+          IconButton(
+            icon: Icon(Icons.file_download, color: theme.appBarTheme.foregroundColor),
+            tooltip: context.tr('匯出數據'),
+            onPressed: () => _showExportOptions(context),
+          ),
           // 添加生成報告按鈕
-          IconButton(icon: const Icon(Icons.picture_as_pdf), tooltip: context.tr('生成報告'), onPressed: () => _generateReport(context)),
+          IconButton(
+            icon: Icon(Icons.picture_as_pdf, color: theme.appBarTheme.foregroundColor),
+            tooltip: context.tr('生成報告'),
+            onPressed: () => _generateReport(context),
+          ),
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: Colors.white,
+          indicatorColor: theme.appBarTheme.foregroundColor,
           indicatorWeight: 3,
-          labelColor: Colors.white,
+          labelColor: theme.appBarTheme.foregroundColor,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          unselectedLabelColor: Colors.white.withAlpha(179),
+          unselectedLabelColor: theme.appBarTheme.foregroundColor?.withAlpha(179),
           tabs: [Tab(text: context.tr('趨勢圖')), Tab(text: context.tr('歷史記錄'))],
         ),
       ),
@@ -213,6 +228,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   // 顯示匯出選項
   void _showExportOptions(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (_filteredRecords.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法匯出'))));
       return;
@@ -220,6 +237,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
     showModalBottomSheet(
       context: context,
+      backgroundColor: theme.cardColor,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
         return Container(
@@ -229,22 +247,25 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(context.tr('選擇匯出格式'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(
+                  context.tr('選擇匯出格式'),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color),
+                ),
               ),
-              const Divider(),
+              Divider(color: theme.dividerColor),
               ListTile(
-                leading: const Icon(Icons.table_chart, color: Colors.green),
-                title: Text(context.tr('匯出為 CSV 檔案')),
-                subtitle: Text(context.tr('適用於 Excel、Google 試算表等')),
+                leading: Icon(Icons.table_chart, color: theme.colorScheme.primary),
+                title: Text(context.tr('匯出為 CSV 檔案'), style: TextStyle(color: theme.textTheme.titleMedium?.color)),
+                subtitle: Text(context.tr('適用於 Excel、Google 試算表等'), style: TextStyle(color: theme.textTheme.bodySmall?.color)),
                 onTap: () {
                   Navigator.pop(context);
                   _exportData(context, 'csv');
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.table_view, color: Colors.blue),
-                title: Text(context.tr('匯出為 Excel 檔案')),
-                subtitle: Text(context.tr('包含格式化和顏色標記')),
+                leading: Icon(Icons.table_view, color: theme.colorScheme.secondary),
+                title: Text(context.tr('匯出為 Excel 檔案'), style: TextStyle(color: theme.textTheme.titleMedium?.color)),
+                subtitle: Text(context.tr('包含格式化和顏色標記'), style: TextStyle(color: theme.textTheme.bodySmall?.color)),
                 onTap: () {
                   Navigator.pop(context);
                   _exportData(context, 'excel');
@@ -260,6 +281,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   // 匯出數據
   Future<void> _exportData(BuildContext context, String format) async {
+    final theme = Theme.of(context);
+
     if (_filteredRecords.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法匯出'))));
       return;
@@ -302,7 +325,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 使用保存的 scaffoldMessenger 引用顯示成功消息
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text(formatGeneratedText(formatName)), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text(formatGeneratedText(formatName)), backgroundColor: theme.colorScheme.primary, behavior: SnackBarBehavior.floating),
       );
     } catch (e) {
       // 檢查 widget 是否仍然掛載在 widget 樹上
@@ -313,13 +336,15 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 使用保存的 scaffoldMessenger 引用顯示錯誤消息
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('$exportFailedText$e'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text('$exportFailedText$e'), backgroundColor: theme.colorScheme.error, behavior: SnackBarBehavior.floating),
       );
     }
   }
 
   // 生成健康報告
   Future<void> _generateReport(BuildContext context) async {
+    final theme = Theme.of(context);
+
     if (_filteredRecords.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法生成報告'))));
       return;
@@ -379,7 +404,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 顯示成功消息
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('$reportTitleText已生成'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text('$reportTitleText已生成'), backgroundColor: theme.colorScheme.primary, behavior: SnackBarBehavior.floating),
       );
     } catch (e) {
       // 檢查 widget 是否仍然掛載在 widget 樹上
@@ -390,7 +415,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
       // 顯示錯誤消息
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('$reportFailedText: $e'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text('$reportFailedText: $e'), backgroundColor: theme.colorScheme.error, behavior: SnackBarBehavior.floating),
       );
     }
   }
@@ -429,6 +454,8 @@ class LoadingDialog {
 
   static LoadingDialog show(BuildContext context) {
     final overlay = Overlay.of(context);
+    final theme = Theme.of(context);
+
     final overlayEntry = OverlayEntry(
       builder:
           (context) => Material(
@@ -436,13 +463,13 @@ class LoadingDialog {
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const CircularProgressIndicator(),
+                    CircularProgressIndicator(color: theme.primaryColor),
                     const SizedBox(height: 16),
-                    Text(context.tr('處理中...'), style: const TextStyle(fontSize: 16)),
+                    Text(context.tr('處理中...'), style: TextStyle(fontSize: 16, color: theme.textTheme.bodyLarge?.color)),
                   ],
                 ),
               ),

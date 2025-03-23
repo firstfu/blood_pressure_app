@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../l10n/app_localizations_extension.dart';
-import '../themes/app_theme.dart';
+// import '../themes/app_theme.dart'; // 移除不必要的引用
 import 'home/home_page.dart';
 import 'record/record_page.dart';
 import 'analysis/stats/stats_page.dart';
@@ -27,12 +27,24 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
-    // 設置沉浸式狀態欄
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light));
+    // 設置沉浸式狀態欄 - 根據當前主題調整狀態欄圖標亮度
+    // 這裡不再硬編碼設置，而是在 build 方法中根據當前主題動態設置
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+
+    // 根據當前主題動態設置狀態欄樣式
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        statusBarBrightness: brightness == Brightness.light ? Brightness.light : Brightness.dark,
+      ),
+    );
+
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -49,10 +61,11 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('統計')),
           BottomNavigationBarItem(icon: const Icon(Icons.person), label: context.tr('我的')),
         ],
-        backgroundColor: Colors.white,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.grey,
-        elevation: 8,
+        // 使用主題而非硬編碼顏色
+        backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
+        selectedItemColor: theme.bottomNavigationBarTheme.selectedItemColor,
+        unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
+        elevation: theme.bottomNavigationBarTheme.elevation,
       ),
     );
   }

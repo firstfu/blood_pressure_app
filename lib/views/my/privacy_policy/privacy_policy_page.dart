@@ -14,16 +14,17 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('Privacy Policy')),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(
-        color: AppTheme.backgroundColor,
+        color: theme.scaffoldBackgroundColor,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -96,30 +97,33 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   /// 構建章節標題
   Widget _buildSectionTitle(BuildContext context, String title) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+      child: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.primaryColor)),
     );
   }
 
   /// 構建段落文字
   Widget _buildParagraph(BuildContext context, String text) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Text(text, style: const TextStyle(fontSize: 15, height: 1.5, color: AppTheme.textPrimaryColor)),
+      child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: theme.textTheme.bodyMedium?.color)),
     );
   }
 
   /// 構建項目符號點
   Widget _buildBulletPoint(BuildContext context, String text) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(left: 16, bottom: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(padding: EdgeInsets.only(top: 8), child: Icon(Icons.circle, size: 6, color: AppTheme.primaryColor)),
+          Padding(padding: const EdgeInsets.only(top: 8), child: Icon(Icons.circle, size: 6, color: theme.primaryColor)),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 15, height: 1.5, color: AppTheme.textPrimaryColor))),
+          Expanded(child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: theme.textTheme.bodyMedium?.color))),
         ],
       ),
     );

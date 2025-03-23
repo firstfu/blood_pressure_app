@@ -187,16 +187,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
           const SizedBox(height: 40),
 
           // 標題
-          Text(
-            title,
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.textPrimaryColor),
-            textAlign: TextAlign.center,
-          ),
+          Text(title, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.textPrimaryColor), textAlign: TextAlign.center),
 
           const SizedBox(height: 16),
 
           // 描述
-          Text(description, style: const TextStyle(fontSize: 16, color: AppTheme.textSecondaryColor, height: 1.5), textAlign: TextAlign.center),
+          Text(description, style: TextStyle(fontSize: 16, color: AppTheme.textSecondaryColor, height: 1.5), textAlign: TextAlign.center),
 
           const SizedBox(height: 40),
         ],

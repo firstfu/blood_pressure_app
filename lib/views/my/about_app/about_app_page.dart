@@ -50,11 +50,12 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('關於應用')),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -63,7 +64,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppTheme.primaryColor.withAlpha(26), AppTheme.backgroundColor, AppTheme.backgroundColor],
+            colors: [theme.primaryColor.withAlpha(26), theme.scaffoldBackgroundColor, theme.scaffoldBackgroundColor],
           ),
         ),
         child: SingleChildScrollView(
@@ -109,20 +110,21 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建應用 Logo
   Widget _buildAppLogo() {
+    final theme = Theme.of(context);
     return Container(
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [BoxShadow(color: AppTheme.primaryColor.withAlpha(51), blurRadius: 20, spreadRadius: 2)],
+        boxShadow: [BoxShadow(color: theme.primaryColor.withAlpha(51), blurRadius: 20, spreadRadius: 2)],
       ),
       child: Center(
         child: Container(
           width: 90,
           height: 90,
-          decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(25)),
-          child: const Icon(Icons.favorite, size: 60, color: AppTheme.primaryColor),
+          decoration: BoxDecoration(color: theme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(25)),
+          child: Icon(Icons.favorite, size: 60, color: theme.primaryColor),
         ),
       ),
     );
@@ -130,16 +132,17 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建應用信息
   Widget _buildAppInfo() {
+    final theme = Theme.of(context);
     return Column(
       children: [
-        Text(context.tr('血壓管家'), style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryColor, letterSpacing: 1.2)),
+        Text(context.tr('血壓管家'), style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: theme.primaryColor, letterSpacing: 1.2)),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(color: theme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(20)),
           child: Text(
             '${context.tr('版本：')} $_appVersion (${context.tr('建置版本')} $_buildNumber)',
-            style: const TextStyle(fontSize: 14, color: AppTheme.primaryColor, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 14, color: theme.primaryColor, fontWeight: FontWeight.w500),
           ),
         ),
       ],
@@ -148,9 +151,10 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建應用介紹
   Widget _buildAppDescription() {
+    final theme = Theme.of(context);
     return Card(
       elevation: 2,
-      shadowColor: AppTheme.primaryColor.withAlpha(51),
+      shadowColor: theme.primaryColor.withAlpha(51),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -159,21 +163,18 @@ class _AboutAppPageState extends State<AboutAppPage> {
           children: [
             Row(
               children: [
-                const Icon(Icons.info_outline, color: AppTheme.primaryColor, size: 22),
+                Icon(Icons.info_outline, color: theme.primaryColor, size: 22),
                 const SizedBox(width: 10),
-                Text(
-                  context.tr('應用介紹'),
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-                ),
+                Text(context.tr('應用介紹'), style: theme.textTheme.displaySmall?.copyWith(color: theme.primaryColor, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 16),
             Text(
               context.tr('血壓管家是一款專為高血壓患者和關注血壓健康的用戶設計的應用程式。它提供了簡單易用的血壓記錄功能，幫助用戶追蹤血壓變化趨勢，並提供數據分析和健康建議。'),
-              style: const TextStyle(fontSize: 15, height: 1.6, color: AppTheme.textPrimaryColor),
+              style: TextStyle(fontSize: 15, height: 1.6, color: theme.textTheme.bodyMedium?.color),
             ),
             const SizedBox(height: 12),
-            Text(context.tr('主要功能包括：'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.textPrimaryColor)),
+            Text(context.tr('主要功能包括：'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: theme.textTheme.bodyMedium?.color)),
             const SizedBox(height: 8),
             _buildFeatureItem(context.tr('血壓記錄與追蹤')),
             _buildFeatureItem(context.tr('數據統計與分析')),
@@ -187,14 +188,15 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建功能項目
   Widget _buildFeatureItem(String text) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(padding: EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 8, color: AppTheme.primaryColor)),
+          Padding(padding: const EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 8, color: theme.primaryColor)),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 15, height: 1.5, color: AppTheme.textPrimaryColor))),
+          Expanded(child: Text(text, style: TextStyle(fontSize: 15, height: 1.5, color: theme.textTheme.bodyMedium?.color))),
         ],
       ),
     );
@@ -202,9 +204,10 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建開發者信息
   Widget _buildDeveloperInfo() {
+    final theme = Theme.of(context);
     return Card(
       elevation: 2,
-      shadowColor: AppTheme.primaryColor.withAlpha(51),
+      shadowColor: theme.primaryColor.withAlpha(51),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -213,12 +216,9 @@ class _AboutAppPageState extends State<AboutAppPage> {
           children: [
             Row(
               children: [
-                const Icon(Icons.person_outline, color: AppTheme.primaryColor, size: 22),
+                Icon(Icons.person_outline, color: theme.primaryColor, size: 22),
                 const SizedBox(width: 10),
-                Text(
-                  context.tr('開發者信息'),
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-                ),
+                Text(context.tr('開發者信息'), style: theme.textTheme.displaySmall?.copyWith(color: theme.primaryColor, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 16),
@@ -239,9 +239,10 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建法律信息
   Widget _buildLegalInfo() {
+    final theme = Theme.of(context);
     return Card(
       elevation: 2,
-      shadowColor: AppTheme.primaryColor.withAlpha(51),
+      shadowColor: theme.primaryColor.withAlpha(51),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -250,12 +251,9 @@ class _AboutAppPageState extends State<AboutAppPage> {
           children: [
             Row(
               children: [
-                const Icon(Icons.gavel_outlined, color: AppTheme.primaryColor, size: 22),
+                Icon(Icons.gavel_outlined, color: theme.primaryColor, size: 22),
                 const SizedBox(width: 10),
-                Text(
-                  context.tr('法律資訊'),
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-                ),
+                Text(context.tr('法律資訊'), style: theme.textTheme.displaySmall?.copyWith(color: theme.primaryColor, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 16),
@@ -264,7 +262,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
               Icons.privacy_tip_outlined,
               () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PrivacyPolicyPage())),
             ),
-            const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
+            Divider(height: 1, thickness: 1, color: Theme.of(context).dividerColor),
             _buildLegalButton(
               context.tr('Terms of Use'),
               Icons.description_outlined,
@@ -278,17 +276,19 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建版權信息
   Widget _buildCopyright() {
+    final theme = Theme.of(context);
     return Column(
       children: [
-        Text('© ${DateTime.now().year} ${context.tr('血壓管家')}', style: const TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor)),
+        Text('© ${DateTime.now().year} ${context.tr('血壓管家')}', style: TextStyle(fontSize: 14, color: theme.textTheme.bodySmall?.color)),
         const SizedBox(height: 4),
-        Text(context.tr('保留所有權利'), style: const TextStyle(fontSize: 12, color: AppTheme.textSecondaryColor)),
+        Text(context.tr('保留所有權利'), style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
       ],
     );
   }
 
   /// 構建信息行
   Widget _buildInfoRow(IconData icon, String label, String value) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -297,17 +297,17 @@ class _AboutAppPageState extends State<AboutAppPage> {
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(10)),
-            child: Icon(icon, size: 20, color: AppTheme.primaryColor),
+            decoration: BoxDecoration(color: theme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, size: 20, color: theme.primaryColor),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor)),
+                Text(label, style: TextStyle(fontSize: 14, color: theme.textTheme.bodySmall?.color)),
                 const SizedBox(height: 2),
-                Text(value, style: const TextStyle(fontSize: 16, color: AppTheme.textPrimaryColor, fontWeight: FontWeight.w500)),
+                Text(value, style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500)),
               ],
             ),
           ),
@@ -318,6 +318,7 @@ class _AboutAppPageState extends State<AboutAppPage> {
 
   /// 構建法律按鈕
   Widget _buildLegalButton(String title, IconData icon, VoidCallback onTap) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -327,12 +328,12 @@ class _AboutAppPageState extends State<AboutAppPage> {
             Container(
               width: 36,
               height: 36,
-              decoration: BoxDecoration(color: AppTheme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(10)),
-              child: Icon(icon, size: 20, color: AppTheme.primaryColor),
+              decoration: BoxDecoration(color: theme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(10)),
+              child: Icon(icon, size: 20, color: theme.primaryColor),
             ),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 16, color: AppTheme.textPrimaryColor, fontWeight: FontWeight.w500))),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: AppTheme.textSecondaryColor),
+            Expanded(child: Text(title, style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500))),
+            Icon(Icons.arrow_forward_ios, size: 16, color: theme.textTheme.bodySmall?.color),
           ],
         ),
       ),

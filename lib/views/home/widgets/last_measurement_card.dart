@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart';
 import '../../../models/blood_pressure_record.dart';
-import '../../../themes/app_theme.dart';
 import '../../../utils/date_time_utils.dart';
 import '../../../l10n/app_localizations_extension.dart';
 
@@ -17,13 +16,18 @@ class LastMeasurementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     final isBPHigh = record.systolic >= 140 || record.diastolic >= 90;
     final isBPNormal = record.systolic < 120 && record.diastolic < 80;
-    final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
+
+    // 使用 ColorScheme 中的顏色
+    final statusColor = isBPHigh ? colorScheme.error : (isBPNormal ? colorScheme.primary : Colors.orange);
     final statusText = isBPHigh ? context.tr('偏高') : (isBPNormal ? context.tr('正常') : context.tr('臨界'));
 
     // 獲取心率狀態顏色
-    final pulseColor = _getPulseStatusColor(record.pulse);
+    final pulseColor = _getPulseStatusColor(context, record.pulse);
 
     // 根據血壓狀態選擇圖標
     IconData statusIcon;
@@ -37,7 +41,7 @@ class LastMeasurementCard extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
+      shadowColor: theme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -47,10 +51,7 @@ class LastMeasurementCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  DateTimeUtils.getRelativeTimeDescription(context, record.measureTime),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryColor),
-                ),
+                Text(DateTimeUtils.getRelativeTimeDescription(context, record.measureTime), style: theme.textTheme.bodyMedium),
                 GestureDetector(
                   onTap: () {
                     if (statusText == context.tr('臨界')) {
@@ -82,17 +83,17 @@ class LastMeasurementCard extends StatelessWidget {
                   record.systolic.toString(),
                   'SYS',
                   'mmHg',
-                  isBPHigh ? (record.systolic >= 140 ? AppTheme.warningColor : AppTheme.alertColor) : AppTheme.textPrimaryColor,
+                  isBPHigh ? (record.systolic >= 140 ? colorScheme.error : Colors.orange) : theme.textTheme.titleLarge!.color!,
                 ),
-                Container(height: 50, width: 1, color: AppTheme.dividerColor),
+                Container(height: 50, width: 1, color: theme.dividerColor),
                 _buildBPValueColumn(
                   context,
                   record.diastolic.toString(),
                   'DIA',
                   'mmHg',
-                  isBPHigh ? (record.diastolic >= 90 ? AppTheme.warningColor : AppTheme.alertColor) : AppTheme.textPrimaryColor,
+                  isBPHigh ? (record.diastolic >= 90 ? colorScheme.error : Colors.orange) : theme.textTheme.titleLarge!.color!,
                 ),
-                Container(height: 50, width: 1, color: AppTheme.dividerColor),
+                Container(height: 50, width: 1, color: theme.dividerColor),
                 Column(
                   children: [
                     Row(
@@ -101,7 +102,7 @@ class LastMeasurementCard extends StatelessWidget {
                       children: [
                         Text(
                           record.pulse.toString(),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: pulseColor, fontSize: 36),
+                          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: pulseColor, fontSize: 36),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 2, top: 4),
@@ -114,14 +115,11 @@ class LastMeasurementCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      'PULSE',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor, fontWeight: FontWeight.w500),
-                    ),
+                    Text('PULSE', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('bpm', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                        Text('bpm', style: theme.textTheme.bodySmall),
                         const SizedBox(width: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
@@ -138,7 +136,7 @@ class LastMeasurementCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            const Divider(height: 1),
+            Divider(color: theme.dividerColor, height: 1),
             const SizedBox(height: 16),
             Wrap(
               spacing: 8,
@@ -157,13 +155,15 @@ class LastMeasurementCard extends StatelessWidget {
   }
 
   Widget _buildBPValueColumn(BuildContext context, String value, String label, String unit, Color valueColor) {
+    final theme = Theme.of(context);
+
     // 根據數值顏色選擇適當的圖標
     IconData? valueIcon;
-    if (valueColor == AppTheme.warningColor) {
+    if (valueColor == theme.colorScheme.error) {
       valueIcon = Icons.arrow_upward;
-    } else if (valueColor == AppTheme.alertColor) {
+    } else if (valueColor == Colors.orange) {
       valueIcon = Icons.arrow_upward;
-    } else if (valueColor == AppTheme.successColor) {
+    } else if (valueColor == theme.colorScheme.primary) {
       valueIcon = Icons.check;
     }
 
@@ -173,25 +173,27 @@ class LastMeasurementCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: valueColor, fontSize: 36)),
+            Text(value, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: valueColor, fontSize: 36)),
             if (valueIcon != null) Padding(padding: const EdgeInsets.only(left: 2, top: 4), child: Icon(valueIcon, color: valueColor, size: 16)),
           ],
         ),
         const SizedBox(height: 4),
-        Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor, fontWeight: FontWeight.w500)),
-        Text(unit, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+        Text(label, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
+        Text(unit, style: theme.textTheme.bodySmall),
       ],
     );
   }
 
   // 獲取心率狀態顏色
-  Color _getPulseStatusColor(int pulse) {
+  Color _getPulseStatusColor(BuildContext context, int pulse) {
+    final theme = Theme.of(context);
+
     if (pulse < 60) {
       return Colors.blue; // 心率過低
     } else if (pulse > 100) {
-      return AppTheme.warningColor; // 心率過高
+      return theme.colorScheme.error; // 心率過高
     } else {
-      return AppTheme.successColor; // 心率正常
+      return theme.colorScheme.primary; // 心率正常
     }
   }
 
@@ -207,38 +209,49 @@ class LastMeasurementCard extends StatelessWidget {
   }
 
   Widget _buildInfoChip(BuildContext context, String text) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: AppTheme.backgroundColor, borderRadius: BorderRadius.circular(16)),
-      child: Text(text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+      decoration: BoxDecoration(
+        color: theme.cardTheme.color ?? theme.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.dividerColor.withOpacity(0.5)),
+      ),
+      child: Text(text, style: theme.textTheme.bodySmall),
     );
   }
 
   // 顯示臨界狀態的解釋
   void _showBorderlineExplanation(BuildContext context) {
+    final theme = Theme.of(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(context.tr('什麼是臨界血壓？'), style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(context.tr('什麼是臨界血壓？'), style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(context.tr('臨界血壓是指血壓值處於正常值和高血壓之間的狀態：')),
+              Text(context.tr('臨界血壓是指血壓值處於正常值和高血壓之間的狀態：'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
               const SizedBox(height: 8),
-              Text(context.tr('• 收縮壓在 120-139 mmHg 之間')),
-              Text(context.tr('• 舒張壓在 80-89 mmHg 之間')),
+              Text(context.tr('• 收縮壓在 120-139 mmHg 之間'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+              Text(context.tr('• 舒張壓在 80-89 mmHg 之間'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
               const SizedBox(height: 12),
-              Text(context.tr('處於臨界狀態時，雖然尚未達到高血壓標準，但已有發展為高血壓的風險。建議：')),
+              Text(context.tr('處於臨界狀態時，雖然尚未達到高血壓標準，但已有發展為高血壓的風險。建議：'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
               const SizedBox(height: 8),
-              Text(context.tr('• 定期監測血壓變化')),
-              Text(context.tr('• 保持健康的生活方式')),
-              Text(context.tr('• 適當控制鹽分攝入')),
-              Text(context.tr('• 規律運動')),
+              Text(context.tr('• 定期監測血壓變化'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+              Text(context.tr('• 保持健康的生活方式'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+              Text(context.tr('• 適當控制鹽分攝入'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+              Text(context.tr('• 規律運動'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
             ],
           ),
-          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(context.tr('了解了')))],
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(context.tr('了解了'), style: TextStyle(color: theme.primaryColor))),
+          ],
+          backgroundColor: theme.dialogBackgroundColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         );
       },
