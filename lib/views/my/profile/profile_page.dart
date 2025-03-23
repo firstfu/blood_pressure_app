@@ -357,13 +357,6 @@ class _ProfilePageState extends State<ProfilePage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
-      // 2. 清除本地數據庫數據
-      // 注意：這裡假設使用了 SQLite，需根據實際數據庫實現調整
-      // final db = await DatabaseHelper.instance.database;
-      // await db.delete('blood_pressure_records');
-      // await db.delete('medications');
-      // await db.delete('user_settings');
-
       // 3. 重置引導頁面狀態
       await SharedPrefsService.resetOnBoardingStatus();
 
