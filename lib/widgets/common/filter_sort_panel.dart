@@ -77,9 +77,8 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    // 獲取螢幕尺寸和安全區域
-    final mediaQuery = MediaQuery.of(context);
-    // 移除未使用的變數
+    // 獲取螢幕尺寸和安全區域已被註釋，移除未使用的 mediaQuery 變數
+    // final mediaQuery = MediaQuery.of(context);
     // final screenHeight = mediaQuery.size.height;
     // final viewInsets = mediaQuery.viewInsets.bottom;
 

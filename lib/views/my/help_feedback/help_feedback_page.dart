@@ -113,8 +113,6 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   /// 構建常見問題頁面
   Widget _buildFaqTab() {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -159,7 +157,6 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
   /// 構建意見反饋頁面
   Widget _buildFeedbackTab() {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -179,26 +176,36 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 反饋類型
-                  Text(context.tr('反饋類型'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white70 : null)),
+                  Text(
+                    context.tr('反饋類型'),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : null,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
-                      color: theme.cardColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: theme.dividerColor),
+                      border: Border.all(color: Theme.of(context).dividerColor),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedFeedbackType,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down, color: theme.primaryColor),
-                        dropdownColor: theme.cardColor,
+                        icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).primaryColor),
+                        dropdownColor: Theme.of(context).cardColor,
                         items:
                             _feedbackTypes.map((String type) {
                               return DropdownMenuItem<String>(
                                 value: type,
-                                child: Text(type, style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null)),
+                                child: Text(
+                                  type,
+                                  style: TextStyle(fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : null),
+                                ),
                               );
                             }).toList(),
                         onChanged: (String? newValue) {
@@ -215,21 +222,31 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   const SizedBox(height: 16),
 
                   // 反饋內容
-                  Text(context.tr('反饋內容'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white70 : null)),
+                  Text(
+                    context.tr('反饋內容'),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : null,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _feedbackController,
                     maxLines: 5,
-                    style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null),
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : null),
                     decoration: InputDecoration(
                       hintText: context.tr('請描述您的問題或建議...'),
-                      hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : null),
+                      hintStyle: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white60 : null),
                       filled: true,
-                      fillColor: theme.cardColor,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
+                      fillColor: Theme.of(context).cardColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Theme.of(context).dividerColor),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
                       ),
                     ),
                   ),
@@ -239,24 +256,31 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   // 聯絡郵箱
                   Text(
                     context.tr('聯絡郵箱（選填）'),
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white70 : null),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : null,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : null),
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : null),
                     decoration: InputDecoration(
                       hintText: context.tr('請輸入您的電子郵箱'),
-                      hintStyle: TextStyle(color: isDarkMode ? Colors.white60 : null),
+                      hintStyle: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white60 : null),
                       filled: true,
-                      fillColor: theme.cardColor,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
+                      fillColor: Theme.of(context).cardColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Theme.of(context).dividerColor),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
                       ),
-                      prefixIcon: Icon(Icons.email_outlined, color: theme.primaryColor, size: 18),
+                      prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).primaryColor, size: 18),
                     ),
                   ),
 
@@ -266,8 +290,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   ElevatedButton(
                     onPressed: _submitFeedback,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.primaryColor,
-                      foregroundColor: theme.colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
