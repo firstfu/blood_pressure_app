@@ -324,10 +324,9 @@ class AppTheme {
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: darkCardColor,
-        selectedItemColor: darkPrimaryColor,
+        backgroundColor: Color(0xFF121212),
+        selectedItemColor: Color(0xFF42A5F5),
         unselectedItemColor: darkTextSecondaryColor,
-        // 使用深色模式的底部導航欄樣式
         selectedLabelStyle: TypographyTheme.bottomNavSelectedDark,
         unselectedLabelStyle: TypographyTheme.bottomNavUnselectedDark,
         elevation: 8,

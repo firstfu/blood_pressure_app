@@ -27,7 +27,10 @@ class GreetingHeader extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(16, topPadding, 16, 12),
       decoration: BoxDecoration(
-        color: theme.primaryColor,
+        color:
+            theme.brightness == Brightness.dark
+                ? const Color(0xFF121212) // 深色模式使用標準深灰色
+                : theme.primaryColor,
         boxShadow: [BoxShadow(color: theme.shadowColor.withAlpha(20), blurRadius: 4, offset: const Offset(0, 1))],
       ),
       child: Column(

@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('統計')),
           BottomNavigationBarItem(icon: const Icon(Icons.person), label: context.tr('我的')),
         ],
-        // 使用主題而非硬編碼顏色
+        // 使用主題設置
         backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
         selectedItemColor: theme.bottomNavigationBarTheme.selectedItemColor,
         unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
