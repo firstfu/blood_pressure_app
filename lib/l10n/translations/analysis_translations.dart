@@ -58,6 +58,11 @@ const Map<String, String> zhTWAnalysis = {
   '從高到低': '從高到低',
   '從低到高': '從低到高',
   '最高/最低值': '最高/最低值',
+  '排序欄位': '排序欄位',
+  '時間': '時間',
+  '升序（小到大）': '升序（小到大）',
+  '降序（大到小）': '降序（大到小）',
+  '正在加載數據...': '正在加載數據...',
 
   // 匯出功能
   '選擇匯出格式': '選擇匯出格式',
@@ -133,6 +138,11 @@ const Map<String, String> enUSAnalysis = {
   '從高到低': 'High to Low',
   '從低到高': 'Low to High',
   '最高/最低值': 'Max/Min Values',
+  '排序欄位': 'Sort Field',
+  '時間': 'Time',
+  '升序（小到大）': 'Ascending (Low to High)',
+  '降序（大到小）': 'Descending (High to Low)',
+  '正在加載數據...': 'Loading data...',
 
   // 匯出功能
   '選擇匯出格式': 'Select Export Format',
