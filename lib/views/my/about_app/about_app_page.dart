@@ -60,11 +60,16 @@ class _AboutAppPageState extends State<AboutAppPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [theme.primaryColor.withAlpha(26), theme.scaffoldBackgroundColor, theme.scaffoldBackgroundColor],
-          ),
+          gradient:
+              theme.brightness == Brightness.dark
+                  ? null // 暗黑模式下不使用漸層
+                  : LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [theme.primaryColor.withAlpha(26), theme.scaffoldBackgroundColor, theme.scaffoldBackgroundColor],
+                  ),
+          // 暗黑模式下使用純色背景
+          color: theme.brightness == Brightness.dark ? theme.scaffoldBackgroundColor : null,
         ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),

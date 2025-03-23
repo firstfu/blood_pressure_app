@@ -84,7 +84,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [_backgroundColors[_currentPage], Colors.white],
+                colors:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? [_backgroundColors[_currentPage].withAlpha(80), Theme.of(context).scaffoldBackgroundColor]
+                        : [_backgroundColors[_currentPage], Colors.white],
                 stops: const [0.3, 1.0],
               ),
             ),
