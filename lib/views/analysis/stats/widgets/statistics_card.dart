@@ -82,9 +82,11 @@ class StatisticsCard extends StatelessWidget {
                 children: [
                   Container(width: 4, height: 24, decoration: BoxDecoration(color: theme.primaryColor, borderRadius: BorderRadius.circular(2))),
                   const SizedBox(width: 12),
-                  Text(
-                    context.tr('統計數據'),
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 0.5),
+                  Flexible(
+                    child: Text(
+                      context.tr('統計數據'),
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 0.5),
+                    ),
                   ),
                 ],
               ),
@@ -155,9 +157,10 @@ class StatisticsCard extends StatelessWidget {
                 border: Border.all(color: theme.dividerColor),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildInfoRow(context, icon: Icons.format_list_numbered, label: context.tr('記錄總數'), value: '${records.length} $recordUnit'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   _buildInfoRow(context, icon: Icons.date_range, label: context.tr('記錄時間範圍'), value: _getTimeRangeText(context)),
                 ],
               ),
@@ -173,7 +176,7 @@ class StatisticsCard extends StatelessWidget {
 
     return Row(
       children: [
-        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color)),
+        Flexible(child: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color))),
         const SizedBox(width: 8),
         Expanded(child: Container(height: 1, color: theme.dividerColor)),
       ],
@@ -240,7 +243,7 @@ class StatisticsCard extends StatelessWidget {
             children: [
               Icon(icon, color: color, size: 18),
               const SizedBox(width: 8),
-              Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color)),
+              Flexible(child: Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color))),
             ],
           ),
           const SizedBox(height: 12),
@@ -259,6 +262,7 @@ class StatisticsCard extends StatelessWidget {
                           TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
                         ],
                       ),
+                      maxLines: 2,
                     ),
                   ],
                 ),
@@ -277,6 +281,7 @@ class StatisticsCard extends StatelessWidget {
                           TextSpan(text: ' $unit', style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
                         ],
                       ),
+                      maxLines: 2,
                     ),
                   ],
                 ),
@@ -291,13 +296,20 @@ class StatisticsCard extends StatelessWidget {
   Widget _buildInfoRow(BuildContext context, {required IconData icon, required String label, required String value}) {
     final theme = Theme.of(context);
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 18, color: theme.textTheme.bodySmall?.color),
-        const SizedBox(width: 12),
-        Text(label, style: TextStyle(fontSize: 14, color: theme.textTheme.bodyMedium?.color)),
-        const Spacer(),
-        Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color)),
+        Row(
+          children: [
+            Icon(icon, size: 18, color: theme.textTheme.bodySmall?.color),
+            const SizedBox(width: 12),
+            Expanded(child: Text(label, style: TextStyle(fontSize: 14, color: theme.textTheme.bodyMedium?.color))),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 30, top: 4),
+          child: Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.textTheme.titleMedium?.color), softWrap: true),
+        ),
       ],
     );
   }
