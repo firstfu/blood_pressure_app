@@ -5,11 +5,11 @@
  */
 
 import 'package:flutter/material.dart';
-import '../../models/blood_pressure_record.dart';
-import '../../themes/app_theme.dart';
-import '../../utils/date_time_utils.dart';
-import '../../widgets/common/filter_sort_panel.dart';
-import '../../l10n/app_localizations_extension.dart';
+import '../../../../models/blood_pressure_record.dart';
+import '../../../../themes/app_theme.dart';
+import '../../../../utils/date_time_utils.dart';
+import '../../../../widgets/common/filter_sort_panel.dart';
+import '../../../../l10n/app_localizations_extension.dart';
 
 class StatsDataTableTab extends StatefulWidget {
   final List<BloodPressureRecord> records;

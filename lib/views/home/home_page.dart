@@ -16,7 +16,7 @@ import '../../services/mock_data_service.dart';
 import '../../widgets/cards/health_tip_card.dart';
 import '../../themes/app_theme.dart';
 import '../record/record_page.dart';
-import '../stats_page.dart';
+import '../analysis/stats/stats_page.dart';
 import 'widgets/greeting_header.dart';
 import 'widgets/measurement_status_card.dart';
 import 'widgets/last_measurement_card.dart';

@@ -6,10 +6,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../models/blood_pressure_record.dart';
-import '../../themes/app_theme.dart';
-import '../../services/mock_data_service.dart';
-import '../../l10n/app_localizations_extension.dart';
+import '../../../../models/blood_pressure_record.dart';
+import '../../../../themes/app_theme.dart';
+import '../../../../services/mock_data_service.dart';
+import '../../../../l10n/app_localizations_extension.dart';
 
 class StatisticsCard extends StatelessWidget {
   final List<BloodPressureRecord> records;

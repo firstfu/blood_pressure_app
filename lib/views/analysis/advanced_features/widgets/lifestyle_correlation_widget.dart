@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../l10n/app_localizations_extension.dart';
+import '../../../../l10n/app_localizations_extension.dart';
 
 class LifestyleCorrelationWidget extends StatefulWidget {
   final Map<String, dynamic> correlationResults;

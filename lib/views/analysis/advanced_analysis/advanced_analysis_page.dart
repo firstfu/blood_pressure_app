@@ -5,12 +5,12 @@
  */
 
 import 'package:flutter/material.dart';
-import '../models/blood_pressure_record.dart';
-import '../services/analysis_service.dart';
-import '../services/mock_data_service.dart';
-import '../widgets/analysis/medication_effect_widget.dart';
-import '../widgets/analysis/position_arm_effect_widget.dart';
-import '../widgets/analysis/morning_evening_effect_widget.dart';
+import '../../../models/blood_pressure_record.dart';
+import '../../../services/analysis_service.dart';
+import '../../../services/mock_data_service.dart';
+import 'widgets/medication_effect_widget.dart';
+import 'widgets/position_arm_effect_widget.dart';
+import 'widgets/morning_evening_effect_widget.dart';
 
 class AdvancedAnalysisPage extends StatefulWidget {
   final List<BloodPressureRecord>? records;

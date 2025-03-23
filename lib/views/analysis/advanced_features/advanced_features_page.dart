@@ -5,18 +5,18 @@
  */
 
 import 'package:flutter/material.dart';
-import '../services/record_service.dart';
-import '../services/prediction_service.dart';
-import '../services/risk_assessment_service.dart';
-import '../services/lifestyle_analysis_service.dart';
-import '../services/analysis_service.dart';
-import '../widgets/advanced_features/blood_pressure_prediction_widget.dart';
-import '../widgets/advanced_features/health_risk_assessment_widget.dart';
-import '../widgets/advanced_features/lifestyle_correlation_widget.dart';
-import '../widgets/analysis/medication_effect_widget.dart';
-import '../widgets/analysis/position_arm_effect_widget.dart';
-import '../widgets/analysis/morning_evening_effect_widget.dart';
-import '../l10n/app_localizations_extension.dart';
+import '../../../services/record_service.dart';
+import '../../../services/prediction_service.dart';
+import '../../../services/risk_assessment_service.dart';
+import '../../../services/lifestyle_analysis_service.dart';
+import '../../../services/analysis_service.dart';
+import 'widgets/blood_pressure_prediction_widget.dart';
+import 'widgets/health_risk_assessment_widget.dart';
+import 'widgets/lifestyle_correlation_widget.dart';
+import '../advanced_analysis/widgets/medication_effect_widget.dart';
+import '../advanced_analysis/widgets/position_arm_effect_widget.dart';
+import '../advanced_analysis/widgets/morning_evening_effect_widget.dart';
+import '../../../l10n/app_localizations_extension.dart';
 
 class AdvancedFeaturesPage extends StatefulWidget {
   const AdvancedFeaturesPage({super.key});

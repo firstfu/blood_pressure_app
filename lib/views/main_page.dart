@@ -8,7 +8,7 @@ import '../l10n/app_localizations_extension.dart';
 import '../themes/app_theme.dart';
 import 'home/home_page.dart';
 import 'record/record_page.dart';
-import 'stats_page.dart';
+import 'analysis/stats/stats_page.dart';
 import 'my/profile/profile_page.dart';
 
 class MainPage extends StatefulWidget {
