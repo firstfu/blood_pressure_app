@@ -35,11 +35,36 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     };
   }
 
+  // 獲取主題亮度
+  bool isDarkMode(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
+  }
+
+  // 獲取背景色
+  Color getBackgroundColor(BuildContext context, {double opacity = 0.1}) {
+    return isDarkMode(context) ? Colors.white.withOpacity(opacity) : Colors.grey.shade100;
+  }
+
+  // 獲取邊框色
+  Color getBorderColor(BuildContext context, {double opacity = 0.3}) {
+    return isDarkMode(context) ? Colors.white.withOpacity(opacity) : Colors.grey.shade300;
+  }
+
+  // 獲取主要文字顏色
+  Color getTextColor(BuildContext context) {
+    return isDarkMode(context) ? Colors.white : Colors.black87;
+  }
+
   @override
   Widget build(BuildContext context) {
     // 檢查是否有相關性結果
     if (widget.correlationResults.isEmpty) {
-      return Center(child: Padding(padding: const EdgeInsets.all(16.0), child: Text(context.tr('沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。'))));
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(context.tr('沒有足夠的數據進行生活方式相關性分析。請記錄更多帶有生活方式標籤的血壓數據。'), style: TextStyle(color: getTextColor(context))),
+        ),
+      );
     }
 
     // 獲取選定因素的數據
@@ -62,13 +87,23 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
   // =============================================
   // 構建因素選擇器
   Widget _buildFactorSelector() {
+    final Color primaryColor = Theme.of(context).primaryColor;
+    final bool darkMode = isDarkMode(context);
+    final Color selectedTextColor = darkMode ? Colors.white : Colors.blue.shade800;
+    final Color selectedBgColor = darkMode ? primaryColor.withOpacity(0.3) : Colors.blue.shade100;
+    final Color unselectedBgColor = darkMode ? Colors.grey.shade800 : Colors.white;
+
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
+      decoration: BoxDecoration(
+        color: darkMode ? Colors.grey.shade900 : Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: getBorderColor(context)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.tr('選擇生活方式因素'), style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(context.tr('選擇生活方式因素'), style: TextStyle(fontWeight: FontWeight.bold, color: getTextColor(context))),
           const SizedBox(height: 16),
           GridView.count(
             shrinkWrap: true,
@@ -88,23 +123,34 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isSelected ? Colors.blue.shade100 : Colors.white,
+                        color: isSelected ? selectedBgColor : unselectedBgColor,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: isSelected ? Colors.blue.shade800 : Colors.grey.shade300, width: isSelected ? 2 : 1),
+                        border: Border.all(
+                          color: isSelected ? (darkMode ? primaryColor : Colors.blue.shade800) : getBorderColor(context),
+                          width: isSelected ? 2 : 1,
+                        ),
                         boxShadow:
-                            isSelected ? [BoxShadow(color: Colors.blue.shade200.withAlpha(128), blurRadius: 4, offset: const Offset(0, 2))] : null,
+                            isSelected
+                                ? [
+                                  BoxShadow(
+                                    color: darkMode ? primaryColor.withOpacity(0.3) : Colors.blue.shade200.withAlpha(128),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                                : null,
                       ),
                       child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (isSelected) Icon(Icons.check_circle, color: Colors.blue.shade800, size: 14),
+                            if (isSelected) Icon(Icons.check_circle, color: darkMode ? Colors.white : Colors.blue.shade800, size: 14),
                             if (isSelected) const SizedBox(width: 2),
                             Flexible(
                               child: Text(
                                 entry.value,
                                 style: TextStyle(
-                                  color: isSelected ? Colors.blue.shade800 : Colors.black87,
+                                  color: isSelected ? selectedTextColor : getTextColor(context),
                                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   fontSize: 13,
                                 ),
@@ -127,6 +173,13 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性圖表
   Widget _buildCorrelationChart(Map<String, dynamic> factorData) {
+    final bool darkMode = isDarkMode(context);
+    final Color textColor = getTextColor(context);
+    final Color gridLineColor = darkMode ? Colors.grey.shade700.withAlpha(100) : Colors.grey.withAlpha(51);
+    final Color emptyContainerColor = darkMode ? Colors.grey.shade800.withAlpha(80) : Colors.grey.withAlpha(26);
+    final Color emptyBorderColor = darkMode ? Colors.grey.shade600 : Colors.grey.withAlpha(77);
+    final Color tooltipBgColor = darkMode ? Colors.grey.shade800 : Colors.blueGrey.withAlpha(204);
+
     // 檢查是否有數據
     final hasData = factorData['hasData'] == true;
 
@@ -134,19 +187,19 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     if (!hasData) {
       return Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey.withAlpha(26),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.withAlpha(77)),
-        ),
+        decoration: BoxDecoration(color: emptyContainerColor, borderRadius: BorderRadius.circular(8), border: Border.all(color: emptyBorderColor)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.bar_chart, size: 48, color: Colors.grey),
+            Icon(Icons.bar_chart, size: 48, color: darkMode ? Colors.grey.shade400 : Colors.grey),
             const SizedBox(height: 16),
-            Text(context.tr('數據不足，無法顯示圖表'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(context.tr('數據不足，無法顯示圖表'), textAlign: TextAlign.center, style: TextStyle(color: darkMode ? Colors.grey.shade400 : Colors.grey)),
             const SizedBox(height: 8),
-            Text(context.tr('請記錄更多數據或選擇其他因素'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(
+              context.tr('請記錄更多數據或選擇其他因素'),
+              textAlign: TextAlign.center,
+              style: TextStyle(color: darkMode ? Colors.grey.shade400 : Colors.grey, fontSize: 12),
+            ),
           ],
         ),
       );
@@ -157,17 +210,13 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     if (groups == null || (groups is List && groups.isEmpty)) {
       return Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey.withAlpha(26),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.withAlpha(77)),
-        ),
+        decoration: BoxDecoration(color: emptyContainerColor, borderRadius: BorderRadius.circular(8), border: Border.all(color: emptyBorderColor)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.grey),
+            Icon(Icons.error_outline, size: 48, color: darkMode ? Colors.grey.shade400 : Colors.grey),
             const SizedBox(height: 16),
-            Text(context.tr('無法顯示的圖表數據'), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(context.tr('無法顯示的圖表數據'), textAlign: TextAlign.center, style: TextStyle(color: darkMode ? Colors.grey.shade400 : Colors.grey)),
           ],
         ),
       );
@@ -176,13 +225,17 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     // 確保 groups 是一個列表
     final List<dynamic> groupsList = groups is List ? groups : [groups];
 
+    // 定義柱狀圖顏色
+    final Color systolicColor = darkMode ? Colors.redAccent : Colors.red.withAlpha(179);
+    final Color diastolicColor = darkMode ? Colors.blueAccent : Colors.blue.withAlpha(179);
+
     // 構建柱狀圖
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
-          child: Text(context.tr('血壓平均值比較'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          child: Text(context.tr('血壓平均值比較'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
         ),
         SizedBox(
           height: 250,
@@ -195,7 +248,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.blueGrey.withAlpha(204),
+                  tooltipBgColor: tooltipBgColor,
+                  tooltipPadding: const EdgeInsets.all(8),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     String title = '';
                     if (rodIndex == 0) {
@@ -203,7 +257,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                     } else if (rodIndex == 1) {
                       title = context.tr('舒張壓');
                     }
-                    return BarTooltipItem('$title: ${rod.toY.toStringAsFixed(1)}', const TextStyle(color: Colors.white));
+                    return BarTooltipItem('$title: ${rod.toY.toStringAsFixed(1)}', TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
                   },
                 ),
               ),
@@ -217,7 +271,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                       if (value < groupsList.length) {
                         text = context.tr(groupsList[value.toInt()]['name'] ?? '');
                       }
-                      return Padding(padding: const EdgeInsets.only(top: 8.0), child: Text(text, style: const TextStyle(fontSize: 12)));
+                      return Padding(padding: const EdgeInsets.only(top: 8.0), child: Text(text, style: TextStyle(fontSize: 12, color: textColor)));
                     },
                     reservedSize: 30,
                   ),
@@ -229,7 +283,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                       if (value % 50 == 0) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 8.0),
-                          child: Text(value.toInt().toString(), style: const TextStyle(fontSize: 10)),
+                          child: Text(value.toInt().toString(), style: TextStyle(fontSize: 10, color: textColor)),
                         );
                       }
                       return const SizedBox();
@@ -240,11 +294,11 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                 topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
-              borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.withAlpha(51))),
+              borderData: FlBorderData(show: true, border: Border.all(color: gridLineColor)),
               gridData: FlGridData(
                 show: true,
                 getDrawingHorizontalLine: (value) {
-                  return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
+                  return FlLine(color: gridLineColor, strokeWidth: 1);
                 },
                 drawVerticalLine: false,
               ),
@@ -258,13 +312,13 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                   barRods: [
                     BarChartRodData(
                       toY: systolic.toDouble(),
-                      color: Colors.red.withAlpha(179),
+                      color: systolicColor,
                       width: 16,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
                     BarChartRodData(
                       toY: diastolic.toDouble(),
-                      color: Colors.blue.withAlpha(179),
+                      color: diastolicColor,
                       width: 16,
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     ),
@@ -278,13 +332,13 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(width: 12, height: 12, color: Colors.red.withAlpha(179)),
+            Container(width: 12, height: 12, color: systolicColor),
             const SizedBox(width: 4),
-            Text(context.tr('收縮壓'), style: const TextStyle(fontSize: 12)),
+            Text(context.tr('收縮壓'), style: TextStyle(fontSize: 12, color: textColor)),
             const SizedBox(width: 16),
-            Container(width: 12, height: 12, color: Colors.blue.withAlpha(179)),
+            Container(width: 12, height: 12, color: diastolicColor),
             const SizedBox(width: 4),
-            Text(context.tr('舒張壓'), style: const TextStyle(fontSize: 12)),
+            Text(context.tr('舒張壓'), style: TextStyle(fontSize: 12, color: textColor)),
           ],
         ),
       ],
@@ -293,6 +347,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建相關性結果
   Widget _buildCorrelationResults(Map<String, dynamic> factorData) {
+    final bool darkMode = isDarkMode(context);
+    final Color textColor = getTextColor(context);
+
     // 添加空值檢查
     final correlation = factorData['correlation'];
     final hasData = factorData['hasData'] == true;
@@ -303,31 +360,32 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
     // 如果關鍵數據缺失，顯示錯誤訊息
     if (correlation == null || serviceDes == null || serviceImpact == null) {
+      final Color warningColor = darkMode ? Colors.amber : Colors.orange;
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.orange.withAlpha(26),
+          color: darkMode ? warningColor.withOpacity(0.15) : warningColor.withAlpha(26),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.orange.withAlpha(77)),
+          border: Border.all(color: darkMode ? warningColor.withOpacity(0.3) : warningColor.withAlpha(77)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                Icon(Icons.warning_amber_rounded, color: warningColor),
                 const SizedBox(width: 8),
                 Flexible(
                   child: Text(
                     '${_factorNames[_selectedFactor]} ${context.tr('相關性數據不完整')}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: warningColor),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            Text(context.tr('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。'), softWrap: true),
+            Text(context.tr('無法顯示完整的相關性分析結果，請稍後再試或選擇其他因素。'), softWrap: true, style: TextStyle(color: textColor)),
           ],
         ),
       );
@@ -414,37 +472,41 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     if (!hasData) {
       // 數據不足但有基本信息時的樣式
       icon = Icons.info_outline;
-      color = Colors.blue;
+      color = darkMode ? Colors.lightBlue : Colors.blue;
       correlationText = context.tr('數據不足');
     } else if (correlationValue > 0.7) {
       icon = Icons.arrow_upward;
-      color = Colors.red;
+      color = darkMode ? Colors.redAccent : Colors.red;
       correlationText = context.tr('強正相關');
     } else if (correlationValue > 0.3) {
       icon = Icons.arrow_upward;
-      color = Colors.orange;
+      color = darkMode ? Colors.amber : Colors.orange;
       correlationText = context.tr('中等正相關');
     } else if (correlationValue > 0) {
       icon = Icons.arrow_upward;
-      color = Colors.yellow.shade800;
+      color = darkMode ? Colors.amber.shade300 : Colors.yellow.shade800;
       correlationText = context.tr('弱正相關');
     } else if (correlationValue > -0.3) {
       icon = Icons.arrow_downward;
-      color = Colors.green.shade300;
+      color = darkMode ? Colors.lightGreen : Colors.green.shade300;
       correlationText = context.tr('弱負相關');
     } else if (correlationValue > -0.7) {
       icon = Icons.arrow_downward;
-      color = Colors.green.shade600;
+      color = darkMode ? Colors.lightGreen.shade200 : Colors.green.shade600;
       correlationText = context.tr('中等負相關');
     } else {
       icon = Icons.arrow_downward;
-      color = Colors.green.shade900;
+      color = darkMode ? Colors.green : Colors.green.shade900;
       correlationText = context.tr('強負相關');
     }
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: color.withAlpha(26), borderRadius: BorderRadius.circular(8), border: Border.all(color: color.withAlpha(77))),
+      decoration: BoxDecoration(
+        color: darkMode ? color.withOpacity(0.2) : color.withAlpha(26),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: darkMode ? color.withOpacity(0.3) : color.withAlpha(77)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -472,17 +534,21 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
           // 描述文本 - 增加間距
           const SizedBox(height: 16),
-          Text(descriptionText, softWrap: true, style: const TextStyle(height: 1.4)),
+          Text(descriptionText, softWrap: true, style: TextStyle(height: 1.4, color: textColor)),
 
           // 影響部分 - 標題和內容分開顯示
           const SizedBox(height: 16),
-          Text(context.tr('影響'), style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(context.tr('影響'), style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
           const SizedBox(height: 8),
-          Text(impactText, softWrap: true, style: const TextStyle(height: 1.4)),
+          Text(impactText, softWrap: true, style: TextStyle(height: 1.4, color: textColor)),
 
           if (!hasData && factorData['message'] != null) ...[
             const SizedBox(height: 12),
-            Text(factorData['message'], style: TextStyle(color: Colors.grey.shade700, fontStyle: FontStyle.italic), softWrap: true),
+            Text(
+              factorData['message'],
+              style: TextStyle(color: darkMode ? Colors.grey.shade400 : Colors.grey.shade700, fontStyle: FontStyle.italic),
+              softWrap: true,
+            ),
           ],
         ],
       ),
@@ -491,21 +557,23 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建建議項目
   Widget _buildRecommendationItem(String recommendation) {
+    final bool darkMode = isDarkMode(context);
+    final Color textColor = getTextColor(context);
+    final Color bgColor = darkMode ? Colors.blue.withOpacity(0.2) : Colors.blue.withAlpha(13);
+    final Color borderColor = darkMode ? Colors.blue.withOpacity(0.3) : Colors.blue.withAlpha(51);
+    final Color iconColor = darkMode ? Colors.lightBlue : Colors.blue;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.blue.withAlpha(13),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue.withAlpha(51)),
-        ),
+        decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(8), border: Border.all(color: borderColor)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.lightbulb_outline, color: Colors.blue, size: 20),
+            Icon(Icons.lightbulb_outline, color: iconColor, size: 20),
             const SizedBox(width: 8),
-            Expanded(child: Text(recommendation, softWrap: true)),
+            Expanded(child: Text(recommendation, softWrap: true, style: TextStyle(color: textColor))),
           ],
         ),
       ),
@@ -514,6 +582,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 構建健康建議部分
   Widget _buildHealthRecommendations(Map<String, dynamic> factorData) {
+    final Color textColor = getTextColor(context);
+
     // 檢查是否有建議
     final recommendations = factorData['recommendations'];
     if (recommendations == null || (recommendations is List && recommendations.isEmpty)) {
@@ -557,7 +627,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
-          child: Text(context.tr('健康建議'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          child: Text(context.tr('健康建議'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
         ),
         ...recommendationsList.map((recommendation) => _buildRecommendationItem(context.tr(recommendation))),
       ],
