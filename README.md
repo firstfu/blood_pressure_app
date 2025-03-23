@@ -25,6 +25,7 @@
 - Quick recording of systolic pressure, diastolic pressure, and pulse data
 - Support for adding measurement posture, arm used, and personal notes
 - Automatic classification of blood pressure status (normal, elevated, stage 1 hypertension, stage 2 hypertension)
+- Color-coded indicators for different blood pressure levels
 
 ### 📈 Data Analysis and Visualization
 
@@ -32,6 +33,7 @@
 - Detailed statistical analysis, including averages, highest/lowest values
 - Blood pressure status distribution ratios
 - Advanced analysis features including morning surge analysis and measurement condition comparisons
+- Beautiful data visualizations with professional medical color scheme
 
 ### 🔔 Health Reminders and Recommendations
 
@@ -39,6 +41,7 @@
 - Personalized health recommendations based on blood pressure data
 - Professional medical knowledge tips
 - Risk assessment for cardiovascular diseases
+- Smart notification system with adjustable frequency
 
 ### 👤 Personal Profile Management
 
@@ -46,6 +49,7 @@
 - Personal health goal setting
 - Data backup and recovery
 - Multi-language support (Traditional Chinese, Simplified Chinese, English)
+- Medication tracking and reminder
 
 ### 📋 Advanced Features
 
@@ -53,6 +57,7 @@
 - Lifestyle correlation analysis
 - Blood pressure trend prediction
 - Onboarding experience for new users
+- Medication effectiveness analysis
 
 ## 🛠️ Technical Features
 
@@ -62,7 +67,8 @@
 - **Adaptive UI**: Adapts to different device sizes and screens
 - **Material Design 3**: Modern design language, providing a consistent visual experience
 - **Internationalization**: Full support for multiple languages
-- **Theme Customization**: Light and dark mode support
+- **Theme Customization**: Light and dark mode support (coming soon)
+- **Professional Medical Color Scheme**: Medical blue primary color with scientifically calibrated accent colors
 
 ## 📋 User Guide
 
@@ -80,12 +86,14 @@
 - Different time ranges can be selected (7 days, 2 weeks, 1 month)
 - Click "View Details" to enter the statistics page for more detailed analysis
 - Advanced analysis features are available in the Statistics section
+- Use the comparison tool to analyze different time periods or conditions
 
 ### Health Recommendations
 
 - The main page displays health recommendations based on the user's blood pressure condition
 - Click on recommendation cards to get more related information
 - Risk assessment provides personalized health advice
+- Access a knowledge base of professional health articles
 
 ## 🔜 Future Plans
 
@@ -95,6 +103,7 @@
 - Direct connection to Bluetooth blood pressure monitors
 - Intelligent blood pressure analysis and early warning
 - Cloud synchronization for data backup
+- Dark theme support with eye-comfort design
 
 ## 📝 Developer Notes
 
@@ -131,6 +140,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Thanks to all users who provided suggestions and feedback for this project
 - Special thanks to healthcare professionals for guidance on blood pressure classification standards
 - Icons and design elements from [Material Design](https://material.io/design)
+- Medical data reference from international health organizations
 
 <div align="center">
   <p>Caring for your heart health</p>
@@ -166,6 +176,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 快速記錄收縮壓、舒張壓和脈搏數據
 - 支援添加測量姿勢、使用手臂和個人備註
 - 自動分類血壓狀態（正常、偏高、高血壓一級、高血壓二級）
+- 不同血壓級別的顏色編碼指示器
 
 ### 📈 數據分析與視覺化
 
@@ -173,6 +184,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 詳細統計分析，包括平均值、最高/最低值
 - 血壓狀態分佈比例
 - 進階分析功能，包括晨峰血壓分析和測量條件比較
+- 專業醫療配色方案的精美數據視覺化
 
 ### 🔔 健康提醒與建議
 
@@ -180,6 +192,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 根據血壓數據提供個性化健康建議
 - 專業醫療知識小貼士
 - 心血管疾病風險評估
+- 可調頻率的智能通知系統
 
 ### 👤 個人檔案管理
 
@@ -187,6 +200,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 個人健康目標設定
 - 數據備份與恢復
 - 多語言支援（繁體中文、簡體中文、英文）
+- 用藥追蹤與提醒
 
 ### 📋 進階功能
 
@@ -194,6 +208,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 生活習慣關聯分析
 - 血壓趨勢預測
 - 新用戶引導體驗
+- 藥物有效性分析
 
 ## 🛠️ 技術特點
 
@@ -203,7 +218,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **自適應 UI**：適配不同尺寸的設備和屏幕
 - **Material Design 3**：現代化的設計語言，提供一致的視覺體驗
 - **國際化**：完整支援多種語言
-- **主題定制**：支援淺色和深色模式
+- **主題定制**：支援淺色和深色模式（即將推出）
+- **專業醫療配色方案**：醫療藍主色調搭配科學校準的輔助色彩
 
 ## 📋 使用指南
 
@@ -221,12 +237,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 可選擇不同時間範圍（7 天、2 週、1 個月）
 - 點擊「查看詳情」進入統計頁面，獲取更詳細的分析
 - 在統計部分可使用進階分析功能
+- 使用比較工具分析不同時期或條件的數據
 
 ### 健康建議
 
 - 主頁面顯示根據用戶血壓狀況提供的健康建議
 - 點擊建議卡片獲取更多相關信息
 - 風險評估提供個性化健康建議
+- 訪問專業健康文章知識庫
 
 ## 🔜 未來計劃
 
@@ -236,6 +254,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 藍牙血壓計直接連接功能
 - 智能血壓分析與預警
 - 雲端同步數據備份
+- 深色主題支援與護眼設計
 
 ## 📝 開發者說明
 
@@ -272,6 +291,7 @@ flutter run
 - 感謝所有為本專案提供建議和反饋的用戶
 - 特別感謝醫療專業人士對血壓分類標準的指導
 - 圖標和設計元素來自 [Material Design](https://material.io/design)
+- 醫療數據參考來自國際健康組織
 
 <div align="center">
   <p>用心守護您的心臟健康</p>
