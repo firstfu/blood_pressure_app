@@ -85,6 +85,18 @@ const Map<String, String> zhTWAboutFeedback = {
   '聯絡我們': '聯絡我們',
   '範圍': '範圍',
 
+  // 分享應用相關
+  '推薦您使用血壓管家 App，幫助您輕鬆記錄和管理血壓數據！': '推薦您使用血壓管家 App，幫助您輕鬆記錄和管理血壓數據！',
+  '分享血壓管家 App': '分享血壓管家 App',
+
+  // 清除數據相關
+  '確認清除數據': '確認清除數據',
+  '此操作將清除應用中的所有數據，包括血壓記錄和設置。此操作不可恢復。': '此操作將清除應用中的所有數據，包括血壓記錄和設置。此操作不可恢復。',
+  '取消': '取消',
+  '確認清除': '確認清除',
+  '所有數據已清除': '所有數據已清除',
+  '清除數據失敗': '清除數據失敗',
+
   // FAQ 答案詳細內容
   '在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。': '在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。',
 
@@ -183,6 +195,19 @@ const Map<String, String> enUSAboutFeedback = {
   '幫助與反饋': 'Help & Feedback',
   '聯絡我們': 'Contact Us',
   '範圍': 'Range',
+
+  // 分享應用相關
+  '推薦您使用血壓管家 App，幫助您輕鬆記錄和管理血壓數據！': 'I recommend the Blood Pressure Manager App, which helps you easily record and manage your blood pressure data!',
+  '分享血壓管家 App': 'Share Blood Pressure Manager App',
+
+  // 清除數據相關
+  '確認清除數據': 'Confirm Data Deletion',
+  '此操作將清除應用中的所有數據，包括血壓記錄和設置。此操作不可恢復。':
+      'This action will delete all data in the app, including blood pressure records and settings. This action cannot be undone.',
+  '取消': 'Cancel',
+  '確認清除': 'Confirm Delete',
+  '所有數據已清除': 'All data has been cleared',
+  '清除數據失敗': 'Failed to clear data',
 
   // FAQ 答案詳細內容
   '在應用底部導航欄點擊「記錄」按鈕，進入記錄頁面後點擊右下角的「+」按鈕，填寫您的血壓數值、心率等信息後點擊「保存記錄」即可。':
