@@ -32,6 +32,8 @@ class DateRangeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     // 獲取當前語系，用於強制重新構建
     final locale = Provider.of<LocaleProvider>(context).locale;
+    // 獲取當前主題
+    final theme = Theme.of(context);
 
     final dateFormat = DateFormat('yyyy/MM/dd');
     final startDateText = startDate != null ? dateFormat.format(startDate!) : context.tr('選擇開始日期');
@@ -43,7 +45,7 @@ class DateRangeSelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
@@ -55,15 +57,19 @@ class DateRangeSelector extends StatelessWidget {
                   onTap: () => _selectDate(context, isStartDate: true),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(border: Border.all(color: AppTheme.dividerColor), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: theme.dividerColor),
+                      borderRadius: BorderRadius.circular(8),
+                      color: theme.inputDecorationTheme.fillColor,
+                    ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today, size: 16, color: AppTheme.primaryColor),
+                        Icon(Icons.calendar_today, size: 16, color: theme.primaryColor),
                         const SizedBox(width: 8),
                         Text(
                           startDateText,
                           style: TextStyle(
-                            color: startDate != null ? Colors.black87 : Colors.grey,
+                            color: startDate != null ? theme.textTheme.bodyLarge?.color : theme.hintColor,
                             fontWeight: startDate != null ? FontWeight.w500 : FontWeight.normal,
                           ),
                         ),
@@ -72,21 +78,25 @@ class DateRangeSelector extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(context.tr('至'), style: const TextStyle(color: Colors.grey))),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(context.tr('至'), style: TextStyle(color: theme.hintColor))),
               Expanded(
                 child: GestureDetector(
                   onTap: () => _selectDate(context, isStartDate: false),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(border: Border.all(color: AppTheme.dividerColor), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: theme.dividerColor),
+                      borderRadius: BorderRadius.circular(8),
+                      color: theme.inputDecorationTheme.fillColor,
+                    ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today, size: 16, color: AppTheme.primaryColor),
+                        Icon(Icons.calendar_today, size: 16, color: theme.primaryColor),
                         const SizedBox(width: 8),
                         Text(
                           endDateText,
                           style: TextStyle(
-                            color: endDate != null ? Colors.black87 : Colors.grey,
+                            color: endDate != null ? theme.textTheme.bodyLarge?.color : theme.hintColor,
                             fontWeight: endDate != null ? FontWeight.w500 : FontWeight.normal,
                           ),
                         ),
@@ -107,12 +117,12 @@ class DateRangeSelector extends StatelessWidget {
               icon: const Icon(Icons.search, size: 18),
               label: Text(searchText, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
+                backgroundColor: theme.primaryColor,
+                foregroundColor: theme.colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 2,
-                shadowColor: AppTheme.primaryColor.withAlpha(100),
+                shadowColor: theme.primaryColor.withAlpha(100),
               ),
             ),
           ),
@@ -186,7 +196,7 @@ class DateRangeSelector extends StatelessWidget {
                   },
                   dateOrder: DatePickerDateOrder.ymd,
                   use24hFormat: true,
-                  backgroundColor: Colors.white,
+                  backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
                 ),
               ),
             ],

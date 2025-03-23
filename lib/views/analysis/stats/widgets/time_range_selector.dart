@@ -18,10 +18,12 @@ class TimeRangeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Row(
@@ -39,6 +41,7 @@ class TimeRangeSelector extends StatelessWidget {
   }
 
   Widget _buildTimeRangeButton(BuildContext context, TimeRange timeRange, String label) {
+    final theme = Theme.of(context);
     final isSelected = selectedTimeRange == timeRange;
 
     return GestureDetector(
@@ -53,7 +56,7 @@ class TimeRangeSelector extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor : Colors.white,
+          color: isSelected ? AppTheme.primaryColor : theme.cardColor,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: isSelected ? AppTheme.primaryColor : AppTheme.dividerColor, width: 1.5),
           boxShadow: isSelected ? [BoxShadow(color: AppTheme.primaryColor.withAlpha(77), blurRadius: 8, offset: const Offset(0, 2))] : null,
@@ -61,7 +64,7 @@ class TimeRangeSelector extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppTheme.textSecondaryColor,
+            color: isSelected ? Colors.white : theme.textTheme.bodyMedium?.color,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
             fontSize: 15,
           ),
