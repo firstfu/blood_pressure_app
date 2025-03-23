@@ -392,7 +392,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           // 優化排序選項間距，使其更緊湊以顯示更多內容
           Container(
             decoration: BoxDecoration(
-              color: isDarkMode ? theme.cardColor.withOpacity(0.5) : theme.cardColor.withOpacity(0.8),
+              color: isDarkMode ? theme.cardColor.withAlpha(128) : theme.cardColor.withAlpha(204),
               borderRadius: BorderRadius.circular(8),
             ),
             margin: const EdgeInsets.only(top: 4),
@@ -412,7 +412,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           // 優化排序方式選項
           Container(
             decoration: BoxDecoration(
-              color: isDarkMode ? theme.cardColor.withOpacity(0.5) : theme.cardColor.withOpacity(0.8),
+              color: isDarkMode ? theme.cardColor.withAlpha(128) : theme.cardColor.withAlpha(204),
               borderRadius: BorderRadius.circular(8),
             ),
             margin: const EdgeInsets.only(top: 4),
