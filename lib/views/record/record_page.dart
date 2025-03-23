@@ -503,20 +503,24 @@ class _RecordPageState extends State<RecordPage> {
   // 構建按鈕
   Widget _buildButton({required String title, required VoidCallback onPressed, bool isPrimary = true}) {
     return SizedBox(
-      height: 48,
+      height: 52,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary ? Theme.of(context).primaryColor : Colors.transparent,
           foregroundColor: isPrimary ? Colors.white : Theme.of(context).primaryColor,
           elevation: isPrimary ? 2 : 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(_borderRadius),
             side: isPrimary ? BorderSide.none : BorderSide(color: Theme.of(context).primaryColor),
           ),
           shadowColor: Theme.of(context).primaryColor.withAlpha(128),
         ),
-        child: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.visible),
+        ),
       ),
     );
   }
@@ -541,6 +545,7 @@ class _RecordPageState extends State<RecordPage> {
         centerTitle: true,
         leading: widget.isFromTabNav ? null : IconButton(icon: const Icon(Icons.arrow_back_ios), onPressed: () => Navigator.of(context).pop()),
         actions: [
+          IconButton(icon: const Icon(Icons.save), tooltip: context.tr('保存記錄'), onPressed: _saveRecord),
           if (_isEditing)
             IconButton(
               icon: const Icon(Icons.delete),
