@@ -53,7 +53,7 @@ class MedicationEffectWidget extends StatelessWidget {
       children: [
         // 服藥效果摘要 - 優化後的設計
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -83,41 +83,41 @@ class MedicationEffectWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              const SizedBox(height: 20),
+
+              // 使用垂直佈局而非擁擠的水平佈局
+              Column(
                 children: [
-                  Expanded(
-                    child: _buildEffectSummaryItem(
-                      context.tr('收縮壓'),
-                      '${difference['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
-                      percentChange['systolic'].toStringAsFixed(1) + context.tr('%'),
-                      difference['systolic'] > 0,
-                      isDarkMode,
-                      theme,
-                    ),
+                  // 收縮壓
+                  _buildEffectSummaryCard(
+                    context.tr('收縮壓'),
+                    '${difference['systolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
+                    percentChange['systolic'].toStringAsFixed(1) + context.tr('%'),
+                    difference['systolic'] > 0,
+                    isDarkMode,
+                    theme,
                   ),
-                  Container(height: 40, width: 1, color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
-                  Expanded(
-                    child: _buildEffectSummaryItem(
-                      context.tr('舒張壓'),
-                      '${difference['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
-                      percentChange['diastolic'].toStringAsFixed(1) + context.tr('%'),
-                      difference['diastolic'] > 0,
-                      isDarkMode,
-                      theme,
-                    ),
+                  const SizedBox(height: 10),
+
+                  // 舒張壓
+                  _buildEffectSummaryCard(
+                    context.tr('舒張壓'),
+                    '${difference['diastolic'].toStringAsFixed(1)} ${context.tr('mmHg')}',
+                    percentChange['diastolic'].toStringAsFixed(1) + context.tr('%'),
+                    difference['diastolic'] > 0,
+                    isDarkMode,
+                    theme,
                   ),
-                  Container(height: 40, width: 1, color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
-                  Expanded(
-                    child: _buildEffectSummaryItem(
-                      context.tr('心率'),
-                      '${difference['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
-                      percentChange['pulse'].toStringAsFixed(1) + context.tr('%'),
-                      difference['pulse'] > 0,
-                      isDarkMode,
-                      theme,
-                    ),
+                  const SizedBox(height: 10),
+
+                  // 心率
+                  _buildEffectSummaryCard(
+                    context.tr('心率'),
+                    '${difference['pulse'].toStringAsFixed(1)} ${context.tr('bpm')}',
+                    percentChange['pulse'].toStringAsFixed(1) + context.tr('%'),
+                    difference['pulse'] > 0,
+                    isDarkMode,
+                    theme,
                   ),
                 ],
               ),
@@ -447,7 +447,7 @@ class MedicationEffectWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEffectSummaryItem(String title, String value, String percent, bool isPositive, bool isDarkMode, ThemeData theme) {
+  Widget _buildEffectSummaryCard(String title, String value, String percent, bool isPositive, bool isDarkMode, ThemeData theme) {
     final Color valueColor = isPositive ? (isDarkMode ? Colors.green.shade300 : Colors.green) : (isDarkMode ? Colors.red.shade300 : Colors.red);
     final Color percentColor =
         isPositive
@@ -455,39 +455,35 @@ class MedicationEffectWidget extends StatelessWidget {
             : (isDarkMode ? Colors.red.shade300.withAlpha(204) : Colors.red.withAlpha(204));
     final IconData arrowIcon = isPositive ? Icons.arrow_downward : Icons.arrow_upward;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 13, color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey, fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 6),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(arrowIcon, color: valueColor, size: 14),
-            const SizedBox(width: 2),
-            Flexible(
-              child: Text(
-                value,
-                style: TextStyle(fontWeight: FontWeight.bold, color: valueColor, fontSize: 14),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: isDarkMode ? theme.cardColor.withOpacity(0.2) : Colors.white.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.08) : Colors.grey.withAlpha(20), width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // 標題
+          Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: isDarkMode ? theme.colorScheme.onSurface : Colors.black87)),
+
+          // 變化值與百分比
+          Row(
+            children: [
+              Icon(arrowIcon, color: valueColor, size: 16),
+              const SizedBox(width: 4),
+              Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: valueColor, fontSize: 15)),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                decoration: BoxDecoration(color: percentColor.withAlpha(isDarkMode ? 40 : 26), borderRadius: BorderRadius.circular(10)),
+                child: Text(percent, style: TextStyle(fontSize: 12, color: percentColor, fontWeight: FontWeight.w500)),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 2),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration: BoxDecoration(color: percentColor.withAlpha(isDarkMode ? 40 : 26), borderRadius: BorderRadius.circular(10)),
-          child: Text(percent, style: TextStyle(fontSize: 10, color: percentColor, fontWeight: FontWeight.w500), textAlign: TextAlign.center),
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
