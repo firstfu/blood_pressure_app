@@ -21,6 +21,7 @@ class TrendChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tertiaryColor = theme.colorScheme.tertiary; // 定義第三色調，用於心率
+    final pulseColor = Colors.orange; // 新增心率顏色定義，與長條圖保持一致
 
     if (records.isEmpty) {
       return Center(
@@ -128,7 +129,7 @@ class TrendChart extends StatelessWidget {
                   } else {
                     title = context.tr('心率');
                     value = record.pulse;
-                    color = tertiaryColor;
+                    color = pulseColor;
                   }
 
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
@@ -204,7 +205,7 @@ class TrendChart extends StatelessWidget {
               LineChartBarData(
                 spots: _getPulseSpots(sortedRecords),
                 isCurved: true,
-                color: tertiaryColor,
+                color: pulseColor,
                 barWidth: 2.5,
                 isStrokeCapRound: true,
                 dotData: FlDotData(
@@ -214,15 +215,15 @@ class TrendChart extends StatelessWidget {
                     return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
                   },
                   getDotPainter:
-                      (spot, percent, barData, index) => FlDotCirclePainter(radius: 4, color: cardColor, strokeWidth: 2, strokeColor: tertiaryColor),
+                      (spot, percent, barData, index) => FlDotCirclePainter(radius: 4, color: cardColor, strokeWidth: 2, strokeColor: pulseColor),
                 ),
                 belowBarData: BarAreaData(
                   show: true,
-                  color: tertiaryColor.withAlpha(26),
+                  color: pulseColor.withAlpha(26),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [tertiaryColor.withAlpha(51), tertiaryColor.withAlpha(13)],
+                    colors: [pulseColor.withAlpha(51), pulseColor.withAlpha(13)],
                   ),
                 ),
               ),

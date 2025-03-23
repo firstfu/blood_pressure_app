@@ -91,7 +91,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
                             _showPulse = value;
                           });
                         },
-                        activeColor: theme.colorScheme.tertiary,
+                        activeColor: Colors.orange,
                       ),
                     ),
                   ],
@@ -191,7 +191,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 12, height: 12, decoration: BoxDecoration(color: theme.colorScheme.tertiary, borderRadius: BorderRadius.circular(6))),
+            Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(6))),
             const SizedBox(width: 4),
             Text(context.tr('心率'), style: theme.textTheme.bodySmall),
           ],
