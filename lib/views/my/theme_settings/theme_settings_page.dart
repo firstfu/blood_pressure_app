@@ -44,7 +44,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
       appBar: AppBar(
         title: Text(context.tr('主題設定')),
         centerTitle: true,
-        backgroundColor: theme.primaryColor,
+        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.primaryColor,
         foregroundColor: theme.colorScheme.onPrimary,
         elevation: 0,
       ),
