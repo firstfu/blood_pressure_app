@@ -3,8 +3,8 @@
 // @ Description: 血壓管家 App 使用條款頁面，顯示應用的使用條款內容
 
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations_extension.dart';
-import '../themes/app_theme.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../themes/app_theme.dart';
 
 /// TermsOfUsePage 類
 ///
