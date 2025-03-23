@@ -116,11 +116,11 @@ class LastMeasurementCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text('PULSE', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
+                    Text('PULSE', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500) ?? TextStyle(fontWeight: FontWeight.w500)),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('bpm', style: theme.textTheme.bodySmall),
+                        Text('bpm', style: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12)),
                         const SizedBox(width: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
@@ -179,8 +179,8 @@ class LastMeasurementCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Text(label, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
-        Text(unit, style: theme.textTheme.bodySmall),
+        Text(label, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500) ?? TextStyle(fontWeight: FontWeight.w500)),
+        Text(unit, style: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12)),
       ],
     );
   }
@@ -217,9 +217,9 @@ class LastMeasurementCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.chipTheme?.backgroundColor ?? theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.5)),
+        border: Border.all(color: theme.dividerColor.withAlpha(128)),
       ),
-      child: Text(text, style: theme.textTheme.bodySmall),
+      child: Text(text, style: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12)),
     );
   }
 
@@ -231,7 +231,7 @@ class LastMeasurementCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: theme.dialogBackgroundColor,
+          backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
           title: Text(context.tr('什麼是臨界血壓？'), style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
           content: Column(
             mainAxisSize: MainAxisSize.min,

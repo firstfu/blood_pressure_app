@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
-import '../../constants/app_constants.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../l10n/app_localizations_extension.dart';
 
@@ -46,7 +45,6 @@ class _RecordPageState extends State<RecordPage> {
   final double _smallSpacing = 8.0;
 
   // 字體大小
-  final double _titleFontSize = 20.0;
   final double _sectionTitleFontSize = 16.0;
   final double _contentFontSize = 15.0;
   final double _smallFontSize = 13.0;
@@ -492,7 +490,6 @@ class _RecordPageState extends State<RecordPage> {
     // 根據收縮壓和舒張壓判斷血壓等級
     String status = '';
     String description = '';
-    Color statusColor = Theme.of(context).primaryColor;
 
     // ... 省略血壓判定邏輯 ...
 
@@ -517,7 +514,7 @@ class _RecordPageState extends State<RecordPage> {
             borderRadius: BorderRadius.circular(_borderRadius),
             side: isPrimary ? BorderSide.none : BorderSide(color: Theme.of(context).primaryColor),
           ),
-          shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
+          shadowColor: Theme.of(context).primaryColor.withAlpha(128),
         ),
         child: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
       ),
