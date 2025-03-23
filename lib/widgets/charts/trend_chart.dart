@@ -20,7 +20,6 @@ class TrendChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tertiaryColor = theme.colorScheme.tertiary; // 定義第三色調，用於心率
     final pulseColor = Colors.orange; // 新增心率顏色定義，與長條圖保持一致
 
     if (records.isEmpty) {
