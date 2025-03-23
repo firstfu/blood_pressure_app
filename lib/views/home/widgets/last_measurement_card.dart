@@ -187,14 +187,13 @@ class LastMeasurementCard extends StatelessWidget {
 
   // 獲取心率狀態顏色
   Color _getPulseStatusColor(BuildContext context, int pulse) {
-    final theme = Theme.of(context);
-
+    // 使用 Colors.orange 作為心率顏色，與長條圖保持一致
     if (pulse < 60) {
-      return theme.colorScheme.secondary; // 心率過低，使用 secondary 顏色
+      return Colors.orange.shade300; // 心率過低
     } else if (pulse > 100) {
-      return theme.colorScheme.error; // 心率過高
+      return Colors.orange.shade700; // 心率過高
     } else {
-      return theme.colorScheme.primary; // 心率正常
+      return Colors.orange; // 心率正常
     }
   }
 
