@@ -72,26 +72,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   });
                 },
                 children: [
-                  OnboardingPageContent(
-                    image: 'assets/images/onboarding_record.png',
-                    titleKey: 'onboarding_manage_goals_title',
-                    descriptionKey: 'onboarding_manage_goals_description',
-                  ),
-                  OnboardingPageContent(
-                    image: 'assets/images/onboarding_reminder.png',
-                    titleKey: 'onboarding_set_schedule_title',
-                    descriptionKey: 'onboarding_set_schedule_description',
-                  ),
-                  OnboardingPageContent(
-                    image: 'assets/images/onboarding_analysis.png',
-                    titleKey: 'onboarding_todo_list_title',
-                    descriptionKey: 'onboarding_todo_list_description',
-                  ),
-                  OnboardingPageContent(
-                    image: 'assets/images/onboarding_welcome.png',
-                    titleKey: 'onboarding_share_data_title',
-                    descriptionKey: 'onboarding_share_data_description',
-                  ),
+                  OnboardingPageContent(image: 'assets/images/onboarding_record.png', titleKey: '記錄血壓_標題', descriptionKey: '記錄血壓_描述'),
+                  OnboardingPageContent(image: 'assets/images/onboarding_reminder.png', titleKey: '追蹤健康_標題', descriptionKey: '追蹤健康_描述'),
+                  OnboardingPageContent(image: 'assets/images/onboarding_analysis.png', titleKey: '數據分析_標題', descriptionKey: '數據分析_描述'),
+                  OnboardingPageContent(image: 'assets/images/onboarding_welcome.png', titleKey: '數據分享_標題', descriptionKey: '數據分享_描述'),
                 ],
               ),
             ),
@@ -122,7 +106,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       if (_currentPage < _totalPages - 1)
                         TextButton(
                           onPressed: _completeOnboarding,
-                          child: Text(context.tr('onboarding_skip_button'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                          child: Text(context.tr('跳過_按鈕'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
                         )
                       else
                         const SizedBox(width: 80),
@@ -144,7 +128,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           elevation: 2,
                         ),
                         child: Text(
-                          _currentPage < _totalPages - 1 ? context.tr('onboarding_next_button') : context.tr('onboarding_start_button'),
+                          _currentPage < _totalPages - 1 ? context.tr('下一步_按鈕') : context.tr('開始_按鈕'),
                           style: TypographyTheme.buttonText.copyWith(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
                         ),
                       ),
