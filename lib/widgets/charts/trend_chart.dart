@@ -134,7 +134,7 @@ class TrendChart extends StatelessWidget {
 
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                   final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
-                  final unit = barSpot.barIndex == 2 ? 'bpm' : 'mmHg';
+                  final unit = barSpot.barIndex == 2 ? context.tr('bpm') : context.tr('mmHg');
 
                   return LineTooltipItem('$title: $value $unit\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
                 }).toList();

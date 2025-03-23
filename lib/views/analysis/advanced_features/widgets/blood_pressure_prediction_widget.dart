@@ -395,7 +395,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
                 String title;
                 Color color;
-                String unit = 'mmHg';
+                String unit = context.tr('mmHg');
 
                 if (spot.barIndex == 0) {
                   title = context.tr('收縮壓');
@@ -406,7 +406,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
                 } else {
                   title = context.tr('心率');
                   color = isHistory ? pulseColor : (isDarkMode ? pulseColor.withAlpha(180) : Colors.orange.shade300);
-                  unit = 'bpm';
+                  unit = context.tr('bpm');
                 }
 
                 return LineTooltipItem('$title: ${spot.y.toInt()} $unit\n$dateStr', TextStyle(color: color, fontWeight: FontWeight.bold));

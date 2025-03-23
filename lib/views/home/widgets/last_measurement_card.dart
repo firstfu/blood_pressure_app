@@ -82,16 +82,16 @@ class LastMeasurementCard extends StatelessWidget {
                 _buildBPValueColumn(
                   context,
                   record.systolic.toString(),
-                  'SYS',
-                  'mmHg',
+                  context.tr('SYS'),
+                  context.tr('mmHg'),
                   isBPHigh ? (record.systolic >= 140 ? colorScheme.error : colorScheme.tertiary) : theme.textTheme.titleLarge!.color!,
                 ),
                 Container(height: 50, width: 1, color: theme.dividerColor),
                 _buildBPValueColumn(
                   context,
                   record.diastolic.toString(),
-                  'DIA',
-                  'mmHg',
+                  context.tr('DIA'),
+                  context.tr('mmHg'),
                   isBPHigh ? (record.diastolic >= 90 ? colorScheme.error : colorScheme.tertiary) : theme.textTheme.titleLarge!.color!,
                 ),
                 Container(height: 50, width: 1, color: theme.dividerColor),
@@ -116,11 +116,14 @@ class LastMeasurementCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text('PULSE', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500) ?? TextStyle(fontWeight: FontWeight.w500)),
+                    Text(
+                      context.tr('PULSE'),
+                      style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500) ?? TextStyle(fontWeight: FontWeight.w500),
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('bpm', style: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12)),
+                        Text(context.tr('bpm'), style: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12)),
                         const SizedBox(width: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),

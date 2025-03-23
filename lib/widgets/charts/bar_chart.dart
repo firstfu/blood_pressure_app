@@ -73,22 +73,22 @@ class BloodPressureBarChart extends StatelessWidget {
                 Color color;
 
                 if (rodIndex == 0) {
-                  title = '收縮壓';
+                  title = context.tr('收縮壓');
                   value = record.systolic;
                   color = theme.primaryColor;
                 } else if (rodIndex == 1) {
-                  title = '舒張壓';
+                  title = context.tr('舒張壓');
                   value = record.diastolic;
                   color = theme.colorScheme.secondary;
                 } else {
-                  title = '心率';
+                  title = context.tr('心率');
                   value = record.pulse;
                   color = tertiaryColor;
                 }
 
                 final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                 final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
-                final unit = rodIndex == 2 ? 'bpm' : 'mmHg';
+                final unit = rodIndex == 2 ? context.tr('bpm') : context.tr('mmHg');
 
                 return BarTooltipItem('$title: $value $unit\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
               },

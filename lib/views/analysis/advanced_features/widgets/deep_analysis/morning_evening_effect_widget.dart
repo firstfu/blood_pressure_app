@@ -281,7 +281,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
       children: [
         Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 16)),
+        Text('$value ${context.tr('mmHg')}', style: const TextStyle(fontSize: 16)),
         Text('$count ${context.tr('次測量')}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
@@ -293,7 +293,7 @@ class MorningEveningEffectWidget extends StatelessWidget {
       children: [
         Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 16, color: Colors.red)),
+        Text('$value ${context.tr('mmHg')}', style: const TextStyle(fontSize: 16, color: Colors.red)),
         Text(note, style: TextStyle(fontSize: 12, color: noteColor)),
       ],
     );
