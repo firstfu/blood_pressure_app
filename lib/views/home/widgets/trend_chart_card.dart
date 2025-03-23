@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../models/blood_pressure_record.dart';
-import '../../../themes/app_theme.dart';
+// import '../../../themes/app_theme.dart'; // 移除不必要的引用
 import '../../../widgets/charts/trend_chart.dart';
 import '../../../widgets/charts/bar_chart.dart';
 import '../../../services/mock_data_service.dart';
@@ -35,10 +35,12 @@ class _TrendChartCardState extends State<TrendChartCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
       elevation: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      shadowColor: AppTheme.primaryColor.withAlpha(26),
+      shadowColor: theme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -78,7 +80,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(context.tr('顯示心率'), style: TextStyle(color: AppTheme.textSecondaryColor, fontSize: 13)),
+                    Text(context.tr('顯示心率'), style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 13)),
                     Transform.scale(
                       scale: 0.8,
                       child: Switch(
@@ -88,7 +90,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
                             _showPulse = value;
                           });
                         },
-                        activeColor: Colors.orange,
+                        activeColor: theme.colorScheme.secondary,
                       ),
                     ),
                   ],
@@ -121,14 +123,16 @@ class _TrendChartCardState extends State<TrendChartCard> {
 
   // 根據選擇的圖表類型構建對應的圖表
   Widget _buildChart() {
+    final theme = Theme.of(context);
+
     if (widget.records.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timeline_outlined, size: 48, color: AppTheme.textSecondaryColor.withAlpha(128)),
+            Icon(Icons.timeline_outlined, size: 48, color: theme.textTheme.bodySmall?.color?.withAlpha(128)),
             const SizedBox(height: 16),
-            Text(context.tr('暫無數據'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondaryColor.withAlpha(179))),
+            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodySmall?.color?.withAlpha(179))),
           ],
         ),
       );
@@ -144,16 +148,22 @@ class _TrendChartCardState extends State<TrendChartCard> {
 
   // 構建圖例項目
   List<Widget> _buildLegendItems() {
+    final theme = Theme.of(context);
     final List<Widget> items = [];
+
+    // 定義顏色
+    final systolicColor = theme.primaryColor;
+    final diastolicColor = theme.colorScheme.secondary;
+    final pulseColor = theme.colorScheme.tertiary;
 
     // 折線圖和長條圖使用相同的圖例
     items.add(
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(6))),
+          Container(width: 12, height: 12, decoration: BoxDecoration(color: systolicColor, borderRadius: BorderRadius.circular(6))),
           const SizedBox(width: 4),
-          Text(context.tr('收縮壓'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+          Text(context.tr('收縮壓'), style: theme.textTheme.bodySmall),
         ],
       ),
     );
@@ -162,9 +172,9 @@ class _TrendChartCardState extends State<TrendChartCard> {
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.successColor, borderRadius: BorderRadius.circular(6))),
+          Container(width: 12, height: 12, decoration: BoxDecoration(color: diastolicColor, borderRadius: BorderRadius.circular(6))),
           const SizedBox(width: 4),
-          Text(context.tr('舒張壓'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+          Text(context.tr('舒張壓'), style: theme.textTheme.bodySmall),
         ],
       ),
     );
@@ -174,9 +184,9 @@ class _TrendChartCardState extends State<TrendChartCard> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(6))),
+            Container(width: 12, height: 12, decoration: BoxDecoration(color: pulseColor, borderRadius: BorderRadius.circular(6))),
             const SizedBox(width: 4),
-            Text(context.tr('心率'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+            Text(context.tr('心率'), style: theme.textTheme.bodySmall),
           ],
         ),
       );

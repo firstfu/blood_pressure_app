@@ -127,7 +127,7 @@ class TrendChart extends StatelessWidget {
                   } else {
                     title = context.tr('心率');
                     value = record.pulse;
-                    color = Colors.orange;
+                    color = theme.colorScheme.tertiary;
                   }
 
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
@@ -204,7 +204,7 @@ class TrendChart extends StatelessWidget {
               LineChartBarData(
                 spots: _getPulseSpots(sortedRecords),
                 isCurved: true,
-                color: Colors.orange,
+                color: theme.colorScheme.tertiary,
                 barWidth: 2,
                 isStrokeCapRound: true,
                 dotData: FlDotData(
@@ -215,7 +215,7 @@ class TrendChart extends StatelessWidget {
                   },
                   getDotPainter:
                       (spot, percent, barData, index) =>
-                          FlDotCirclePainter(radius: 3.5, color: Colors.white, strokeWidth: 2, strokeColor: Colors.orange),
+                          FlDotCirclePainter(radius: 3.5, color: Colors.white, strokeWidth: 2, strokeColor: theme.colorScheme.tertiary),
                 ),
                 dashArray: [4, 4], // 使用虛線表示心率
               ),

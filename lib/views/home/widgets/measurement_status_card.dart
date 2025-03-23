@@ -5,7 +5,7 @@
  */
 
 import 'package:flutter/material.dart';
-import '../../../themes/app_theme.dart';
+// import '../../../themes/app_theme.dart'; // 移除不必要的引用
 import '../../../l10n/app_localizations_extension.dart';
 
 class MeasurementStatusCard extends StatelessWidget {
@@ -15,10 +15,14 @@ class MeasurementStatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final successColorLight = AppTheme.successColor.withAlpha(20);
-    final alertColorLight = AppTheme.alertColor.withAlpha(20);
-    final successColorBorder = AppTheme.successColor.withAlpha(77);
-    final alertColorBorder = AppTheme.alertColor.withAlpha(77);
+    final theme = Theme.of(context);
+    final successColor = theme.colorScheme.secondary;
+    final alertColor = theme.colorScheme.error;
+
+    final successColorLight = successColor.withAlpha(20);
+    final alertColorLight = alertColor.withAlpha(20);
+    final successColorBorder = successColor.withAlpha(77);
+    final alertColorBorder = alertColor.withAlpha(77);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -32,12 +36,12 @@ class MeasurementStatusCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isMeasuredToday ? AppTheme.successColor.withAlpha(38) : AppTheme.alertColor.withAlpha(38),
+              color: isMeasuredToday ? successColor.withAlpha(38) : alertColor.withAlpha(38),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               isMeasuredToday ? Icons.check_circle : Icons.notifications_none,
-              color: isMeasuredToday ? AppTheme.successColor : AppTheme.alertColor,
+              color: isMeasuredToday ? successColor : alertColor,
               size: 24,
             ),
           ),
@@ -48,12 +52,9 @@ class MeasurementStatusCard extends StatelessWidget {
               children: [
                 Text(
                   isMeasuredToday ? context.tr('已完成今日測量') : context.tr('今日尚未測量'),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600, color: isMeasuredToday ? AppTheme.successColor : AppTheme.alertColor),
+                  style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600, color: isMeasuredToday ? successColor : alertColor),
                 ),
-                if (!isMeasuredToday)
-                  Text(context.tr('建議每日測量血壓以保持健康追蹤'), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondaryColor)),
+                if (!isMeasuredToday) Text(context.tr('建議每日測量血壓以保持健康追蹤'), style: theme.textTheme.bodySmall),
               ],
             ),
           ),

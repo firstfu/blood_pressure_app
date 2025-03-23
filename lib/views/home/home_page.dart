@@ -42,8 +42,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat(reverse: true);
     _loadRecords();
 
-    // 設置沉浸式狀態欄
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light));
+    // 移除狀態欄設置，因為這已經在 MainPage 中處理
   }
 
   @override
@@ -60,6 +59,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     final lastRecord = MockDataService.getLastBloodPressureRecord();
     final isMeasuredToday = MockDataService.isMeasuredToday();
+    final theme = Theme.of(context);
 
     // 隨機選擇 2 條健康建議
     final random = Random();
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final selectedTips = healthTips.take(2).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -160,6 +160,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildFloatingActionButton(BuildContext context) {
+    final theme = Theme.of(context);
+
     return FloatingActionButton(
       onPressed: () {
         HapticFeedback.mediumImpact();
@@ -171,10 +173,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           }
         });
       },
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: theme.primaryColor,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: const Icon(Icons.add, color: Colors.white, size: 28),
+      child: Icon(Icons.add, color: theme.colorScheme.onPrimary, size: 28),
     );
   }
 }

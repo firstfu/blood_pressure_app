@@ -72,7 +72,7 @@ class BloodPressureBarChart extends StatelessWidget {
                 } else {
                   title = '心率';
                   value = record.pulse;
-                  color = Colors.orange;
+                  color = theme.colorScheme.tertiary;
                 }
 
                 final date = DateTimeUtils.formatDateMMDD(record.measureTime);
@@ -225,7 +225,7 @@ class BloodPressureBarChart extends StatelessWidget {
         rods.add(
           BarChartRodData(
             toY: record.pulse.toDouble(),
-            color: Colors.orange,
+            color: theme.colorScheme.tertiary,
             width: 5.5,
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
             backDrawRodData: BackgroundBarChartRodData(show: false),
