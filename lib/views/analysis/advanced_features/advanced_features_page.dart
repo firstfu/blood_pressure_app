@@ -13,9 +13,7 @@ import '../../../services/analysis_service.dart';
 import 'widgets/blood_pressure_prediction_widget.dart';
 import 'widgets/health_risk_assessment_widget.dart';
 import 'widgets/lifestyle_correlation_widget.dart';
-import 'widgets/deep_analysis/medication_effect_widget.dart';
-import 'widgets/deep_analysis/position_arm_effect_widget.dart';
-import 'widgets/deep_analysis/morning_evening_effect_widget.dart';
+import 'widgets/deep_analysis/deep_analysis_widget.dart';
 import '../../../l10n/app_localizations_extension.dart';
 
 class AdvancedFeaturesPage extends StatefulWidget {
@@ -175,83 +173,10 @@ class _AdvancedFeaturesPageState extends State<AdvancedFeaturesPage> with Ticker
                   // 深度分析
                   SingleChildScrollView(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(context.tr('深度分析'), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text(context.tr('基於您的血壓記錄進行深度分析，幫助您更好地了解血壓變化規律。'), style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                        const SizedBox(height: 24),
-
-                        // 服藥效果分析
-                        Card(
-                          elevation: 2,
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.medication, color: Colors.blue),
-                                    const SizedBox(width: 8),
-                                    Text(context.tr('服藥效果分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                MedicationEffectWidget(analysis: _medicationAnalysis),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        // 測量條件分析
-                        Card(
-                          elevation: 2,
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.compare_arrows, color: Colors.green),
-                                    const SizedBox(width: 8),
-                                    Text(context.tr('測量條件分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                PositionArmEffectWidget(analysis: _positionArmAnalysis),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        // 晨峰血壓分析
-                        Card(
-                          elevation: 2,
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.wb_sunny, color: Colors.orange),
-                                    const SizedBox(width: 8),
-                                    Text(context.tr('晨峰血壓分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                MorningEveningEffectWidget(analysis: _morningEveningAnalysis),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: DeepAnalysisWidget(
+                      medicationAnalysis: _medicationAnalysis,
+                      positionArmAnalysis: _positionArmAnalysis,
+                      morningEveningAnalysis: _morningEveningAnalysis,
                     ),
                   ),
 
