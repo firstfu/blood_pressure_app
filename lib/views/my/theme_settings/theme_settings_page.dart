@@ -148,7 +148,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
                     border: Border.all(color: theme.cardColor, width: 2),
                     boxShadow: [BoxShadow(color: themeColor['color'].withAlpha(100), blurRadius: 4, spreadRadius: 1)],
                   ),
-                  child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
+                  child: isSelected ? Icon(Icons.check, color: theme.colorScheme.onPrimary, size: 20) : null,
                 ),
                 const SizedBox(height: 8),
                 Text(

@@ -60,10 +60,10 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.tr('幫助與反饋'), style: TypographyTheme.pageTitle),
+        title: Text(context.tr('幫助與反饋')),
         centerTitle: true,
-        backgroundColor: theme.primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
       ),
       body: Container(
@@ -157,6 +157,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   /// 構建意見反饋頁面
   Widget _buildFeedbackTab() {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -181,15 +182,15 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.cardColor,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE0E0E0)),
+                      border: Border.all(color: theme.dividerColor),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedFeedbackType,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).primaryColor),
+                        icon: Icon(Icons.arrow_drop_down, color: theme.primaryColor),
                         items:
                             _feedbackTypes.map((String type) {
                               return DropdownMenuItem<String>(value: type, child: Text(type, style: TypographyTheme.body));
@@ -218,11 +219,11 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                       hintText: context.tr('請描述您的問題或建議...'),
                       hintStyle: TypographyTheme.inputHint,
                       filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
+                      fillColor: theme.cardColor,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+                        borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
                       ),
                     ),
                   ),
@@ -240,13 +241,13 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                       hintText: context.tr('請輸入您的電子郵箱'),
                       hintStyle: TypographyTheme.inputHint,
                       filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
+                      fillColor: theme.cardColor,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: theme.dividerColor)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+                        borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
                       ),
-                      prefixIcon: Icon(Icons.email_outlined, color: Theme.of(context).primaryColor, size: 18),
+                      prefixIcon: Icon(Icons.email_outlined, color: theme.primaryColor, size: 18),
                     ),
                   ),
 
@@ -256,8 +257,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   ElevatedButton(
                     onPressed: _submitFeedback,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
+                      backgroundColor: theme.primaryColor,
+                      foregroundColor: theme.colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),

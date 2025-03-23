@@ -55,8 +55,8 @@ class _AboutAppPageState extends State<AboutAppPage> {
       appBar: AppBar(
         title: Text(context.tr('關於應用')),
         centerTitle: true,
-        backgroundColor: theme.primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
       ),
       body: Container(

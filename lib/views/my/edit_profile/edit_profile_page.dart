@@ -51,15 +51,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final double _spacing = 16.0;
   final double _smallSpacing = 8.0;
 
-  // 主色調
-  final Color _primaryColor = const Color(0xFF4A7BF7);
-  final Color _backgroundColor = const Color(0xFFF5F7FA);
-  final Color _cardColor = Colors.white;
-  final Color _textColor = const Color(0xFF2D3748);
-  final Color _secondaryTextColor = const Color(0xFF718096);
-  final Color _borderColor = const Color(0xFFE2E8F0);
-  final Color _iconColor = const Color(0xFF4A7BF7);
-
   // 字體大小
   final double _titleFontSize = 20.0;
   final double _sectionTitleFontSize = 16.0;
@@ -258,7 +249,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(context.tr('個人資料已更新')),
-            backgroundColor: _primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(16),
@@ -271,23 +262,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: _primaryColor,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
-        title: Text(context.tr('編輯個人資料'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: _titleFontSize)),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: brightness == Brightness.light ? Brightness.dark : Brightness.light,
+          statusBarBrightness: brightness == Brightness.light ? Brightness.light : Brightness.dark,
+        ),
+        title: Text(context.tr('編輯個人資料'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: _titleFontSize)),
         centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: _saveProfile,
-            child: Text(context.tr('保存'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-        ],
+        actions: [TextButton(onPressed: _saveProfile, child: Text(context.tr('保存'), style: TextStyle(fontWeight: FontWeight.bold)))],
       ),
       body: Container(
-        color: _backgroundColor,
+        color: theme.scaffoldBackgroundColor,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Form(
@@ -305,9 +299,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           children: [
                             CircleAvatar(
                               radius: 50,
-                              backgroundColor: _borderColor,
+                              backgroundColor: Theme.of(context).dividerColor,
                               backgroundImage: _getAvatarImage(),
-                              child: _avatarFile == null ? Icon(Icons.person, size: 50, color: _primaryColor) : null,
+                              child: _avatarFile == null ? Icon(Icons.person, size: 50, color: Theme.of(context).primaryColor) : null,
                             ),
                             Positioned(
                               right: 0,
@@ -315,18 +309,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               child: Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: _primaryColor,
+                                  color: theme.primaryColor,
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 2),
+                                  border: Border.all(color: theme.cardColor, width: 2),
                                 ),
-                                child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                                child: Icon(Icons.camera_alt, color: theme.colorScheme.onPrimary, size: 20),
                               ),
                             ),
                           ],
                         ),
                       ),
                       SizedBox(height: _smallSpacing),
-                      Text(context.tr('點擊更換頭像'), style: TextStyle(color: _secondaryTextColor, fontSize: _smallFontSize)),
+                      Text(context.tr('點擊更換頭像'), style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: _smallFontSize)),
                       SizedBox(height: _spacing),
                     ],
                   ),
@@ -507,9 +501,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       margin: EdgeInsets.only(top: _spacing, bottom: _smallSpacing),
       child: Row(
         children: [
-          Container(width: 4, height: 20, decoration: BoxDecoration(color: _primaryColor, borderRadius: BorderRadius.circular(2))),
+          Container(width: 4, height: 20, decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(2))),
           SizedBox(width: _smallSpacing),
-          Text(title, style: TextStyle(fontSize: _sectionTitleFontSize, fontWeight: FontWeight.bold, color: _textColor)),
+          Text(
+            title,
+            style: TextStyle(fontSize: _sectionTitleFontSize, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
+          ),
         ],
       ),
     );
@@ -533,18 +530,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          prefixIcon: Icon(icon, color: _iconColor),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
+          prefixIcon: Icon(icon, color: Theme.of(context).primaryColor),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(_borderRadius),
+            borderSide: BorderSide(color: Theme.of(context).dividerColor),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(_borderRadius),
+            borderSide: BorderSide(color: Theme.of(context).dividerColor),
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(_borderRadius),
-            borderSide: BorderSide(color: _primaryColor, width: 1.5),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
           ),
           filled: true,
-          fillColor: _cardColor,
+          fillColor: Theme.of(context).cardColor,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
-        style: TextStyle(fontSize: _contentFontSize, color: _textColor),
+        style: TextStyle(fontSize: _contentFontSize, color: Theme.of(context).textTheme.bodyLarge?.color),
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         validator: validator,
@@ -567,19 +570,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
         value: value,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon, color: _iconColor),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(_borderRadius), borderSide: BorderSide(color: _borderColor)),
+          prefixIcon: Icon(icon, color: Theme.of(context).primaryColor),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(_borderRadius),
+            borderSide: BorderSide(color: Theme.of(context).dividerColor),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(_borderRadius),
+            borderSide: BorderSide(color: Theme.of(context).dividerColor),
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(_borderRadius),
-            borderSide: BorderSide(color: _primaryColor, width: 1.5),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
           ),
           filled: true,
-          fillColor: _cardColor,
+          fillColor: Theme.of(context).cardColor,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
-        style: TextStyle(fontSize: _contentFontSize, color: _textColor),
-        dropdownColor: _cardColor,
+        style: TextStyle(fontSize: _contentFontSize, color: Theme.of(context).textTheme.bodyLarge?.color),
+        dropdownColor: Theme.of(context).cardColor,
         items: items,
         onChanged: onChanged,
       ),
@@ -590,12 +599,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget _buildSwitchOption({required String title, required String subtitle, required bool value, required Function(bool) onChanged}) {
     return Container(
       margin: EdgeInsets.only(bottom: _spacing),
-      decoration: BoxDecoration(color: _cardColor, borderRadius: BorderRadius.circular(_borderRadius), border: Border.all(color: _borderColor)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(_borderRadius),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
       child: SwitchListTile(
-        title: Text(title, style: TextStyle(fontSize: _contentFontSize, color: _textColor)),
-        subtitle: subtitle.isNotEmpty ? Text(subtitle, style: TextStyle(fontSize: _smallFontSize, color: _secondaryTextColor)) : null,
+        title: Text(title, style: TextStyle(fontSize: _contentFontSize, color: Theme.of(context).textTheme.bodyLarge?.color)),
+        subtitle:
+            subtitle.isNotEmpty
+                ? Text(subtitle, style: TextStyle(fontSize: _smallFontSize, color: Theme.of(context).textTheme.bodySmall?.color))
+                : null,
         value: value,
-        activeColor: _primaryColor,
+        activeColor: Theme.of(context).primaryColor,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         onChanged: onChanged,
       ),
@@ -611,12 +627,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary ? _primaryColor : Colors.transparent,
-          foregroundColor: isPrimary ? Colors.white : _primaryColor,
+          backgroundColor: isPrimary ? Theme.of(context).primaryColor : Colors.transparent,
+          foregroundColor: isPrimary ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).primaryColor,
           elevation: isPrimary ? 2 : 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(_borderRadius),
-            side: isPrimary ? BorderSide.none : BorderSide(color: _primaryColor),
+            side: isPrimary ? BorderSide.none : BorderSide(color: Theme.of(context).primaryColor),
           ),
         ),
         child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

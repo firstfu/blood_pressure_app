@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations_extension.dart';
-import '../../../themes/app_theme.dart';
 import '../../../services/shared_prefs_service.dart';
 
 /// PrivacySettingsPage 類
@@ -53,16 +52,18 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('隱私偏好')),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
       ),
       body: Container(
-        color: AppTheme.backgroundColor,
+        color: theme.scaffoldBackgroundColor,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -87,8 +88,8 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
                 child: ElevatedButton(
                   onPressed: _savePrivacySettings,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.primaryColor,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
@@ -106,25 +107,27 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
 
   /// 構建章節標題
   Widget _buildSectionTitle(String title) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+      child: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.primaryColor)),
     );
   }
 
   /// 構建開關設定項
   Widget _buildSwitchItem(String title, String subtitle, bool value, Function(bool) onChanged) {
+    final theme = Theme.of(context);
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
       child: SwitchListTile(
-        title: Text(title),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        title: Text(title, style: TextStyle(color: theme.textTheme.titleMedium?.color)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
         value: value,
         onChanged: onChanged,
-        activeColor: AppTheme.primaryColor,
+        activeColor: theme.primaryColor,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
     );
