@@ -3,9 +3,9 @@
 // @ Description: 血壓管家 App 隱私偏好頁面，用於管理應用通知與提示設置
 
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations_extension.dart';
-import '../themes/app_theme.dart';
-import '../services/shared_prefs_service.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../themes/app_theme.dart';
+import '../../../services/shared_prefs_service.dart';
 
 /// PrivacySettingsPage 類
 ///

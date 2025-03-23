@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_settings/app_settings.dart';
-import '../l10n/app_localizations_extension.dart';
-import '../models/user_profile.dart';
-import '../services/shared_prefs_service.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../models/user_profile.dart';
+import '../../../services/shared_prefs_service.dart';
 
 /// 編輯個人資料頁面
 ///

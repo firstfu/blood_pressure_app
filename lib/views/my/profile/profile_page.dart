@@ -7,18 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../l10n/app_localizations_extension.dart';
-import '../../services/shared_prefs_service.dart';
-import '../../themes/app_theme.dart';
-import '../../constants/app_constants.dart';
-import '../../models/user_profile.dart';
-import '../about_app_page.dart';
-import '../edit_profile_page.dart';
-import '../help_feedback_page.dart';
-import '../language_settings_page.dart';
-import '../onboarding/onboarding_page.dart';
-import '../privacy_settings_page.dart';
-import '../theme_settings_page.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../services/shared_prefs_service.dart';
+import '../../../themes/app_theme.dart';
+import '../../../constants/app_constants.dart';
+import '../../../models/user_profile.dart';
+import '../about_app/about_app_page.dart';
+import '../edit_profile/edit_profile_page.dart';
+import '../help_feedback/help_feedback_page.dart';
+import '../language_settings/language_settings_page.dart';
+import '../../onboarding/onboarding_page.dart';
+import '../privacy_settings/privacy_settings_page.dart';
+import '../../theme_settings_page.dart';
 
 /// ProfilePage 類
 ///

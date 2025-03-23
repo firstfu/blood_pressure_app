@@ -5,10 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../l10n/app_localizations_extension.dart';
-import '../themes/app_theme.dart';
-import 'privacy_policy_page.dart';
-import 'terms_of_use_page.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../themes/app_theme.dart';
+import '../privacy_policy/privacy_policy_page.dart';
+import '../../terms_of_use_page.dart';
 
 /// AboutAppPage 類
 ///

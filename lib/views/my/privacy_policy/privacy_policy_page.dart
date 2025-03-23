@@ -3,8 +3,8 @@
 // @ Description: 血壓管家 App 隱私政策頁面，顯示應用的隱私政策內容
 
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations_extension.dart';
-import '../themes/app_theme.dart';
+import '../../../l10n/app_localizations_extension.dart';
+import '../../../themes/app_theme.dart';
 
 /// PrivacyPolicyPage 類
 ///
