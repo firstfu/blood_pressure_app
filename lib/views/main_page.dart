@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../themes/app_theme.dart';
-import 'home_page.dart';
-import 'record_page.dart';
+import 'home/home_page.dart';
+import 'record/record_page.dart';
 import 'stats_page.dart';
-import 'profile_page.dart';
+import 'profile/profile_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

@@ -14,7 +14,7 @@ import 'providers/locale_provider.dart';
 import 'services/shared_prefs_service.dart';
 import 'themes/app_theme.dart';
 import 'views/main_page.dart';
-import 'views/onboarding_page.dart';
+import 'views/onboarding/onboarding_page.dart';
 
 // 主應用程式入口
 void main() async {

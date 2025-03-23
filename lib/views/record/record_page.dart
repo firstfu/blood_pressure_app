@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
-import '../constants/app_constants.dart';
-import '../models/blood_pressure_record.dart';
-import '../themes/app_theme.dart';
-import '../l10n/app_localizations_extension.dart';
+import '../../constants/app_constants.dart';
+import '../../models/blood_pressure_record.dart';
+import '../../themes/app_theme.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class RecordPage extends StatefulWidget {
   final BloodPressureRecord? recordToEdit;

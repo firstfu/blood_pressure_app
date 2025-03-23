@@ -5,8 +5,8 @@
  */
 
 import 'package:flutter/material.dart';
-import '../../themes/app_theme.dart';
-import '../../l10n/app_localizations_extension.dart';
+import '../../../themes/app_theme.dart';
+import '../../../l10n/app_localizations_extension.dart';
 
 class MeasurementStatusCard extends StatelessWidget {
   final bool isMeasuredToday;

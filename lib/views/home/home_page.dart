@@ -10,19 +10,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
-import '../constants/app_constants.dart';
-import '../models/blood_pressure_record.dart';
-import '../services/mock_data_service.dart';
-import '../widgets/cards/health_tip_card.dart';
-import '../themes/app_theme.dart';
-import '../views/record_page.dart';
-import '../views/stats_page.dart';
-import '../widgets/home/greeting_header.dart';
-import '../widgets/home/measurement_status_card.dart';
-import '../widgets/home/last_measurement_card.dart';
-import '../widgets/home/trend_chart_card.dart';
-import '../widgets/home/time_range_selector.dart';
-import '../l10n/app_localizations_extension.dart';
+import '../../constants/app_constants.dart';
+import '../../models/blood_pressure_record.dart';
+import '../../services/mock_data_service.dart';
+import '../../widgets/cards/health_tip_card.dart';
+import '../../themes/app_theme.dart';
+import '../record/record_page.dart';
+import '../stats_page.dart';
+import 'widgets/greeting_header.dart';
+import 'widgets/measurement_status_card.dart';
+import 'widgets/last_measurement_card.dart';
+import 'widgets/trend_chart_card.dart';
+import 'widgets/time_range_selector.dart';
+import '../../l10n/app_localizations_extension.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
