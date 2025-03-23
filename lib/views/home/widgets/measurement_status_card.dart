@@ -16,8 +16,9 @@ class MeasurementStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final successColor = theme.colorScheme.secondary;
-    final alertColor = theme.colorScheme.error;
+
+    final successColor = theme.colorScheme.secondary; // 使用主題中的 secondary 作為成功顏色
+    final alertColor = theme.colorScheme.error; // 使用主題中的 error 作為警示顏色
 
     final successColorLight = successColor.withAlpha(20);
     final alertColorLight = alertColor.withAlpha(20);

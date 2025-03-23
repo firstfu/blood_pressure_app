@@ -14,7 +14,6 @@ import '../../constants/app_constants.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../services/mock_data_service.dart';
 import '../../widgets/cards/health_tip_card.dart';
-import '../../themes/app_theme.dart';
 import '../record/record_page.dart';
 import '../analysis/stats/stats_page.dart';
 import 'widgets/greeting_header.dart';
@@ -41,8 +40,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat(reverse: true);
     _loadRecords();
+  }
 
-    // 移除狀態欄設置，因為這已經在 MainPage 中處理
+  // 更新狀態欄樣式
+  void _updateStatusBarOverlay() {
+    final brightness = Theme.of(context).brightness;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: brightness == Brightness.light ? Brightness.dark : Brightness.light,
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateStatusBarOverlay();
   }
 
   @override
@@ -86,7 +100,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   if (lastRecord != null) ...[
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(context.tr('最近一次測量'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                      child: Text(context.tr('最近一次測量'), style: theme.textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
                     ),
                     const SizedBox(height: 12),
                     Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: LastMeasurementCard(record: lastRecord)),
@@ -97,7 +111,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_getTrendTitle(), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                        Text(_getTrendTitle(), style: theme.textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
                         HomeTimeRangeSelector(
                           selectedTimeRange: _selectedTimeRange,
                           onTimeRangeChanged: (timeRange) {
@@ -128,7 +142,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(context.tr('健康建議'), style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    child: Text(context.tr('健康建議'), style: theme.textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w600)),
                   ),
                   const SizedBox(height: 12),
                   ...selectedTips.map(
@@ -174,9 +188,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         });
       },
       backgroundColor: theme.primaryColor,
+      foregroundColor: theme.colorScheme.onPrimary,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Icon(Icons.add, color: theme.colorScheme.onPrimary, size: 28),
+      child: const Icon(Icons.add, size: 28),
     );
   }
 }

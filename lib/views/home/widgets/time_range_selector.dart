@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../themes/app_theme.dart';
+// import '../../../themes/app_theme.dart'; // 移除不必要的引用
 import '../../../services/mock_data_service.dart';
 import '../../../l10n/app_localizations_extension.dart';
 
@@ -18,12 +18,10 @@ class HomeTimeRangeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.dividerColor),
-      ),
+      decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.dividerColor)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -37,6 +35,7 @@ class HomeTimeRangeSelector extends StatelessWidget {
 
   // 構建時間範圍按鈕
   Widget _buildTimeRangeButton(BuildContext context, TimeRange timeRange, String label) {
+    final theme = Theme.of(context);
     final isSelected = selectedTimeRange == timeRange;
 
     return GestureDetector(
@@ -48,11 +47,11 @@ class HomeTimeRangeSelector extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(color: isSelected ? AppTheme.primaryColor : Colors.transparent, borderRadius: BorderRadius.circular(14)),
+        decoration: BoxDecoration(color: isSelected ? theme.primaryColor : Colors.transparent, borderRadius: BorderRadius.circular(14)),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppTheme.textSecondaryColor,
+            color: isSelected ? theme.colorScheme.onPrimary : theme.textTheme.bodySmall?.color,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             fontSize: 12,
           ),

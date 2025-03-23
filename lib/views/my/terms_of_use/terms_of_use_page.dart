@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations_extension.dart';
-import '../../../themes/app_theme.dart';
 
 /// TermsOfUsePage 類
 ///

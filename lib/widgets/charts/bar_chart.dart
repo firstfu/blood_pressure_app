@@ -21,6 +21,7 @@ class BloodPressureBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final tertiaryColor = theme.colorScheme.tertiary; // 定義第三色調，用於心率
 
     if (records.isEmpty) {
       return Center(
@@ -72,7 +73,7 @@ class BloodPressureBarChart extends StatelessWidget {
                 } else {
                   title = '心率';
                   value = record.pulse;
-                  color = theme.colorScheme.tertiary;
+                  color = tertiaryColor;
                 }
 
                 final date = DateTimeUtils.formatDateMMDD(record.measureTime);
@@ -225,7 +226,7 @@ class BloodPressureBarChart extends StatelessWidget {
         rods.add(
           BarChartRodData(
             toY: record.pulse.toDouble(),
-            color: theme.colorScheme.tertiary,
+            color: Colors.orange,
             width: 5.5,
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
             backDrawRodData: BackgroundBarChartRodData(show: false),

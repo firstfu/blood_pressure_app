@@ -20,6 +20,7 @@ class TrendChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final tertiaryColor = theme.colorScheme.tertiary; // 定義第三色調，用於心率
 
     if (records.isEmpty) {
       return Center(
@@ -44,7 +45,7 @@ class TrendChart extends StatelessWidget {
     final primaryColor = theme.primaryColor;
     final secondaryColor = theme.colorScheme.secondary;
     final dividerColor = theme.dividerColor;
-    final errorColor = theme.colorScheme.error;
+    final cardColor = theme.cardColor;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -105,7 +106,7 @@ class TrendChart extends StatelessWidget {
           borderData: FlBorderData(show: true, border: Border.all(color: dividerColor)),
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: theme.cardColor,
+              tooltipBgColor: cardColor,
               tooltipRoundedRadius: 8,
               tooltipBorder: BorderSide(color: primaryColor.withAlpha(51), width: 1),
               tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -127,7 +128,7 @@ class TrendChart extends StatelessWidget {
                   } else {
                     title = context.tr('心率');
                     value = record.pulse;
-                    color = theme.colorScheme.tertiary;
+                    color = tertiaryColor;
                   }
 
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
@@ -160,7 +161,7 @@ class TrendChart extends StatelessWidget {
                   return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
                 },
                 getDotPainter:
-                    (spot, percent, barData, index) => FlDotCirclePainter(radius: 4, color: Colors.white, strokeWidth: 2, strokeColor: primaryColor),
+                    (spot, percent, barData, index) => FlDotCirclePainter(radius: 4, color: cardColor, strokeWidth: 2, strokeColor: primaryColor),
               ),
               belowBarData: BarAreaData(
                 show: true,
@@ -186,8 +187,7 @@ class TrendChart extends StatelessWidget {
                   return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
                 },
                 getDotPainter:
-                    (spot, percent, barData, index) =>
-                        FlDotCirclePainter(radius: 4, color: Colors.white, strokeWidth: 2, strokeColor: secondaryColor),
+                    (spot, percent, barData, index) => FlDotCirclePainter(radius: 4, color: cardColor, strokeWidth: 2, strokeColor: secondaryColor),
               ),
               belowBarData: BarAreaData(
                 show: true,
@@ -199,13 +199,13 @@ class TrendChart extends StatelessWidget {
                 ),
               ),
             ),
-            // 心率線 (僅在 showPulse 為 true 時顯示)
+            // 心率線
             if (showPulse)
               LineChartBarData(
                 spots: _getPulseSpots(sortedRecords),
                 isCurved: true,
-                color: theme.colorScheme.tertiary,
-                barWidth: 2,
+                color: tertiaryColor,
+                barWidth: 2.5,
                 isStrokeCapRound: true,
                 dotData: FlDotData(
                   show: true,
@@ -214,40 +214,46 @@ class TrendChart extends StatelessWidget {
                     return records.length <= 14 || spot.x.toInt() % interval.toInt() == 0;
                   },
                   getDotPainter:
-                      (spot, percent, barData, index) =>
-                          FlDotCirclePainter(radius: 3.5, color: Colors.white, strokeWidth: 2, strokeColor: theme.colorScheme.tertiary),
+                      (spot, percent, barData, index) => FlDotCirclePainter(radius: 4, color: cardColor, strokeWidth: 2, strokeColor: tertiaryColor),
                 ),
-                dashArray: [4, 4], // 使用虛線表示心率
+                belowBarData: BarAreaData(
+                  show: true,
+                  color: tertiaryColor.withAlpha(26),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [tertiaryColor.withAlpha(51), tertiaryColor.withAlpha(13)],
+                  ),
+                ),
               ),
           ],
+          // 標記線
           extraLinesData: ExtraLinesData(
             horizontalLines: [
-              // 正常血壓上限參考線
+              // 收縮壓正常範圍上限線
               HorizontalLine(
                 y: 120,
-                color: secondaryColor.withAlpha(128),
+                color: primaryColor.withAlpha(102),
                 strokeWidth: 1,
                 dashArray: [5, 5],
                 label: HorizontalLineLabel(
                   show: true,
-                  alignment: Alignment.topRight,
-                  padding: const EdgeInsets.only(right: 8, bottom: 2),
-                  style: TextStyle(color: secondaryColor, fontSize: 9, fontWeight: FontWeight.w500),
+                  style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 10),
                   labelResolver: (line) => context.tr('正常上限'),
+                  alignment: Alignment.topRight,
                 ),
               ),
-              // 高血壓參考線
+              // 高血壓一期線
               HorizontalLine(
                 y: 140,
-                color: errorColor.withAlpha(128),
+                color: theme.colorScheme.error.withAlpha(102),
                 strokeWidth: 1,
                 dashArray: [5, 5],
                 label: HorizontalLineLabel(
                   show: true,
-                  alignment: Alignment.topRight,
-                  padding: const EdgeInsets.only(right: 8, bottom: 2),
-                  style: TextStyle(color: errorColor, fontSize: 9, fontWeight: FontWeight.w500),
+                  style: TextStyle(color: theme.colorScheme.error, fontSize: 10),
                   labelResolver: (line) => context.tr('高血壓'),
+                  alignment: Alignment.topRight,
                 ),
               ),
             ],
@@ -257,68 +263,51 @@ class TrendChart extends StatelessWidget {
     );
   }
 
-  // 根據記錄數量計算顯示間隔
+  // 計算顯示間隔
   double _calculateInterval(int recordCount) {
     if (recordCount <= 7) {
-      return 1; // 7天內顯示所有點
+      return 1;
     } else if (recordCount <= 14) {
-      return 2; // 2週顯示每隔一天
+      return 2;
     } else {
-      return 3; // 1個月顯示每隔兩天
+      return (recordCount / 7).ceil().toDouble();
     }
   }
 
-  List<FlSpot> _getSystolicSpots(List<BloodPressureRecord> sortedRecords) {
-    final spots = <FlSpot>[];
-    for (int i = 0; i < sortedRecords.length; i++) {
-      spots.add(FlSpot(i.toDouble(), sortedRecords[i].systolic.toDouble()));
-    }
-    return spots;
+  // 獲取收縮壓點
+  List<FlSpot> _getSystolicSpots(List<BloodPressureRecord> records) {
+    return records.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), entry.value.systolic.toDouble())).toList();
   }
 
-  List<FlSpot> _getDiastolicSpots(List<BloodPressureRecord> sortedRecords) {
-    final spots = <FlSpot>[];
-    for (int i = 0; i < sortedRecords.length; i++) {
-      spots.add(FlSpot(i.toDouble(), sortedRecords[i].diastolic.toDouble()));
-    }
-    return spots;
+  // 獲取舒張壓點
+  List<FlSpot> _getDiastolicSpots(List<BloodPressureRecord> records) {
+    return records.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), entry.value.diastolic.toDouble())).toList();
   }
 
-  List<FlSpot> _getPulseSpots(List<BloodPressureRecord> sortedRecords) {
-    final spots = <FlSpot>[];
-    for (int i = 0; i < sortedRecords.length; i++) {
-      spots.add(FlSpot(i.toDouble(), sortedRecords[i].pulse.toDouble()));
-    }
-    return spots;
+  // 獲取心率點
+  List<FlSpot> _getPulseSpots(List<BloodPressureRecord> records) {
+    return records.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), entry.value.pulse.toDouble())).toList();
   }
 
+  // 獲取Y軸最小值
   double _getMinY() {
-    if (records.isEmpty) return 60;
+    if (records.isEmpty) return 40;
 
-    final minDiastolic = records.map((e) => e.diastolic).reduce((a, b) => a < b ? a : b);
-    // 如果顯示心率，考慮心率的最小值
-    if (showPulse) {
-      final minPulse = records.map((e) => e.pulse).reduce((a, b) => a < b ? a : b);
-      return (min(minDiastolic, minPulse) - 10).toDouble().clamp(40, double.infinity);
-    }
-    return (minDiastolic - 10).toDouble().clamp(60, double.infinity);
+    final minSystolic = records.map((r) => r.systolic).reduce((a, b) => a < b ? a : b).toDouble() - 10;
+    final minDiastolic = records.map((r) => r.diastolic).reduce((a, b) => a < b ? a : b).toDouble() - 10;
+    final minPulse = showPulse ? records.map((r) => r.pulse).reduce((a, b) => a < b ? a : b).toDouble() - 10 : double.infinity;
+
+    return [minSystolic, minDiastolic, minPulse, 40].reduce((a, b) => a < b ? a : b).toDouble();
   }
 
+  // 獲取Y軸最大值
   double _getMaxY() {
     if (records.isEmpty) return 180;
 
-    final maxSystolic = records.map((e) => e.systolic).reduce((a, b) => a > b ? a : b);
-    // 如果顯示心率，考慮心率的最大值
-    if (showPulse) {
-      final maxPulse = records.map((e) => e.pulse).reduce((a, b) => a > b ? a : b);
-      return (max(maxSystolic, maxPulse) + 10).toDouble().clamp(double.negativeInfinity, 200);
-    }
-    return (maxSystolic + 10).toDouble().clamp(double.negativeInfinity, 200);
+    final maxSystolic = records.map((r) => r.systolic).reduce((a, b) => a > b ? a : b).toDouble() + 10;
+    final maxDiastolic = records.map((r) => r.diastolic).reduce((a, b) => a > b ? a : b).toDouble() + 10;
+    final maxPulse = showPulse ? records.map((r) => r.pulse).reduce((a, b) => a > b ? a : b).toDouble() + 10 : 0;
+
+    return [maxSystolic, maxDiastolic, maxPulse, 180].reduce((a, b) => a > b ? a : b).toDouble();
   }
-
-  // 取最小值
-  int min(int a, int b) => a < b ? a : b;
-
-  // 取最大值
-  int max(int a, int b) => a > b ? a : b;
 }

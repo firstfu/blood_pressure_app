@@ -23,7 +23,7 @@ class LastMeasurementCard extends StatelessWidget {
     final isBPNormal = record.systolic < 120 && record.diastolic < 80;
 
     // 使用 ColorScheme 中的顏色
-    final statusColor = isBPHigh ? colorScheme.error : (isBPNormal ? colorScheme.primary : Colors.orange);
+    final statusColor = isBPHigh ? colorScheme.error : (isBPNormal ? colorScheme.primary : colorScheme.tertiary);
     final statusText = isBPHigh ? context.tr('偏高') : (isBPNormal ? context.tr('正常') : context.tr('臨界'));
 
     // 獲取心率狀態顏色
@@ -43,6 +43,7 @@ class LastMeasurementCard extends StatelessWidget {
       elevation: 1,
       shadowColor: theme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.cardColor,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -83,7 +84,7 @@ class LastMeasurementCard extends StatelessWidget {
                   record.systolic.toString(),
                   'SYS',
                   'mmHg',
-                  isBPHigh ? (record.systolic >= 140 ? colorScheme.error : Colors.orange) : theme.textTheme.titleLarge!.color!,
+                  isBPHigh ? (record.systolic >= 140 ? colorScheme.error : colorScheme.tertiary) : theme.textTheme.titleLarge!.color!,
                 ),
                 Container(height: 50, width: 1, color: theme.dividerColor),
                 _buildBPValueColumn(
@@ -91,7 +92,7 @@ class LastMeasurementCard extends StatelessWidget {
                   record.diastolic.toString(),
                   'DIA',
                   'mmHg',
-                  isBPHigh ? (record.diastolic >= 90 ? colorScheme.error : Colors.orange) : theme.textTheme.titleLarge!.color!,
+                  isBPHigh ? (record.diastolic >= 90 ? colorScheme.error : colorScheme.tertiary) : theme.textTheme.titleLarge!.color!,
                 ),
                 Container(height: 50, width: 1, color: theme.dividerColor),
                 Column(
@@ -161,7 +162,7 @@ class LastMeasurementCard extends StatelessWidget {
     IconData? valueIcon;
     if (valueColor == theme.colorScheme.error) {
       valueIcon = Icons.arrow_upward;
-    } else if (valueColor == Colors.orange) {
+    } else if (valueColor == theme.colorScheme.tertiary) {
       valueIcon = Icons.arrow_upward;
     } else if (valueColor == theme.colorScheme.primary) {
       valueIcon = Icons.check;
@@ -189,7 +190,7 @@ class LastMeasurementCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (pulse < 60) {
-      return Colors.blue; // 心率過低
+      return theme.colorScheme.secondary; // 心率過低，使用 secondary 顏色
     } else if (pulse > 100) {
       return theme.colorScheme.error; // 心率過高
     } else {
@@ -214,7 +215,7 @@ class LastMeasurementCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.cardTheme.color ?? theme.cardColor,
+        color: theme.chipTheme?.backgroundColor ?? theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: theme.dividerColor.withOpacity(0.5)),
       ),
@@ -230,6 +231,7 @@ class LastMeasurementCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: theme.dialogBackgroundColor,
           title: Text(context.tr('什麼是臨界血壓？'), style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -248,11 +250,7 @@ class LastMeasurementCard extends StatelessWidget {
               Text(context.tr('• 規律運動'), style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
             ],
           ),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(context.tr('了解了'), style: TextStyle(color: theme.primaryColor))),
-          ],
-          backgroundColor: theme.dialogBackgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.tr('了解'), style: TextStyle(color: theme.primaryColor)))],
         );
       },
     );

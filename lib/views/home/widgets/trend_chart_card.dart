@@ -42,6 +42,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       shadowColor: theme.primaryColor.withAlpha(26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.cardColor,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -90,7 +91,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
                             _showPulse = value;
                           });
                         },
-                        activeColor: theme.colorScheme.secondary,
+                        activeColor: theme.colorScheme.tertiary,
                       ),
                     ),
                   ],
@@ -100,7 +101,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
             const SizedBox(height: 8),
             Container(height: 220, padding: const EdgeInsets.only(top: 8), child: _buildChart()),
             const SizedBox(height: 16),
-            const Divider(height: 1),
+            Divider(height: 1, color: theme.dividerColor),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,7 +111,11 @@ class _TrendChartCardState extends State<TrendChartCard> {
                   onPressed: widget.onViewDetails,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Text(context.tr('查看詳情')), const SizedBox(width: 4), const Icon(Icons.arrow_forward, size: 16)],
+                    children: [
+                      Text(context.tr('查看詳情'), style: TextStyle(color: theme.primaryColor)),
+                      const SizedBox(width: 4),
+                      Icon(Icons.arrow_forward, size: 16, color: theme.primaryColor),
+                    ],
                   ),
                 ),
               ],
@@ -151,17 +156,12 @@ class _TrendChartCardState extends State<TrendChartCard> {
     final theme = Theme.of(context);
     final List<Widget> items = [];
 
-    // 定義顏色
-    final systolicColor = theme.primaryColor;
-    final diastolicColor = theme.colorScheme.secondary;
-    final pulseColor = theme.colorScheme.tertiary;
-
     // 折線圖和長條圖使用相同的圖例
     items.add(
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 12, height: 12, decoration: BoxDecoration(color: systolicColor, borderRadius: BorderRadius.circular(6))),
+          Container(width: 12, height: 12, decoration: BoxDecoration(color: theme.primaryColor, borderRadius: BorderRadius.circular(6))),
           const SizedBox(width: 4),
           Text(context.tr('收縮壓'), style: theme.textTheme.bodySmall),
         ],
@@ -172,7 +172,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 12, height: 12, decoration: BoxDecoration(color: diastolicColor, borderRadius: BorderRadius.circular(6))),
+          Container(width: 12, height: 12, decoration: BoxDecoration(color: theme.colorScheme.secondary, borderRadius: BorderRadius.circular(6))),
           const SizedBox(width: 4),
           Text(context.tr('舒張壓'), style: theme.textTheme.bodySmall),
         ],
@@ -184,7 +184,7 @@ class _TrendChartCardState extends State<TrendChartCard> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 12, height: 12, decoration: BoxDecoration(color: pulseColor, borderRadius: BorderRadius.circular(6))),
+            Container(width: 12, height: 12, decoration: BoxDecoration(color: theme.colorScheme.tertiary, borderRadius: BorderRadius.circular(6))),
             const SizedBox(width: 4),
             Text(context.tr('心率'), style: theme.textTheme.bodySmall),
           ],
