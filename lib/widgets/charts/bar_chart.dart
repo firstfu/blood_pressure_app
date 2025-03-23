@@ -66,6 +66,7 @@ class BloodPressureBarChart extends StatelessWidget {
               tooltipRoundedRadius: 8,
               tooltipBorder: BorderSide(color: theme.primaryColor.withAlpha(51), width: 1),
               tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              maxContentWidth: 160,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final record = sortedRecords[groupIndex];
                 String title;
@@ -73,24 +74,35 @@ class BloodPressureBarChart extends StatelessWidget {
                 Color color;
 
                 if (rodIndex == 0) {
-                  title = context.tr('收縮壓');
+                  title = "SYS"; // 使用縮寫替代 context.tr('收縮壓')
                   value = record.systolic;
                   color = theme.primaryColor;
                 } else if (rodIndex == 1) {
-                  title = context.tr('舒張壓');
+                  title = "DIA"; // 使用縮寫替代 context.tr('舒張壓')
                   value = record.diastolic;
                   color = theme.colorScheme.secondary;
                 } else {
-                  title = context.tr('心率');
+                  title = "PULSE"; // 使用縮寫替代 context.tr('心率')
                   value = record.pulse;
                   color = tertiaryColor;
                 }
 
                 final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                 final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
-                final unit = rodIndex == 2 ? context.tr('bpm') : context.tr('mmHg');
+                final unit = rodIndex == 2 ? "bpm" : "mmHg";
 
-                return BarTooltipItem('$title: $value $unit\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
+                // 修改顯示格式，將日期和時間分開顯示，一行顯示數值，一行顯示日期時間
+                return BarTooltipItem(
+                  '$title: $value $unit',
+                  TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+                  textAlign: TextAlign.left,
+                  children: [
+                    TextSpan(
+                      text: '\n$date $time',
+                      style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 10, fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                );
               },
             ),
             touchCallback: (FlTouchEvent event, barTouchResponse) {},

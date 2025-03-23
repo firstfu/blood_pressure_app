@@ -111,6 +111,7 @@ class TrendChart extends StatelessWidget {
               tooltipRoundedRadius: 8,
               tooltipBorder: BorderSide(color: primaryColor.withAlpha(51), width: 1),
               tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              maxContentWidth: 160,
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                 return touchedBarSpots.map((barSpot) {
                   final record = sortedRecords[barSpot.x.toInt()];
@@ -119,24 +120,34 @@ class TrendChart extends StatelessWidget {
                   Color color;
 
                   if (barSpot.barIndex == 0) {
-                    title = context.tr('收縮壓');
+                    title = "SYS";
                     value = record.systolic;
                     color = primaryColor;
                   } else if (barSpot.barIndex == 1) {
-                    title = context.tr('舒張壓');
+                    title = "DIA";
                     value = record.diastolic;
                     color = secondaryColor;
                   } else {
-                    title = context.tr('心率');
+                    title = "PULSE";
                     value = record.pulse;
                     color = pulseColor;
                   }
 
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                   final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
-                  final unit = barSpot.barIndex == 2 ? context.tr('bpm') : context.tr('mmHg');
+                  final unit = barSpot.barIndex == 2 ? "bpm" : "mmHg";
 
-                  return LineTooltipItem('$title: $value $unit\n$date $time', TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12));
+                  return LineTooltipItem(
+                    '$title: $value $unit',
+                    TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+                    textAlign: TextAlign.left,
+                    children: [
+                      TextSpan(
+                        text: '\n$date $time',
+                        style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 10, fontWeight: FontWeight.normal),
+                      ),
+                    ],
+                  );
                 }).toList();
               },
             ),
