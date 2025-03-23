@@ -11,6 +11,10 @@ import 'settings_translations.dart';
 import 'profile_translations.dart';
 import 'about_feedback_translations.dart';
 import 'lifestyle_analysis_translations.dart';
+import 'app_translations.dart';
+import 'stats_translations.dart';
+import 'privacy_translations.dart';
+import 'health_assessment_translations.dart';
 
 // 繁體中文翻譯整合
 Map<String, String> mergeZhTWTranslations() {
@@ -26,6 +30,10 @@ Map<String, String> mergeZhTWTranslations() {
   mergedZhTW.addAll(zhTWProfile);
   mergedZhTW.addAll(zhTWAboutFeedback);
   mergedZhTW.addAll(zhTWLifestyleAnalysis);
+  mergedZhTW.addAll(zhTWApp);
+  mergedZhTW.addAll(zhTWStats);
+  mergedZhTW.addAll(zhTWPrivacy);
+  mergedZhTW.addAll(zhTWHealthAssessment);
 
   return mergedZhTW;
 }
@@ -44,6 +52,10 @@ Map<String, String> mergeEnUSTranslations() {
   mergedEnUS.addAll(enUSProfile);
   mergedEnUS.addAll(enUSAboutFeedback);
   mergedEnUS.addAll(enUSLifestyleAnalysis);
+  mergedEnUS.addAll(enUSApp);
+  mergedEnUS.addAll(enUSStats);
+  mergedEnUS.addAll(enUSPrivacy);
+  mergedEnUS.addAll(enUSHealthAssessment);
 
   return mergedEnUS;
 }
