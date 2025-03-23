@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:blood_pressure_app/l10n/app_localizations_extension.dart';
+import 'package:blood_pressure_app/themes/app_theme.dart';
 
 class BloodPressurePredictionWidget extends StatefulWidget {
   final Map<String, dynamic> predictionResult;
@@ -23,18 +24,25 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDarkMode ? AppTheme.darkTextPrimaryColor : AppTheme.lightTextPrimaryColor;
+    final secondaryTextColor = isDarkMode ? AppTheme.darkTextSecondaryColor : AppTheme.lightTextSecondaryColor;
+    final dividerColor = isDarkMode ? AppTheme.darkDividerColor : AppTheme.lightDividerColor;
+    final cardColor = isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor;
+    final backgroundColor = isDarkMode ? AppTheme.darkBackgroundColor : AppTheme.lightBackgroundColor;
+
     if (widget.predictionResult['hasData'] != true) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const Icon(Icons.info_outline, size: 48, color: Colors.grey),
+              Icon(Icons.info_outline, size: 48, color: secondaryTextColor),
               const SizedBox(height: 16),
               Text(
                 widget.predictionResult['message'] ?? context.tr('無法進行血壓趨勢預測，數據不足'),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
+                style: TextStyle(color: secondaryTextColor),
               ),
             ],
           ),
@@ -51,18 +59,18 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 趨勢信息
-        _buildTrendInfo(trend),
+        _buildTrendInfo(trend, isDarkMode),
         const SizedBox(height: 24),
 
         // 預測圖表
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(context.tr('血壓趨勢預測'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(context.tr('血壓趨勢預測'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor)),
             // 心率顯示切換
             Row(
               children: [
-                Text(context.tr('顯示心率'), style: const TextStyle(fontSize: 14, color: Colors.orange)),
+                Text(context.tr('顯示心率'), style: TextStyle(fontSize: 14, color: Colors.orange)),
                 Switch(
                   value: _showPulse,
                   onChanged: (value) {
@@ -77,14 +85,14 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
           ],
         ),
         const SizedBox(height: 8),
-        SizedBox(height: 250, child: _buildPredictionChart(dailyData, predictions, riskDays)),
+        SizedBox(height: 250, child: _buildPredictionChart(dailyData, predictions, riskDays, isDarkMode)),
         const SizedBox(height: 24),
 
         // 風險日提示
         if (riskDays.isNotEmpty) ...[
-          Text(context.tr('潛在風險日'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(context.tr('潛在風險日'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor)),
           const SizedBox(height: 8),
-          ...riskDays.map((day) => _buildRiskDayItem(day)),
+          ...riskDays.map((day) => _buildRiskDayItem(day, isDarkMode)),
           const SizedBox(height: 24),
         ],
 
@@ -92,43 +100,48 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(context.tr('未來7天血壓預測'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), overflow: TextOverflow.ellipsis),
+            Text(
+              context.tr('未來7天血壓預測'),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor),
+              overflow: TextOverflow.ellipsis,
+            ),
             const SizedBox(height: 4),
             if (_showPulse) Text(context.tr('包含心率'), style: const TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 8),
-        _buildPredictionTable(predictions),
+        _buildPredictionTable(predictions, isDarkMode),
       ],
     );
   }
 
   // 構建趨勢信息
-  Widget _buildTrendInfo(Map<String, dynamic> trend) {
+  Widget _buildTrendInfo(Map<String, dynamic> trend, bool isDarkMode) {
     IconData trendIcon;
     Color trendColor;
     String trendLabel;
+    final textColor = isDarkMode ? AppTheme.darkTextPrimaryColor : AppTheme.lightTextPrimaryColor;
 
     switch (trend['type']) {
       case 'rising':
         trendIcon = Icons.trending_up;
-        trendColor = Colors.red;
+        trendColor = isDarkMode ? Colors.red.shade300 : Colors.red;
         trendLabel = context.tr('上升趨勢');
         break;
       case 'falling':
         trendIcon = Icons.trending_down;
-        trendColor = Colors.green;
+        trendColor = isDarkMode ? Colors.green.shade300 : Colors.green;
         trendLabel = context.tr('下降趨勢');
         break;
       case 'unstable':
         trendIcon = Icons.auto_graph;
-        trendColor = Colors.orange;
+        trendColor = isDarkMode ? Colors.orange.shade300 : Colors.orange;
         trendLabel = context.tr('不穩定趨勢');
         break;
       case 'stable':
       default:
         trendIcon = Icons.trending_flat;
-        trendColor = Colors.blue;
+        trendColor = isDarkMode ? AppTheme.darkPrimaryColor : Colors.blue;
         trendLabel = context.tr('穩定趨勢');
         break;
     }
@@ -136,9 +149,9 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: trendColor.withAlpha(26),
+        color: trendColor.withAlpha(isDarkMode ? 51 : 26),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: trendColor.withAlpha(77)),
+        border: Border.all(color: trendColor.withAlpha(isDarkMode ? 102 : 77)),
       ),
       child: Row(
         children: [
@@ -150,7 +163,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
               children: [
                 Text(trendLabel, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: trendColor)),
                 const SizedBox(height: 4),
-                Text(trend['description'] ?? context.tr('您的血壓在近期顯示為穩定狀態'), style: const TextStyle(fontSize: 14)),
+                Text(trend['description'] ?? context.tr('您的血壓在近期顯示為穩定狀態'), style: TextStyle(fontSize: 14, color: textColor)),
               ],
             ),
           ),
@@ -160,9 +173,18 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
   }
 
   // 構建預測圖表
-  Widget _buildPredictionChart(List<dynamic> dailyData, List<dynamic> predictions, List<dynamic> riskDays) {
+  Widget _buildPredictionChart(List<dynamic> dailyData, List<dynamic> predictions, List<dynamic> riskDays, bool isDarkMode) {
     // 獲取當前語系
     final isChineseLocale = _isChineseLocale();
+
+    // 定義暗黑模式下的顏色
+    final systolicColor = isDarkMode ? Colors.blue.shade300 : Colors.blue;
+    final diastolicColor = isDarkMode ? Colors.green.shade300 : Colors.green;
+    final pulseColor = isDarkMode ? Colors.orange.shade300 : Colors.orange;
+    final gridColor = isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300;
+    final textColor = isDarkMode ? AppTheme.darkTextSecondaryColor : Colors.grey;
+    final borderColor = isDarkMode ? AppTheme.darkDividerColor : Colors.grey.shade300;
+    final tooltipBgColor = isDarkMode ? AppTheme.darkCardColor.withAlpha(230) : Colors.white.withAlpha(204);
 
     // 合併歷史數據和預測數據
     final allData = [...dailyData, ...predictions];
@@ -227,7 +249,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
       LineChartBarData(
         spots: systolicSpots,
         isCurved: true,
-        color: Colors.blue,
+        color: systolicColor,
         barWidth: 3,
         isStrokeCapRound: true,
         dotData: const FlDotData(show: true),
@@ -237,7 +259,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
       LineChartBarData(
         spots: diastolicSpots,
         isCurved: true,
-        color: Colors.green,
+        color: diastolicColor,
         barWidth: 3,
         isStrokeCapRound: true,
         dotData: const FlDotData(show: true),
@@ -247,7 +269,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
       LineChartBarData(
         spots: systolicPredictionSpots,
         isCurved: true,
-        color: Colors.blue.shade300,
+        color: isDarkMode ? systolicColor.withAlpha(180) : Colors.blue.shade300,
         barWidth: 3,
         isStrokeCapRound: true,
         dotData: const FlDotData(show: true),
@@ -258,7 +280,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
       LineChartBarData(
         spots: diastolicPredictionSpots,
         isCurved: true,
-        color: Colors.green.shade300,
+        color: isDarkMode ? diastolicColor.withAlpha(180) : Colors.green.shade300,
         barWidth: 3,
         isStrokeCapRound: true,
         dotData: const FlDotData(show: true),
@@ -274,7 +296,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
         LineChartBarData(
           spots: pulseSpots,
           isCurved: true,
-          color: Colors.orange,
+          color: pulseColor,
           barWidth: 3,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: true),
@@ -287,7 +309,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
         LineChartBarData(
           spots: pulsePredictionSpots,
           isCurved: true,
-          color: Colors.orange.shade300,
+          color: isDarkMode ? pulseColor.withAlpha(180) : Colors.orange.shade300,
           barWidth: 3,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: true),
@@ -299,7 +321,14 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true, drawVerticalLine: true, horizontalInterval: 20, verticalInterval: _calculateXAxisInterval(totalDays)),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: true,
+          horizontalInterval: 20,
+          verticalInterval: _calculateXAxisInterval(totalDays),
+          getDrawingHorizontalLine: (value) => FlLine(color: gridColor, strokeWidth: 0.5),
+          getDrawingVerticalLine: (value) => FlLine(color: gridColor, strokeWidth: 0.5),
+        ),
         titlesData: FlTitlesData(
           show: true,
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -316,7 +345,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     isChineseLocale ? DateFormat('MM-dd').format(date) : DateFormat('MMM d').format(date),
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10, color: textColor),
                   ),
                 );
               },
@@ -336,7 +365,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
                       value.toInt().toString(),
                       style: TextStyle(
                         fontSize: 10,
-                        color: value >= 60 && value <= 100 ? Colors.orange : Colors.grey,
+                        color: value >= 60 && value <= 100 ? pulseColor : textColor,
                         fontWeight: value >= 60 && value <= 100 ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
@@ -344,20 +373,20 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
                 }
                 return Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: Text(value.toInt().toString(), style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                  child: Text(value.toInt().toString(), style: TextStyle(fontSize: 10, color: textColor)),
                 );
               },
             ),
           ),
         ),
-        borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.shade300)),
+        borderData: FlBorderData(show: true, border: Border.all(color: borderColor)),
         minX: 0,
         maxX: totalDays.toDouble() - 1,
         minY: 40, // 降低最小值以適應心率數據
         maxY: 180,
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
-            tooltipBgColor: Colors.white.withAlpha(204),
+            tooltipBgColor: tooltipBgColor,
             getTooltipItems: (touchedSpots) {
               // 獲取當前語系
               final isChineseLocale = _isChineseLocale();
@@ -373,13 +402,13 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
                 if (spot.barIndex == 0) {
                   title = context.tr('收縮壓');
-                  color = isHistory ? Colors.blue : Colors.blue.shade300;
+                  color = isHistory ? systolicColor : (isDarkMode ? systolicColor.withAlpha(180) : Colors.blue.shade300);
                 } else if (spot.barIndex == 1) {
                   title = context.tr('舒張壓');
-                  color = isHistory ? Colors.green : Colors.green.shade300;
+                  color = isHistory ? diastolicColor : (isDarkMode ? diastolicColor.withAlpha(180) : Colors.green.shade300);
                 } else {
                   title = context.tr('心率');
-                  color = isHistory ? Colors.orange : Colors.orange.shade300;
+                  color = isHistory ? pulseColor : (isDarkMode ? pulseColor.withAlpha(180) : Colors.orange.shade300);
                   unit = 'bpm';
                 }
 
@@ -409,21 +438,22 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
   }
 
   // 構建風險日項目
-  Widget _buildRiskDayItem(Map<String, dynamic> riskDay) {
+  Widget _buildRiskDayItem(Map<String, dynamic> riskDay, bool isDarkMode) {
     final date = riskDay['date'] as DateTime;
     final systolic = riskDay['systolic'] as int;
     final diastolic = riskDay['diastolic'] as int;
     final pulse = riskDay['pulse'] as int?;
     final riskLevel = riskDay['riskLevel'] as String;
+    final textColor = isDarkMode ? AppTheme.darkTextPrimaryColor : AppTheme.lightTextPrimaryColor;
 
     Color riskColor;
     String riskText;
 
     if (riskLevel == 'high') {
-      riskColor = Colors.red;
+      riskColor = isDarkMode ? Colors.red.shade300 : Colors.red;
       riskText = context.tr('高風險');
     } else {
-      riskColor = Colors.orange;
+      riskColor = isDarkMode ? Colors.orange.shade300 : Colors.orange;
       riskText = context.tr('風險升高');
     }
 
@@ -432,9 +462,9 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: riskColor.withAlpha(26),
+          color: riskColor.withAlpha(isDarkMode ? 51 : 26),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: riskColor.withAlpha(77)),
+          border: Border.all(color: riskColor.withAlpha(isDarkMode ? 102 : 77)),
         ),
         child: Row(
           children: [
@@ -444,7 +474,7 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
               flex: 2,
               child: Text(
                 DateFormat('yyyy-MM-dd').format(date),
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -471,12 +501,20 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
   }
 
   // 構建預測數據表格
-  Widget _buildPredictionTable(List<dynamic> predictions) {
+  Widget _buildPredictionTable(List<dynamic> predictions, bool isDarkMode) {
     // 始終顯示心率列
     final hasPulseData = true;
 
     // 檢查當前語系
     final isChineseLocale = _isChineseLocale();
+
+    // 定義暗黑模式的表格顏色
+    final borderColor = isDarkMode ? AppTheme.darkDividerColor : Colors.grey.shade300;
+    final headerBgColor = isDarkMode ? AppTheme.darkCardColor.withAlpha(200) : Colors.grey.shade100;
+    final textColor = isDarkMode ? AppTheme.darkTextPrimaryColor : AppTheme.lightTextPrimaryColor;
+    final riskColor = isDarkMode ? Colors.red.shade300 : Colors.red;
+    final headerTextColor = isDarkMode ? AppTheme.darkTextPrimaryColor : AppTheme.lightTextPrimaryColor;
+    final pulseColor = isDarkMode ? Colors.orange.shade300 : Colors.orange;
 
     // 確保所有預測都有心率數據
     final processedPredictions =
@@ -494,32 +532,31 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
         }).toList();
 
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(border: Border.all(color: borderColor), borderRadius: BorderRadius.circular(8)),
       child: Column(
         children: [
           // 表頭
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: headerBgColor,
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
             ),
             child: Row(
               children: [
                 Expanded(
                   flex: isChineseLocale ? 2 : 3, // 英文語系時日期列更寬
-                  child: Text(context.tr('日期'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(context.tr('日期'), style: TextStyle(fontWeight: FontWeight.bold, color: headerTextColor)),
                 ),
                 Expanded(
                   flex: isChineseLocale ? 1 : 2, // 英文語系時收縮壓列更寬
-                  child: Text(context.tr('收縮壓'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(context.tr('收縮壓'), style: TextStyle(fontWeight: FontWeight.bold, color: headerTextColor)),
                 ),
                 Expanded(
                   flex: isChineseLocale ? 1 : 2, // 英文語系時舒張壓列更寬
-                  child: Text(context.tr('舒張壓'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(context.tr('舒張壓'), style: TextStyle(fontWeight: FontWeight.bold, color: headerTextColor)),
                 ),
-                if (hasPulseData)
-                  Expanded(flex: 1, child: Text(context.tr('心率'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
+                if (hasPulseData) Expanded(flex: 1, child: Text(context.tr('心率'), style: TextStyle(fontWeight: FontWeight.bold, color: pulseColor))),
               ],
             ),
           ),
@@ -532,30 +569,30 @@ class _BloodPressurePredictionWidgetState extends State<BloodPressurePredictionW
 
             // 判斷是否為風險日
             bool isRiskDay = systolic >= 130 || diastolic >= 85;
-            Color textColor = isRiskDay ? Colors.red : Colors.black;
+            Color valueTextColor = isRiskDay ? riskColor : textColor;
 
             return Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade300))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: borderColor))),
               child: Row(
                 children: [
                   Expanded(
                     flex: isChineseLocale ? 2 : 3, // 英文語系時日期列更寬
                     child: Text(
                       isChineseLocale ? DateFormat('yyyy-MM-dd').format(date) : DateFormat('MMM d, yyyy').format(date),
+                      style: TextStyle(color: textColor),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Expanded(
                     flex: isChineseLocale ? 1 : 2, // 英文語系時收縮壓列更寬
-                    child: Text('$systolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                    child: Text('$systolic', style: TextStyle(fontWeight: FontWeight.bold, color: valueTextColor)),
                   ),
                   Expanded(
                     flex: isChineseLocale ? 1 : 2, // 英文語系時舒張壓列更寬
-                    child: Text('$diastolic', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                    child: Text('$diastolic', style: TextStyle(fontWeight: FontWeight.bold, color: valueTextColor)),
                   ),
-                  if (hasPulseData)
-                    Expanded(flex: 1, child: Text('$pulse', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
+                  if (hasPulseData) Expanded(flex: 1, child: Text('$pulse', style: TextStyle(fontWeight: FontWeight.bold, color: pulseColor))),
                 ],
               ),
             );
