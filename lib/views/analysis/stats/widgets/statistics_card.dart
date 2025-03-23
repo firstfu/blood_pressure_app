@@ -30,7 +30,7 @@ class StatisticsCard extends StatelessWidget {
         shadowColor: theme.primaryColor.withAlpha(100),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: isDarkMode ? BorderSide(color: theme.dividerColor, width: 1) : BorderSide.none,
+          side: isDarkMode ? BorderSide(color: Colors.white.withOpacity(0.2), width: 1) : BorderSide.none,
         ),
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -67,7 +67,7 @@ class StatisticsCard extends StatelessWidget {
       shadowColor: theme.primaryColor.withAlpha(100),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: isDarkMode ? BorderSide(color: theme.dividerColor, width: 1) : BorderSide.none,
+        side: isDarkMode ? BorderSide(color: Colors.white.withOpacity(0.2), width: 1) : BorderSide.none,
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -231,7 +231,7 @@ class StatisticsCard extends StatelessWidget {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), spreadRadius: 1, blurRadius: 3, offset: const Offset(0, 1))],
-        border: isDarkMode ? Border.all(color: theme.dividerColor.withOpacity(0.5), width: 0.5) : null,
+        border: isDarkMode ? Border.all(color: Colors.white.withOpacity(0.2), width: 1.0) : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

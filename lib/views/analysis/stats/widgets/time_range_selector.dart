@@ -26,7 +26,7 @@ class TimeRangeSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
-        border: isDarkMode ? Border(bottom: BorderSide(color: theme.dividerColor, width: 0.5)) : null,
+        border: isDarkMode ? Border(bottom: BorderSide(color: Colors.white.withOpacity(0.15), width: 0.5)) : null,
       ),
       child: Row(
         children: [
@@ -61,10 +61,7 @@ class TimeRangeSelector extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? theme.primaryColor : theme.cardColor,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isSelected ? theme.primaryColor : (isDarkMode ? theme.dividerColor.withOpacity(0.8) : theme.dividerColor),
-            width: 1.5,
-          ),
+          border: Border.all(color: isSelected ? theme.primaryColor : (isDarkMode ? Colors.white.withOpacity(0.2) : theme.dividerColor), width: 1.5),
           boxShadow: isSelected ? [BoxShadow(color: theme.primaryColor.withAlpha(77), blurRadius: 8, offset: const Offset(0, 2))] : null,
         ),
         child: Text(
