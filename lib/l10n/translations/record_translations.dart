@@ -9,6 +9,10 @@ const Map<String, String> zhTWRecord = {
   '收縮壓': '收縮壓',
   '舒張壓': '舒張壓',
   '心率': '心率',
+  // 縮寫標籤
+  'SYS': '收縮壓',
+  'DIA': '舒張壓',
+  'PULSE': '心率',
   '新增記錄': '新增記錄',
   '編輯記錄': '編輯記錄',
   '刪除記錄': '刪除記錄',
@@ -120,6 +124,10 @@ const Map<String, String> enUSRecord = {
   '收縮壓': 'Systolic',
   '舒張壓': 'Diastolic',
   '心率': 'Pulse',
+  // 縮寫標籤
+  'SYS': 'SYS',
+  'DIA': 'DIA',
+  'PULSE': 'PULSE',
   '新增記錄': 'Add Record',
   '編輯記錄': 'Edit Record',
   '刪除記錄': 'Delete Record',
