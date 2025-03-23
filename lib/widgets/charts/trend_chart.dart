@@ -120,22 +120,22 @@ class TrendChart extends StatelessWidget {
                   Color color;
 
                   if (barSpot.barIndex == 0) {
-                    title = "SYS";
+                    title = context.tr("SYS");
                     value = record.systolic;
                     color = primaryColor;
                   } else if (barSpot.barIndex == 1) {
-                    title = "DIA";
+                    title = context.tr("DIA");
                     value = record.diastolic;
                     color = secondaryColor;
                   } else {
-                    title = "PULSE";
+                    title = context.tr("PULSE");
                     value = record.pulse;
                     color = pulseColor;
                   }
 
                   final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                   final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
-                  final unit = barSpot.barIndex == 2 ? "bpm" : "mmHg";
+                  final unit = barSpot.barIndex == 2 ? context.tr("bpm") : context.tr("mmHg");
 
                   return LineTooltipItem(
                     '$title: $value $unit',

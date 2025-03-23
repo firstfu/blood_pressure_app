@@ -74,22 +74,22 @@ class BloodPressureBarChart extends StatelessWidget {
                 Color color;
 
                 if (rodIndex == 0) {
-                  title = "SYS"; // 使用縮寫替代 context.tr('收縮壓')
+                  title = context.tr("SYS"); // 使用語系翻譯
                   value = record.systolic;
                   color = theme.primaryColor;
                 } else if (rodIndex == 1) {
-                  title = "DIA"; // 使用縮寫替代 context.tr('舒張壓')
+                  title = context.tr("DIA"); // 使用語系翻譯
                   value = record.diastolic;
                   color = theme.colorScheme.secondary;
                 } else {
-                  title = "PULSE"; // 使用縮寫替代 context.tr('心率')
+                  title = context.tr("PULSE"); // 使用語系翻譯
                   value = record.pulse;
                   color = tertiaryColor;
                 }
 
                 final date = DateTimeUtils.formatDateMMDD(record.measureTime);
                 final time = DateTimeUtils.formatTimeHHMM(record.measureTime);
-                final unit = rodIndex == 2 ? "bpm" : "mmHg";
+                final unit = rodIndex == 2 ? context.tr("bpm") : context.tr("mmHg");
 
                 // 修改顯示格式，將日期和時間分開顯示，一行顯示數值，一行顯示日期時間
                 return BarTooltipItem(
