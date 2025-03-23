@@ -42,12 +42,12 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
 
   // 獲取背景色
   Color getBackgroundColor(BuildContext context, {double opacity = 0.1}) {
-    return isDarkMode(context) ? Colors.white.withOpacity(opacity) : Colors.grey.shade100;
+    return isDarkMode(context) ? Colors.white.withAlpha(26) : Colors.grey.shade100;
   }
 
   // 獲取邊框色
   Color getBorderColor(BuildContext context, {double opacity = 0.3}) {
-    return isDarkMode(context) ? Colors.white.withOpacity(opacity) : Colors.grey.shade300;
+    return isDarkMode(context) ? Colors.white.withAlpha(77) : Colors.grey.shade300;
   }
 
   // 獲取主要文字顏色
@@ -90,7 +90,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     final Color primaryColor = Theme.of(context).primaryColor;
     final bool darkMode = isDarkMode(context);
     final Color selectedTextColor = darkMode ? Colors.white : Colors.blue.shade800;
-    final Color selectedBgColor = darkMode ? primaryColor.withOpacity(0.3) : Colors.blue.shade100;
+    final Color selectedBgColor = darkMode ? primaryColor.withAlpha(77) : Colors.blue.shade100;
     final Color unselectedBgColor = darkMode ? Colors.grey.shade800 : Colors.white;
 
     return Container(
@@ -133,7 +133,7 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
                             isSelected
                                 ? [
                                   BoxShadow(
-                                    color: darkMode ? primaryColor.withOpacity(0.3) : Colors.blue.shade200.withAlpha(128),
+                                    color: darkMode ? primaryColor.withAlpha(77) : Colors.blue.shade200.withAlpha(128),
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
                                   ),
@@ -364,9 +364,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: darkMode ? warningColor.withOpacity(0.15) : warningColor.withAlpha(26),
+          color: darkMode ? warningColor.withAlpha(38) : warningColor.withAlpha(26),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: darkMode ? warningColor.withOpacity(0.3) : warningColor.withAlpha(77)),
+          border: Border.all(color: darkMode ? warningColor.withAlpha(77) : warningColor.withAlpha(77)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -503,9 +503,9 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: darkMode ? color.withOpacity(0.2) : color.withAlpha(26),
+        color: darkMode ? color.withAlpha(51) : color.withAlpha(26),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: darkMode ? color.withOpacity(0.3) : color.withAlpha(77)),
+        border: Border.all(color: darkMode ? color.withAlpha(77) : color.withAlpha(77)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -559,8 +559,8 @@ class _LifestyleCorrelationWidgetState extends State<LifestyleCorrelationWidget>
   Widget _buildRecommendationItem(String recommendation) {
     final bool darkMode = isDarkMode(context);
     final Color textColor = getTextColor(context);
-    final Color bgColor = darkMode ? Colors.blue.withOpacity(0.2) : Colors.blue.withAlpha(13);
-    final Color borderColor = darkMode ? Colors.blue.withOpacity(0.3) : Colors.blue.withAlpha(51);
+    final Color bgColor = darkMode ? Colors.blue.withAlpha(51) : Colors.blue.withAlpha(13);
+    final Color borderColor = darkMode ? Colors.blue.withAlpha(77) : Colors.blue.withAlpha(51);
     final Color iconColor = darkMode ? Colors.lightBlue : Colors.blue;
 
     return Padding(
