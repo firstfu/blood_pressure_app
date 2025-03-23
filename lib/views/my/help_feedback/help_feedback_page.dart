@@ -83,11 +83,11 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           child: Column(
             children: [
               Container(
-                color: theme.cardColor,
+                color: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.primaryColor,
                 child: TabBar(
-                  labelColor: theme.primaryColor,
-                  unselectedLabelColor: theme.textTheme.bodySmall?.color,
-                  indicatorColor: theme.primaryColor,
+                  labelColor: theme.brightness == Brightness.dark ? theme.primaryColor : Colors.white,
+                  unselectedLabelColor: theme.brightness == Brightness.dark ? Colors.white70 : Colors.white.withOpacity(0.7),
+                  indicatorColor: Colors.white,
                   indicatorWeight: 3,
                   labelStyle: TypographyTheme.secondary.copyWith(fontWeight: FontWeight.w500),
                   unselectedLabelStyle: TypographyTheme.secondary,
