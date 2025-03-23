@@ -40,7 +40,7 @@ class DeepAnalysisWidget extends StatelessWidget {
                   children: [
                     const Icon(Icons.medication, color: Colors.blue),
                     const SizedBox(width: 8),
-                    Text(context.tr('服藥效果分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Expanded(child: Text(context.tr('服藥效果分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -63,7 +63,7 @@ class DeepAnalysisWidget extends StatelessWidget {
                   children: [
                     const Icon(Icons.compare_arrows, color: Colors.green),
                     const SizedBox(width: 8),
-                    Text(context.tr('測量條件分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Expanded(child: Text(context.tr('測量條件分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -86,7 +86,7 @@ class DeepAnalysisWidget extends StatelessWidget {
                   children: [
                     const Icon(Icons.wb_sunny, color: Colors.orange),
                     const SizedBox(width: 8),
-                    Text(context.tr('晨峰血壓分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Expanded(child: Text(context.tr('晨峰血壓分析'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                   ],
                 ),
                 const SizedBox(height: 16),
