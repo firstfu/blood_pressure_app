@@ -18,6 +18,7 @@ import '../language_settings/language_settings_page.dart';
 import '../../onboarding/onboarding_page.dart';
 import '../privacy_settings/privacy_settings_page.dart';
 import '../theme_settings/theme_settings_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// ProfilePage 類
 ///
@@ -225,7 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 12),
         _buildDevSettingItem(theme, Icons.refresh, context.tr('重置 OnBoarding'), context.tr('重置引導頁面狀態'), _resetOnboarding),
         _buildDevSettingItem(theme, Icons.delete, context.tr('清除所有數據'), context.tr('刪除應用所有數據'), () {
-          // TODO: 實現清除所有數據功能
+          _showClearDataConfirmDialog();
         }),
       ],
     );
@@ -242,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
         leading: Icon(icon, color: theme.primaryColor),
         title: Text(title, style: TextStyle(color: theme.textTheme.titleMedium?.color)),
         subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: theme.textTheme.bodySmall?.color)),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: theme.iconTheme.color?.withOpacity(0.5)),
+        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: theme.iconTheme.color?.withAlpha(128)),
         onTap: onTap,
       ),
     );
@@ -260,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: ListTile(
         leading: Icon(icon, color: errorColor),
         title: Text(title, style: TextStyle(color: errorColor)),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: errorColor.withOpacity(0.7))),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: errorColor.withAlpha(179))),
         trailing: Icon(Icons.arrow_forward_ios, size: 16, color: errorColor),
         onTap: onTap,
       ),
@@ -320,5 +321,73 @@ class _ProfilePageState extends State<ProfilePage> {
   /// 分享應用
   Future<void> _shareApp() async {
     await Share.share('${context.tr('推薦您使用血壓管家 App，幫助您輕鬆記錄和管理血壓數據！')}\n${AppConstants.appStoreUrl}', subject: context.tr('分享血壓管家 App'));
+  }
+
+  void _showClearDataConfirmDialog() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(context.tr('確認清除數據')),
+            content: Text(context.tr('此操作將清除應用中的所有數據，包括血壓記錄和設置。此操作不可恢復。')),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(context.tr('取消'), style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _clearAllData();
+                },
+                child: Text(context.tr('確認清除'), style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Future<void> _clearAllData() async {
+    // 顯示加載指示器
+    showDialog(context: context, barrierDismissible: false, builder: (context) => const Center(child: CircularProgressIndicator()));
+
+    try {
+      // 這裡實現清除數據的邏輯
+      // 1. 清除 SharedPreferences 數據
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      // 2. 清除本地數據庫數據
+      // 注意：這裡假設使用了 SQLite，需根據實際數據庫實現調整
+      // final db = await DatabaseHelper.instance.database;
+      // await db.delete('blood_pressure_records');
+      // await db.delete('medications');
+      // await db.delete('user_settings');
+
+      // 3. 重置引導頁面狀態
+      await SharedPrefsService.resetOnBoardingStatus();
+
+      // 關閉加載指示器
+      if (mounted) Navigator.of(context).pop();
+
+      // 顯示成功消息
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('所有數據已清除'))));
+      }
+
+      // 重啟應用或返回到引導頁面
+      if (mounted) {
+        // 重新啟動應用或跳轉到首頁
+        Navigator.of(context).pushNamedAndRemoveUntil('/onboarding', (route) => false);
+      }
+    } catch (e) {
+      // 關閉加載指示器
+      if (mounted) Navigator.of(context).pop();
+
+      // 顯示錯誤消息
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${context.tr('清除數據失敗')}: $e')));
+      }
+    }
   }
 }

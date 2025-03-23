@@ -28,9 +28,9 @@ class BloodPressureBarChart extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bar_chart, size: 48, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.5)),
+            Icon(Icons.bar_chart, size: 48, color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
             const SizedBox(height: 16),
-            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7))),
+            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodyMedium?.color?.withAlpha(179))),
           ],
         ),
       );
@@ -145,7 +145,7 @@ class BloodPressureBarChart extends StatelessWidget {
             getDrawingHorizontalLine: (value) {
               // 只在特定值處顯示網格線
               if (value % 20 == 0 && value > 0) {
-                return FlLine(color: theme.dividerColor.withOpacity(0.5), strokeWidth: 0.5);
+                return FlLine(color: theme.dividerColor.withAlpha(128), strokeWidth: 0.5);
               }
               return FlLine(color: Colors.transparent);
             },

@@ -62,7 +62,7 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
       shadowColor: theme.primaryColor.withAlpha(77),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: isDarkMode ? BorderSide(color: Colors.white.withOpacity(0.2), width: 1) : BorderSide.none,
+        side: isDarkMode ? BorderSide(color: Colors.white.withAlpha(51), width: 1) : BorderSide.none,
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -170,7 +170,7 @@ class _StatsTrendTabState extends State<StatsTrendTab> {
       shadowColor: theme.primaryColor.withAlpha(77),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: isDarkMode ? BorderSide(color: Colors.white.withOpacity(0.2), width: 1) : BorderSide.none,
+        side: isDarkMode ? BorderSide(color: Colors.white.withAlpha(51), width: 1) : BorderSide.none,
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),

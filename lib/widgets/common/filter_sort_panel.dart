@@ -79,8 +79,9 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
 
     // 獲取螢幕尺寸和安全區域
     final mediaQuery = MediaQuery.of(context);
-    final screenHeight = mediaQuery.size.height;
-    final viewInsets = mediaQuery.viewInsets.bottom;
+    // 移除未使用的變數
+    // final screenHeight = mediaQuery.size.height;
+    // final viewInsets = mediaQuery.viewInsets.bottom;
 
     // 計算合適的面板高度，限制最大高度，以避免溢出
     final initialChildSize = Platform.isAndroid ? 0.5 : 0.6;
@@ -112,7 +113,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: isDarkMode ? theme.colorScheme.onSurfaceVariant.withOpacity(0.5) : theme.dividerColor,
+                    color: isDarkMode ? theme.colorScheme.onSurfaceVariant.withAlpha(128) : theme.dividerColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -127,7 +128,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                     IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
-                      color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+                      color: theme.textTheme.bodyMedium?.color?.withAlpha(153),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -141,7 +142,7 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
                   controller: _tabController,
                   indicatorColor: theme.primaryColor,
                   labelColor: theme.primaryColor,
-                  unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+                  unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withAlpha(153),
                   indicatorWeight: 3,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   tabs: [Tab(text: context.tr('篩選')), Tab(text: context.tr('排序'))],

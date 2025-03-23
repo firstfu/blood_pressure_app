@@ -27,9 +27,9 @@ class TrendChart extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timeline_outlined, size: 48, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.5)),
+            Icon(Icons.timeline_outlined, size: 48, color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
             const SizedBox(height: 16),
-            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7))),
+            Text(context.tr('暫無數據'), style: theme.textTheme.bodyLarge?.copyWith(color: theme.textTheme.bodyMedium?.color?.withAlpha(179))),
           ],
         ),
       );
@@ -57,10 +57,10 @@ class TrendChart extends StatelessWidget {
             horizontalInterval: 20,
             verticalInterval: interval,
             getDrawingHorizontalLine: (value) {
-              return FlLine(color: dividerColor.withOpacity(0.5), strokeWidth: 1);
+              return FlLine(color: dividerColor.withAlpha(128), strokeWidth: 1);
             },
             getDrawingVerticalLine: (value) {
-              return FlLine(color: dividerColor.withOpacity(0.5), strokeWidth: 1);
+              return FlLine(color: dividerColor.withAlpha(128), strokeWidth: 1);
             },
           ),
           titlesData: FlTitlesData(

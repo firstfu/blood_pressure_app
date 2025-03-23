@@ -62,7 +62,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
       return Center(
         child: Text(
           context.tr('暫無數據'),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.bodyMedium?.color?.withAlpha(179)),
         ),
       );
     }
@@ -158,7 +158,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: isDarkMode ? Colors.white.withOpacity(0.2) : statusColor.withAlpha(77), width: isDarkMode ? 1.0 : 1.0),
+                    border: Border.all(color: isDarkMode ? Colors.white.withAlpha(51) : statusColor.withAlpha(77), width: isDarkMode ? 1.0 : 1.0),
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -218,7 +218,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
-                                color: isDarkMode ? theme.cardColor.withOpacity(0.3) : Colors.grey[100],
+                                color: isDarkMode ? theme.cardColor.withAlpha(77) : Colors.grey[100],
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(

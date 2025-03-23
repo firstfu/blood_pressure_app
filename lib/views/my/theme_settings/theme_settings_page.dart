@@ -19,16 +19,6 @@ class ThemeSettingsPage extends StatefulWidget {
 }
 
 class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
-  // 可選的主題顏色
-  final List<Map<String, dynamic>> _themeColors = [
-    {'name': 'blue', 'color': const Color(0xFF1976D2), 'displayName': '醫療藍'},
-    {'name': 'green', 'color': const Color(0xFF2E7D32), 'displayName': '健康綠'},
-    {'name': 'purple', 'color': const Color(0xFF6A1B9A), 'displayName': '靜謐紫'},
-    {'name': 'red', 'color': const Color(0xFFC62828), 'displayName': '活力紅'},
-    {'name': 'orange', 'color': const Color(0xFFEF6C00), 'displayName': '溫暖橙'},
-    {'name': 'teal', 'color': const Color(0xFF00796B), 'displayName': '清新青'},
-  ];
-
   @override
   Widget build(BuildContext context) {
     // 獲取主題提供者
