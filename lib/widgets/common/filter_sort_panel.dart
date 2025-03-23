@@ -81,132 +81,142 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     final screenHeight = mediaQuery.size.height;
     final viewInsets = mediaQuery.viewInsets.bottom;
 
-    // 計算合適的面板高度
-    // 在 Android 上使用較小的比例，避免面板過大
-    final heightFactor = Platform.isAndroid ? 0.6 : 0.7;
-    final maxPanelHeight = (screenHeight - viewInsets) * heightFactor;
+    // 計算合適的面板高度，限制最大高度，以避免溢出
+    final initialChildSize = Platform.isAndroid ? 0.5 : 0.6;
+    final minChildSize = 0.3;
+    final maxChildSize = 0.85;
 
     // 根據平台調整底部間距
-    // 在 Android 上添加少量間距，避免按鈕與底部太近
     final buttonBottomPadding = Platform.isAndroid ? 8.0 : 16.0;
 
-    return Container(
-      constraints: BoxConstraints(maxHeight: maxPanelHeight),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(26), // 0.1 * 255 ≈ 26
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+    return DraggableScrollableSheet(
+      initialChildSize: initialChildSize,
+      minChildSize: minChildSize,
+      maxChildSize: maxChildSize,
+      expand: false,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+            boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 10, offset: const Offset(0, -2))],
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // 頂部標題和關閉按鈕
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(context.tr('篩選與排序'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 拖動指示器
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(color: theme.dividerColor, borderRadius: BorderRadius.circular(2)),
                 ),
-              ],
-            ),
-          ),
-          // 標籤頁
-          Container(
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: theme.dividerColor))),
-            child: TabBar(
-              controller: _tabController,
-              indicatorColor: theme.primaryColor,
-              labelColor: theme.primaryColor,
-              unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
-              indicatorWeight: 3,
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              tabs: [Tab(text: context.tr('篩選')), Tab(text: context.tr('排序'))],
-            ),
-          ),
-          // 標籤頁內容
-          Expanded(child: TabBarView(controller: _tabController, children: [_buildFilterTab(), _buildSortTab()])),
-          // 底部按鈕
-          Container(
-            padding: EdgeInsets.fromLTRB(16, 8, 16, buttonBottomPadding),
-            decoration: BoxDecoration(
-              color: theme.cardColor,
-              border: Border(top: BorderSide(color: theme.dividerColor)),
-              boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 4, offset: const Offset(0, -1))],
-            ),
-            child: SafeArea(
-              top: false,
-              left: false,
-              right: false,
-              // 確保按鈕不會被系統導航欄遮擋
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          _systolicRange = const RangeValues(70, 200);
-                          _diastolicRange = const RangeValues(40, 130);
-                          _pulseRange = const RangeValues(40, 160);
-                          _sortField = SortField.time;
-                          _sortOrder = SortOrder.descending;
-                        });
-                        widget.onReset();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.primaryColor,
-                        side: BorderSide(color: theme.primaryColor),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: Text(context.tr('重置')),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        widget.onSystolicRangeChanged(_systolicRange);
-                        widget.onDiastolicRangeChanged(_diastolicRange);
-                        widget.onPulseRangeChanged(_pulseRange);
-                        widget.onSortFieldChanged(_sortField);
-                        widget.onSortOrderChanged(_sortOrder);
-                        widget.onApply();
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.primaryColor,
-                        foregroundColor: theme.colorScheme.onPrimary,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: Text(context.tr('應用')),
-                    ),
-                  ),
-                ],
               ),
-            ),
+              // 頂部標題和關閉按鈕
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(context.tr('篩選與排序'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color)),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                      color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ),
+              // 標籤頁
+              Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: theme.dividerColor))),
+                child: TabBar(
+                  controller: _tabController,
+                  indicatorColor: theme.primaryColor,
+                  labelColor: theme.primaryColor,
+                  unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+                  indicatorWeight: 3,
+                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  tabs: [Tab(text: context.tr('篩選')), Tab(text: context.tr('排序'))],
+                ),
+              ),
+              // 標籤頁內容
+              Expanded(child: TabBarView(controller: _tabController, children: [_buildFilterTab(scrollController), _buildSortTab(scrollController)])),
+              // 底部按鈕
+              Container(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, buttonBottomPadding),
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  border: Border(top: BorderSide(color: theme.dividerColor)),
+                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 4, offset: const Offset(0, -1))],
+                ),
+                child: SafeArea(
+                  top: false,
+                  left: false,
+                  right: false,
+                  // 確保按鈕不會被系統導航欄遮擋
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              _systolicRange = const RangeValues(70, 200);
+                              _diastolicRange = const RangeValues(40, 130);
+                              _pulseRange = const RangeValues(40, 160);
+                              _sortField = SortField.time;
+                              _sortOrder = SortOrder.descending;
+                            });
+                            widget.onReset();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: theme.primaryColor,
+                            side: BorderSide(color: theme.primaryColor),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                          child: Text(context.tr('重置')),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            widget.onSystolicRangeChanged(_systolicRange);
+                            widget.onDiastolicRangeChanged(_diastolicRange);
+                            widget.onPulseRangeChanged(_pulseRange);
+                            widget.onSortFieldChanged(_sortField);
+                            widget.onSortOrderChanged(_sortOrder);
+                            widget.onApply();
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.primaryColor,
+                            foregroundColor: theme.colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                          child: Text(context.tr('應用')),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildFilterTab() {
+  Widget _buildFilterTab(ScrollController scrollController) {
     return SingleChildScrollView(
+      controller: scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,6 +262,8 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
               });
             },
           ),
+          // 增加底部間距避免內容被遮擋
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -303,10 +315,11 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
     );
   }
 
-  Widget _buildSortTab() {
+  Widget _buildSortTab(ScrollController scrollController) {
     final theme = Theme.of(context);
 
-    return Padding(
+    return SingleChildScrollView(
+      controller: scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,6 +337,8 @@ class _FilterSortPanelState extends State<FilterSortPanel> with SingleTickerProv
           const SizedBox(height: 8),
           _buildSortOrderOption(SortOrder.ascending, context.tr('升序（小到大）')),
           _buildSortOrderOption(SortOrder.descending, context.tr('降序（大到小）')),
+          // 增加底部間距避免內容被遮擋
+          const SizedBox(height: 20),
         ],
       ),
     );
