@@ -13,9 +13,9 @@ import '../../../services/analysis_service.dart';
 import 'widgets/blood_pressure_prediction_widget.dart';
 import 'widgets/health_risk_assessment_widget.dart';
 import 'widgets/lifestyle_correlation_widget.dart';
-import '../advanced_analysis/widgets/medication_effect_widget.dart';
-import '../advanced_analysis/widgets/position_arm_effect_widget.dart';
-import '../advanced_analysis/widgets/morning_evening_effect_widget.dart';
+import 'widgets/deep_analysis/medication_effect_widget.dart';
+import 'widgets/deep_analysis/position_arm_effect_widget.dart';
+import 'widgets/deep_analysis/morning_evening_effect_widget.dart';
 import '../../../l10n/app_localizations_extension.dart';
 
 class AdvancedFeaturesPage extends StatefulWidget {
