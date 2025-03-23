@@ -7,14 +7,14 @@
 // 繁體中文翻譯
 const Map<String, String> zhTWOnboarding = {
   // Onboarding 頁面標題
-  'onboarding_manage_goals_title': '管理目標',
-  'onboarding_set_schedule_title': '設定行程',
-  'onboarding_todo_list_title': '輕鬆建立清單',
+  'onboarding_manage_goals_title': '記錄血壓',
+  'onboarding_set_schedule_title': '追蹤健康',
+  'onboarding_todo_list_title': '數據分析',
 
   // Onboarding 頁面描述
-  'onboarding_manage_goals_description': '設定您的業務策略並實現您所追求的目標',
-  'onboarding_set_schedule_description': '快速整理您的行程以使所有工作井然有序',
-  'onboarding_todo_list_description': '輕鬆快速地建立清單以促進您的工作',
+  'onboarding_manage_goals_description': '輕鬆記錄您的血壓和心率，幫助您隨時掌握健康狀況',
+  'onboarding_set_schedule_description': '設定測量提醒，養成良好的血壓監測習慣',
+  'onboarding_todo_list_description': '透過直觀的圖表分析血壓趨勢，了解您的健康變化',
 
   // Onboarding 頁面按鈕
   'onboarding_skip_button': '跳過',
@@ -28,14 +28,14 @@ const Map<String, String> zhTWOnboarding = {
 // 英文翻譯
 const Map<String, String> enUSOnboarding = {
   // Onboarding page titles
-  'onboarding_manage_goals_title': 'Manage Goals',
-  'onboarding_set_schedule_title': 'Set a Schedule',
-  'onboarding_todo_list_title': 'Do the list easily',
+  'onboarding_manage_goals_title': 'Track Blood Pressure',
+  'onboarding_set_schedule_title': 'Monitor Health',
+  'onboarding_todo_list_title': 'Analyze Data',
 
   // Onboarding page descriptions
-  'onboarding_manage_goals_description': 'Set your business strategy and achieve the goals you are aiming for',
-  'onboarding_set_schedule_description': 'Organize your schedule quickly to make all your work organized',
-  'onboarding_todo_list_description': 'Make your list easily and quickly to facilitate your work',
+  'onboarding_manage_goals_description': 'Easily record your blood pressure and heart rate to stay informed about your health',
+  'onboarding_set_schedule_description': 'Set measurement reminders to develop good blood pressure monitoring habits',
+  'onboarding_todo_list_description': 'Analyze blood pressure trends through intuitive charts to understand your health changes',
 
   // Onboarding page buttons
   'onboarding_skip_button': 'Skip',

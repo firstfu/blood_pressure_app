@@ -78,7 +78,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 },
                 children: [
                   OnboardingPageContent(
-                    image: 'assets/images/onboarding_welcome.png',
+                    image: 'assets/images/onboarding_record.png',
                     titleKey: 'onboarding_manage_goals_title',
                     descriptionKey: 'onboarding_manage_goals_description',
                   ),
@@ -88,7 +88,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     descriptionKey: 'onboarding_set_schedule_description',
                   ),
                   OnboardingPageContent(
-                    image: 'assets/images/onboarding_record.png',
+                    image: 'assets/images/onboarding_analysis.png',
                     titleKey: 'onboarding_todo_list_title',
                     descriptionKey: 'onboarding_todo_list_description',
                   ),
