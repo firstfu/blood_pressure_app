@@ -16,7 +16,12 @@ class LanguageSettingsPage extends StatelessWidget {
     final currentLocale = localeProvider.locale;
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr('語言設定')), elevation: 0),
+      appBar: AppBar(
+        title: Text(context.tr('語言設定')),
+        elevation: 0,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF121212) : Theme.of(context).appBarTheme.backgroundColor,
+        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
+      ),
       body: ListView(
         children: [
           _buildLanguageOption(

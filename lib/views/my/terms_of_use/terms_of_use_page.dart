@@ -18,7 +18,7 @@ class TermsOfUsePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(context.tr('Terms of Use')),
         centerTitle: true,
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.appBarTheme.backgroundColor,
         foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
       ),
