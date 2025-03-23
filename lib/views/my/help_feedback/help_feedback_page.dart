@@ -86,7 +86,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 color: theme.brightness == Brightness.dark ? const Color(0xFF121212) : theme.primaryColor,
                 child: TabBar(
                   labelColor: theme.brightness == Brightness.dark ? theme.primaryColor : Colors.white,
-                  unselectedLabelColor: theme.brightness == Brightness.dark ? Colors.white70 : Colors.white.withOpacity(0.7),
+                  unselectedLabelColor: theme.brightness == Brightness.dark ? Colors.white70 : Colors.white.withAlpha(178),
                   indicatorColor: Colors.white,
                   indicatorWeight: 3,
                   labelStyle: TypographyTheme.secondary.copyWith(fontWeight: FontWeight.w500),

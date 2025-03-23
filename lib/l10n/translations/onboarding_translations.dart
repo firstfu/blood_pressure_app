@@ -1,8 +1,6 @@
-/**
- * @ Author: firstfu
- * @ Create Time: 2024-03-24 14:50:42
- * @ Description: Onboarding 頁面多國語系翻譯
- */
+/// @ Author: firstfu
+/// @ Create Time: 2024-03-24 14:50:42
+/// @ Description: Onboarding 頁面多國語系翻譯
 
 // 繁體中文翻譯
 const Map<String, String> zhTWOnboarding = {

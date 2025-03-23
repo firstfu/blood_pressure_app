@@ -1,8 +1,6 @@
-/**
- * @ Author: firstfu
- * @ Create Time: 2024-03-23 18:50:42
- * @ Description: Onboarding 頁面，為新用戶展示應用功能亮點
- */
+/// @ Author: firstfu
+/// @ Create Time: 2024-03-23 18:50:42
+/// @ Description: Onboarding 頁面，為新用戶展示應用功能亮點
 
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -93,7 +91,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       dotWidth: 10,
                       dotHeight: 10,
                       activeDotColor: Colors.white,
-                      dotColor: AppTheme.primaryLightColor.withOpacity(0.5),
+                      dotColor: AppTheme.primaryLightColor.withAlpha(128),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -166,7 +164,7 @@ class OnboardingPageContent extends StatelessWidget {
             flex: 3,
             child: Container(
               margin: const EdgeInsets.only(bottom: 32),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: Colors.white.withAlpha(38), shape: BoxShape.circle),
               child: Center(child: Image.asset(image, height: 240, fit: BoxFit.contain)),
             ),
           ),
