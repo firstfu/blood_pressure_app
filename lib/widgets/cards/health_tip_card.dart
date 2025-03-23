@@ -27,15 +27,28 @@ class HealthTipCard extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: theme.primaryColor.withAlpha(26), borderRadius: BorderRadius.circular(12)),
-              child: Icon(Icons.lightbulb_outline, color: theme.primaryColor, size: 20),
+              decoration: BoxDecoration(
+                color: theme.brightness == Brightness.dark ? theme.colorScheme.primary.withAlpha(40) : theme.primaryColor.withAlpha(26),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.lightbulb_outline,
+                color: theme.brightness == Brightness.dark ? theme.colorScheme.primary : theme.primaryColor,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(context.tr('健康小貼士'), style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.primaryColor)),
+                  Text(
+                    context.tr('健康小貼士'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.brightness == Brightness.dark ? theme.colorScheme.primary : theme.primaryColor,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Text(context.tr(tip), style: theme.textTheme.bodyMedium),
                 ],

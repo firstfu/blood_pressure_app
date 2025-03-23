@@ -112,9 +112,16 @@ class _TrendChartCardState extends State<TrendChartCard> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(context.tr('查看詳情'), style: TextStyle(color: theme.primaryColor)),
+                      Text(
+                        context.tr('查看詳情'),
+                        style: TextStyle(color: theme.brightness == Brightness.dark ? theme.colorScheme.primary : theme.primaryColor),
+                      ),
                       const SizedBox(width: 4),
-                      Icon(Icons.arrow_forward, size: 16, color: theme.primaryColor),
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 16,
+                        color: theme.brightness == Brightness.dark ? theme.colorScheme.primary : theme.primaryColor,
+                      ),
                     ],
                   ),
                 ),
