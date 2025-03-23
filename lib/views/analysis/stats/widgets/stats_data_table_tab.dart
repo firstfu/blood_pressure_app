@@ -56,8 +56,15 @@ class StatsDataTableTab extends StatefulWidget {
 class _StatsDataTableTabState extends State<StatsDataTableTab> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (widget.filteredRecords.isEmpty) {
-      return Center(child: Text(context.tr('暫無數據'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey)));
+      return Center(
+        child: Text(
+          context.tr('暫無數據'),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
+        ),
+      );
     }
 
     return Column(
@@ -85,10 +92,10 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
               const SizedBox(width: 8),
               OutlinedButton.icon(
                 onPressed: _showFilterSortPanel,
-                icon: Icon(Icons.filter_list, color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[600]),
-                label: Text(context.tr('篩選與排序'), style: TextStyle(color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[600])),
+                icon: Icon(Icons.filter_list, color: widget.isFiltered ? theme.primaryColor : theme.textTheme.bodyMedium?.color),
+                label: Text(context.tr('篩選與排序'), style: TextStyle(color: widget.isFiltered ? theme.primaryColor : theme.textTheme.bodyMedium?.color)),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: widget.isFiltered ? AppTheme.primaryColor : Colors.grey[400]!),
+                  side: BorderSide(color: widget.isFiltered ? theme.primaryColor : theme.dividerColor),
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   minimumSize: const Size(120, 36),
                   fixedSize: const Size.fromHeight(36),
@@ -100,7 +107,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
                   onPressed: widget.onResetFiltersAndSort,
                   icon: const Icon(Icons.clear),
                   tooltip: context.tr('清除篩選'),
-                  color: Colors.grey[600],
+                  color: theme.textTheme.bodyMedium?.color,
                   iconSize: 20,
                 ),
               ],
@@ -114,13 +121,13 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
             children: [
               Text(
                 '${context.tr('共')} ${widget.filteredRecords.length} ${context.tr('筆')}${context.tr('記錄')}',
-                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                style: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 14),
               ),
               if (widget.isFiltered && widget.filteredRecords.length != widget.records.length) ...[
                 const SizedBox(width: 4),
                 Text(
                   '(${context.tr('已篩選')}，${context.tr('原')} ${widget.records.length} ${context.tr('筆')})',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 12),
                 ),
               ],
             ],
@@ -137,6 +144,7 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
               final isBPHigh = record.systolic >= 140 || record.diastolic >= 90;
               final isBPNormal = record.systolic < 120 && record.diastolic < 80;
               final statusColor = isBPHigh ? AppTheme.warningColor : (isBPNormal ? AppTheme.successColor : AppTheme.alertColor);
+              final isDarkMode = theme.brightness == Brightness.dark;
 
               // 獲取心率狀態顏色
               final pulseColor = _getPulseStatusColor(record.pulse);
@@ -145,27 +153,30 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 elevation: 2,
-                shadowColor: AppTheme.primaryColor.withAlpha(51),
+                shadowColor: theme.primaryColor.withAlpha(51),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: statusColor.withAlpha(77), width: 1)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: isDarkMode ? Colors.white.withOpacity(0.2) : statusColor.withAlpha(77), width: isDarkMode ? 1.0 : 1.0),
+                  ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     title: Row(
                       children: [
                         Text(
                           '${record.systolic}/${record.diastolic}',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey[800]),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: theme.textTheme.titleLarge?.color),
                         ),
                         const SizedBox(width: 8),
-                        Text('mmHg', style: TextStyle(color: Colors.grey[600], fontSize: 14, fontWeight: FontWeight.w500)),
+                        Text('mmHg', style: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 14, fontWeight: FontWeight.w500)),
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: pulseColor.withAlpha(26),
+                            color: isDarkMode ? pulseColor.withAlpha(40) : pulseColor.withAlpha(26),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: pulseColor.withAlpha(77)),
+                            border: Border.all(color: isDarkMode ? pulseColor.withAlpha(120) : pulseColor.withAlpha(77)),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -187,18 +198,18 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
+                              Icon(Icons.calendar_today, size: 14, color: theme.textTheme.bodySmall?.color),
                               const SizedBox(width: 4),
                               Text(
                                 DateTimeUtils.formatDateMMDD(record.measureTime),
-                                style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
+                                style: TextStyle(color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500),
                               ),
                               const SizedBox(width: 12),
-                              Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                              Icon(Icons.access_time, size: 14, color: theme.textTheme.bodySmall?.color),
                               const SizedBox(width: 4),
                               Text(
                                 DateTimeUtils.formatTimeHHMM(record.measureTime),
-                                style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
+                                style: TextStyle(color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -206,14 +217,20 @@ class _StatsDataTableTabState extends State<StatsDataTableTab> {
                             const SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                              decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+                              decoration: BoxDecoration(
+                                color: isDarkMode ? theme.cardColor.withOpacity(0.3) : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.note, size: 14, color: Colors.grey[600]),
+                                  Icon(Icons.note, size: 14, color: theme.textTheme.bodySmall?.color),
                                   const SizedBox(width: 4),
                                   Flexible(
-                                    child: Text(record.note!, style: TextStyle(fontSize: 14, color: Colors.grey[800], fontWeight: FontWeight.w500)),
+                                    child: Text(
+                                      record.note!,
+                                      style: TextStyle(fontSize: 14, color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ],
                               ),
