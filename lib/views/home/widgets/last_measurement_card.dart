@@ -215,7 +215,7 @@ class LastMeasurementCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.chipTheme?.backgroundColor ?? theme.cardColor,
+        color: theme.chipTheme.backgroundColor ?? theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: theme.dividerColor.withAlpha(128)),
       ),

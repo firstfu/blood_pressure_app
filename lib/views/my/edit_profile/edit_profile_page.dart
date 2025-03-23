@@ -52,7 +52,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final double _smallSpacing = 8.0;
 
   // 字體大小
-  final double _titleFontSize = 20.0;
   final double _sectionTitleFontSize = 16.0;
   final double _contentFontSize = 15.0;
   final double _smallFontSize = 13.0;
