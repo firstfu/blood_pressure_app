@@ -156,7 +156,7 @@ class MedicationEffectWidget extends StatelessWidget {
                     barTouchData: BarTouchData(
                       enabled: true,
                       touchTooltipData: BarTouchTooltipData(
-                        tooltipBgColor: isDarkMode ? theme.colorScheme.surfaceVariant : Colors.blueGrey,
+                        tooltipBgColor: isDarkMode ? theme.colorScheme.surfaceContainerHighest : Colors.blueGrey,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                           String title;
                           String value;
@@ -196,7 +196,7 @@ class MedicationEffectWidget extends StatelessWidget {
                               child: Text(
                                 text,
                                 style: TextStyle(
-                                  color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.6) : Colors.grey,
+                                  color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(153) : Colors.grey,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
                                 ),
@@ -213,7 +213,7 @@ class MedicationEffectWidget extends StatelessWidget {
                             if (value % 50 == 0) {
                               return Text(
                                 value.toInt().toString(),
-                                style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.6) : Colors.grey, fontSize: 10),
+                                style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(153) : Colors.grey, fontSize: 10),
                               );
                             }
                             return const Text('');
@@ -228,7 +228,7 @@ class MedicationEffectWidget extends StatelessWidget {
                       horizontalInterval: 50,
                       getDrawingHorizontalLine: (value) {
                         return FlLine(
-                          color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(26),
+                          color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(38) : Colors.grey.withAlpha(26),
                           strokeWidth: 1,
                           dashArray: [5, 5],
                         );
@@ -323,15 +323,15 @@ class MedicationEffectWidget extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
+            border: Border.all(color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(38) : Colors.grey.withAlpha(51)),
             boxShadow: [BoxShadow(color: Colors.black.withAlpha(isDarkMode ? 15 : 5), blurRadius: 2, offset: const Offset(0, 1))],
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
-                verticalInside: BorderSide(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.15) : Colors.grey.withAlpha(51)),
+                horizontalInside: BorderSide(color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(38) : Colors.grey.withAlpha(51)),
+                verticalInside: BorderSide(color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(38) : Colors.grey.withAlpha(51)),
               ),
               columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(3), 2: FlexColumnWidth(3)},
               children: [
@@ -394,7 +394,7 @@ class MedicationEffectWidget extends StatelessWidget {
                   ],
                 ),
                 TableRow(
-                  decoration: BoxDecoration(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.05) : Colors.grey.withAlpha(13)),
+                  decoration: BoxDecoration(color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(13) : Colors.grey.withAlpha(13)),
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -458,9 +458,9 @@ class MedicationEffectWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: isDarkMode ? theme.cardColor.withOpacity(0.2) : Colors.white.withOpacity(0.4),
+        color: isDarkMode ? theme.cardColor.withAlpha(51) : Colors.white.withAlpha(102),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.08) : Colors.grey.withAlpha(20), width: 1),
+        border: Border.all(color: isDarkMode ? theme.colorScheme.onSurface.withAlpha(20) : Colors.grey.withAlpha(20), width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
