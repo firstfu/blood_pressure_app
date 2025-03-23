@@ -15,6 +15,7 @@ import 'app_translations.dart';
 import 'stats_translations.dart';
 import 'privacy_translations.dart';
 import 'health_assessment_translations.dart';
+import 'terms_of_use_translations.dart';
 
 // 繁體中文翻譯整合
 Map<String, String> mergeZhTWTranslations() {
@@ -34,6 +35,7 @@ Map<String, String> mergeZhTWTranslations() {
   mergedZhTW.addAll(zhTWStats);
   mergedZhTW.addAll(zhTWPrivacy);
   mergedZhTW.addAll(zhTWHealthAssessment);
+  mergedZhTW.addAll(zhTWTermsOfUse);
 
   return mergedZhTW;
 }
@@ -56,6 +58,7 @@ Map<String, String> mergeEnUSTranslations() {
   mergedEnUS.addAll(enUSStats);
   mergedEnUS.addAll(enUSPrivacy);
   mergedEnUS.addAll(enUSHealthAssessment);
+  mergedEnUS.addAll(enUSTermsOfUse);
 
   return mergedEnUS;
 }
