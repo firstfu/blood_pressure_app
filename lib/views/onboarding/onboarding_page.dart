@@ -142,7 +142,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                       },
                       children: [
                         OnboardingPageContent(
-                          image: 'assets/images/onboarding_record.png',
+                          image: 'assets/images/onboarding_1.png',
                           titleKey: '記錄血壓_標題',
                           descriptionKey: '記錄血壓_描述',
                           gradientColors: _pageGradients[0],
@@ -151,7 +151,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                           currentPage: _currentPage,
                         ),
                         OnboardingPageContent(
-                          image: 'assets/images/onboarding_reminder.png',
+                          image: 'assets/images/onboarding_2.png',
                           titleKey: '追蹤健康_標題',
                           descriptionKey: '追蹤健康_描述',
                           gradientColors: _pageGradients[1],
@@ -160,7 +160,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                           currentPage: _currentPage,
                         ),
                         OnboardingPageContent(
-                          image: 'assets/images/onboarding_analysis.png',
+                          image: 'assets/images/onboarding_3.png',
                           titleKey: '數據分析_標題',
                           descriptionKey: '數據分析_描述',
                           gradientColors: _pageGradients[2],
@@ -169,7 +169,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                           currentPage: _currentPage,
                         ),
                         OnboardingPageContent(
-                          image: 'assets/images/onboarding_welcome.png',
+                          image: 'assets/images/onboarding_4.png',
                           titleKey: '數據分享_標題',
                           descriptionKey: '數據分享_描述',
                           gradientColors: _pageGradients[3],
