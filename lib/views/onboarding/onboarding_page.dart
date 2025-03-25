@@ -362,13 +362,13 @@ class OnboardingPageContent extends StatelessWidget {
     final double opacity = isActive ? 1.0 : 0.0;
 
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // 圖片 - 添加動畫效果
           Expanded(
-            flex: 3,
+            flex: 4,
             child: AnimatedOpacity(
               opacity: opacity,
               duration: const Duration(milliseconds: 500),
@@ -391,6 +391,8 @@ class OnboardingPageContent extends StatelessWidget {
                   },
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 24),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: MediaQuery.of(context).size.width * 0.9,
                     decoration: BoxDecoration(
                       gradient: RadialGradient(colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.05)], radius: 0.8),
                       shape: BoxShape.circle,
@@ -407,8 +409,8 @@ class OnboardingPageContent extends StatelessWidget {
                             return Transform.scale(scale: pulseScale, child: child);
                           },
                           child: Container(
-                            width: 250,
-                            height: 250,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: MediaQuery.of(context).size.width * 0.8,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: RadialGradient(colors: [Colors.white.withValues(alpha: 0.2), Colors.transparent], stops: const [0.6, 1.0]),
@@ -417,7 +419,18 @@ class OnboardingPageContent extends StatelessWidget {
                         ),
 
                         // 主圖片 - 使用 ClipOval 裁剪成圓形
-                        ClipOval(child: SizedBox(width: 220, height: 220, child: Image.asset(image, fit: BoxFit.cover, width: 220, height: 220))),
+                        ClipOval(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            height: MediaQuery.of(context).size.width * 0.7,
+                            child: Image.asset(
+                              image,
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: MediaQuery.of(context).size.width * 0.7,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -443,12 +456,12 @@ class OnboardingPageContent extends StatelessWidget {
                   return Transform.translate(offset: Offset(0, 50 * (1 - value)), child: Opacity(opacity: safeOpacity, child: child));
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
-                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 5))],
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
+                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 12, offset: const Offset(0, 5))],
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -459,7 +472,7 @@ class OnboardingPageContent extends StatelessWidget {
                         style: TypographyTheme.largeTitle.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: 24,
                           shadows: [const Shadow(color: Colors.black26, blurRadius: 2, offset: Offset(0, 1))],
                         ),
                       ),
@@ -470,7 +483,7 @@ class OnboardingPageContent extends StatelessWidget {
                         child: Text(
                           context.tr(descriptionKey),
                           textAlign: TextAlign.center,
-                          style: TypographyTheme.body.copyWith(color: Colors.white, height: 1.4),
+                          style: TypographyTheme.body.copyWith(color: Colors.white, fontSize: 16, height: 1.4),
                         ),
                       ),
                     ],
