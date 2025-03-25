@@ -416,8 +416,8 @@ class OnboardingPageContent extends StatelessWidget {
                           ),
                         ),
 
-                        // 主圖片
-                        Image.asset(image, height: 220, fit: BoxFit.contain),
+                        // 主圖片 - 使用 ClipOval 裁剪成圓形
+                        ClipOval(child: SizedBox(width: 220, height: 220, child: Image.asset(image, fit: BoxFit.cover, width: 220, height: 220))),
                       ],
                     ),
                   ),
