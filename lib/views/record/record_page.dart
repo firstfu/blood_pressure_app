@@ -245,8 +245,13 @@ class _RecordPageState extends State<RecordPage> {
         Future.delayed(const Duration(milliseconds: 200), () {
           // 檢查 widget 是否仍然掛載
           if (mounted) {
-            // 返回記錄對象
-            Navigator.of(context).pop(record);
+            // 如果是從 Tab 導航欄進入，則不進行導航操作，只重置表單
+            if (widget.isFromTabNav) {
+              _resetForm();
+            } else {
+              // 如果是從其他地方進入，則返回記錄對象
+              Navigator.of(context).pop(record);
+            }
           }
         });
       } catch (e) {
@@ -255,7 +260,11 @@ class _RecordPageState extends State<RecordPage> {
 
         // 最後嘗試直接返回
         if (mounted) {
-          Navigator.of(context).pop(record);
+          if (widget.isFromTabNav) {
+            _resetForm();
+          } else {
+            Navigator.of(context).pop(record);
+          }
         }
       }
     }
@@ -559,6 +568,7 @@ class _RecordPageState extends State<RecordPage> {
         ),
         title: Text(_isEditing ? context.tr('編輯記錄') : context.tr('新增記錄')),
         centerTitle: true,
+        automaticallyImplyLeading: !widget.isFromTabNav,
         leading: widget.isFromTabNav ? null : IconButton(icon: const Icon(Icons.arrow_back_ios), onPressed: () => Navigator.of(context).pop()),
         actions: [
           IconButton(icon: const Icon(Icons.save), tooltip: context.tr('保存記錄'), onPressed: _saveRecord),
@@ -755,6 +765,7 @@ class _RecordPageState extends State<RecordPage> {
           ],
         ),
       ),
+      bottomNavigationBar: null,
     );
   }
 }

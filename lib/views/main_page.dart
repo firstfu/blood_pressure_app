@@ -21,8 +21,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
-  // 修改頁面列表，移除記錄頁面
-  final List<Widget> _pages = [const HomePage(), const SizedBox(), const StatsPage(), const ProfilePage()];
+  // 修改頁面列表，添加記錄頁面
+  final List<Widget> _pages = [const HomePage(), const RecordPage(isFromTabNav: true), const StatsPage(), const ProfilePage()];
 
   @override
   void initState() {
@@ -34,34 +34,8 @@ class _MainPageState extends State<MainPage> {
 
   // 處理底部導航欄點擊
   void _onTabTapped(int index) {
-    // 如果點擊的是記錄標籤（索引為1）
-    if (index == 1) {
-      // 導航到記錄頁面
-      _navigateToRecordPage();
-    } else {
-      // 其他標籤正常切換
-      setState(() {
-        _currentIndex = index;
-      });
-    }
-  }
-
-  // 導航到記錄頁面
-  void _navigateToRecordPage() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecordPage(isFromTabNav: true))).then((value) {
-      // 如果返回數據為 true，則刷新當前頁面
-      if (value == true && _currentIndex == 0) {
-        setState(() {
-          // 刷新首頁
-        });
-      }
-
-      // 保持在首頁標籤
-      if (_currentIndex == 1) {
-        setState(() {
-          _currentIndex = 0;
-        });
-      }
+    setState(() {
+      _currentIndex = index;
     });
   }
 
