@@ -183,7 +183,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
 
                   // 底部導航區域
                   Container(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 24.0),
                     child: Column(
                       children: [
                         // 頁面指示器
@@ -210,7 +210,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                             inActiveColorOverride: (i) => Colors.white.withValues(alpha: 0.4),
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 24),
 
                         // 底部按鈕
                         Row(
@@ -368,7 +368,7 @@ class OnboardingPageContent extends StatelessWidget {
         children: [
           // 圖片 - 添加動畫效果
           Expanded(
-            flex: 3,
+            flex: 2,
             child: AnimatedOpacity(
               opacity: opacity,
               duration: const Duration(milliseconds: 500),
@@ -475,15 +475,27 @@ class OnboardingPageContent extends StatelessWidget {
                           fontSize: 22,
                           shadows: [const Shadow(color: Colors.black26, blurRadius: 2, offset: Offset(0, 1))],
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
 
-                      // 描述文字
+                      // 描述文字 - 調整為自適應容器
                       Flexible(
-                        child: Text(
-                          context.tr(descriptionKey),
-                          textAlign: TextAlign.center,
-                          style: TypographyTheme.body.copyWith(color: Colors.white, fontSize: 15, height: 1.4),
+                        child: SingleChildScrollView(
+                          // 如果文字過長可滾動
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Text(
+                            context.tr(descriptionKey),
+                            textAlign: TextAlign.center,
+                            style: TypographyTheme.body.copyWith(
+                              color: Colors.white,
+                              fontSize: 14, // 略微減小字體大小
+                              height: 1.3, // 減小行高，使多行文字更緊湊
+                            ),
+                            // 確保文字能自動換行
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                          ),
                         ),
                       ),
                     ],
