@@ -28,6 +28,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
 
     // 獲取當前主題設定
     final bool useDarkMode = themeProvider.useDarkMode;
+    final bool isUserSelected = themeProvider.isUserSelected;
 
     return Scaffold(
       appBar: AppBar(
@@ -46,11 +47,35 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
             children: [
               // 深淺模式設定
               _buildSectionTitle(context.tr('深淺模式'), isDarkMode),
-              _buildSwitchItem(
+
+              // 跟隨系統選項
+              _buildRadioItem(
+                context.tr('跟隨系統'),
+                context.tr('自動跟隨系統深淺模式設定'),
+                !isUserSelected,
+                () => themeProvider.setFollowSystemTheme(),
+                isDarkMode,
+              ),
+
+              const SizedBox(height: 8),
+
+              // 淺色模式選項
+              _buildRadioItem(
+                context.tr('淺色模式'),
+                context.tr('始終使用淺色模式'),
+                isUserSelected && !useDarkMode,
+                () => themeProvider.setUseDarkMode(false),
+                isDarkMode,
+              ),
+
+              const SizedBox(height: 8),
+
+              // 深色模式選項
+              _buildRadioItem(
                 context.tr('深色模式'),
                 context.tr('使用深色主題，適合夜間使用'),
-                useDarkMode,
-                (value) => themeProvider.setUseDarkMode(value),
+                isUserSelected && useDarkMode,
+                () => themeProvider.setUseDarkMode(true),
                 isDarkMode,
               ),
 
@@ -73,8 +98,8 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
     );
   }
 
-  /// 構建開關設定項
-  Widget _buildSwitchItem(String title, String subtitle, bool value, Function(bool) onChanged, bool isDarkMode) {
+  /// 構建單選項目
+  Widget _buildRadioItem(String title, String subtitle, bool isSelected, VoidCallback onTap, bool isDarkMode) {
     final theme = Theme.of(context);
     final themeColor = theme.primaryColor;
     final titleColor = isDarkMode ? Colors.white : theme.textTheme.titleMedium?.color;
@@ -85,13 +110,27 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
       color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
-      child: SwitchListTile(
-        title: Text(title, style: TextStyle(color: titleColor)),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: subtitleColor)),
-        value: value,
-        onChanged: onChanged,
-        activeColor: themeColor,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TextStyle(color: titleColor, fontSize: 16)),
+                    const SizedBox(height: 2),
+                    Text(subtitle, style: TextStyle(fontSize: 12, color: subtitleColor)),
+                  ],
+                ),
+              ),
+              if (isSelected) Icon(Icons.check_circle, color: themeColor),
+            ],
+          ),
+        ),
       ),
     );
   }

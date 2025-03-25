@@ -120,6 +120,12 @@ const Map<String, String> zhTWSettings = {
   '通知': '通知',
   '保存設定': '保存設定',
   '管理應用通知與提示': '管理應用通知與提示',
+
+  // 語言設定頁面
+  '應用語言': '應用語言',
+  '自動跟隨系統語言設定': '自動跟隨系統語言設定',
+  '設置應用語言為繁體中文': '設置應用語言為繁體中文',
+  '設置應用語言為英文': '設置應用語言為英文',
 };
 
 // 英文設定頁面詞彙
@@ -241,4 +247,10 @@ const Map<String, String> enUSSettings = {
   '通知': 'Notifications',
   '保存設定': 'Save Settings',
   '管理應用通知與提示': 'Manage app notifications and alerts',
+
+  // 語言設定頁面
+  '應用語言': 'App Language',
+  '自動跟隨系統語言設定': 'Auto-follow system language settings',
+  '設置應用語言為繁體中文': 'Set app language to Traditional Chinese',
+  '設置應用語言為英文': 'Set app language to English',
 };

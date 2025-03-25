@@ -95,7 +95,7 @@ class SharedPrefsService {
 
     if (settingsJson == null) {
       // 返回默認設定
-      return {'themeColor': 'blue', 'useDarkMode': false, 'useSystemTheme': true};
+      return {'themeColor': 'blue', 'useDarkMode': false, 'isUserSelected': false};
     }
 
     // 解析 JSON 字符串為 Map
@@ -109,7 +109,7 @@ class SharedPrefsService {
     } catch (e) {
       print('解析主題設定時出錯: $e');
       // 出錯時返回默認設定
-      return {'themeColor': 'blue', 'useDarkMode': false, 'useSystemTheme': true};
+      return {'themeColor': 'blue', 'useDarkMode': false, 'isUserSelected': false};
     }
   }
 
