@@ -112,10 +112,10 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
-                              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1),
+                              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))],
                             ),
                             child: Text(
                               '${_currentPage + 1}/$_totalPages',
@@ -196,18 +196,18 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                               height: 10,
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(5),
-                              dotBorder: DotBorder(padding: 2, width: 2, color: Colors.white.withOpacity(0.5)),
+                              dotBorder: DotBorder(padding: 2, width: 2, color: Colors.white.withValues(alpha: 0.5)),
                             ),
                             dotDecoration: DotDecoration(
                               width: 8,
                               height: 8,
-                              color: Colors.white.withOpacity(0.4),
+                              color: Colors.white.withValues(alpha: 0.4),
                               borderRadius: BorderRadius.circular(4),
                               dotBorder: DotBorder(padding: 0, width: 0, color: Colors.transparent),
                             ),
                             spacing: 16,
                             activeColorOverride: (i) => Colors.white,
-                            inActiveColorOverride: (i) => Colors.white.withOpacity(0.4),
+                            inActiveColorOverride: (i) => Colors.white.withValues(alpha: 0.4),
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -273,15 +273,17 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(26),
-          splashColor: isOutlined ? Colors.white.withOpacity(0.2) : _pageGradients[_currentPage][1].withOpacity(0.2),
-          highlightColor: isOutlined ? Colors.white.withOpacity(0.1) : _pageGradients[_currentPage][1].withOpacity(0.1),
+          splashColor: isOutlined ? Colors.white.withValues(alpha: 0.2) : _pageGradients[_currentPage][1].withValues(alpha: 0.2),
+          highlightColor: isOutlined ? Colors.white.withValues(alpha: 0.1) : _pageGradients[_currentPage][1].withValues(alpha: 0.1),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(26),
-              border: isOutlined ? Border.all(color: Colors.white.withOpacity(0.8), width: 1) : null,
+              border: isOutlined ? Border.all(color: Colors.white.withValues(alpha: 0.8), width: 1) : null,
               boxShadow:
-                  isOutlined ? null : [BoxShadow(color: Colors.black.withOpacity(0.1), spreadRadius: 1, blurRadius: 4, offset: const Offset(0, 2))],
+                  isOutlined
+                      ? null
+                      : [BoxShadow(color: Colors.black.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 4, offset: const Offset(0, 2))],
             ),
             child: child,
           ),
@@ -319,7 +321,7 @@ class _OnboardingPageState extends State<OnboardingPage> with SingleTickerProvid
                 child: Container(
                   width: size,
                   height: size,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(opacity)),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: opacity)),
                 ),
               );
             },
@@ -390,9 +392,9 @@ class OnboardingPageContent extends StatelessWidget {
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
-                      gradient: RadialGradient(colors: [Colors.white.withOpacity(0.2), Colors.white.withOpacity(0.05)], radius: 0.8),
+                      gradient: RadialGradient(colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.05)], radius: 0.8),
                       shape: BoxShape.circle,
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, spreadRadius: 5)],
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, spreadRadius: 5)],
                     ),
                     child: Stack(
                       alignment: Alignment.center,
@@ -409,7 +411,7 @@ class OnboardingPageContent extends StatelessWidget {
                             height: 250,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: RadialGradient(colors: [Colors.white.withOpacity(0.2), Colors.transparent], stops: const [0.6, 1.0]),
+                              gradient: RadialGradient(colors: [Colors.white.withValues(alpha: 0.2), Colors.transparent], stops: const [0.6, 1.0]),
                             ),
                           ),
                         ),
@@ -443,10 +445,10 @@ class OnboardingPageContent extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5))],
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
+                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 5))],
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
