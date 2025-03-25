@@ -216,12 +216,32 @@ class _RecordPageState extends State<RecordPage> {
       // 創建測量時間
       final measureTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, _selectedTime.hour, _selectedTime.minute);
 
+      // 檢查輸入值是否為有效數字
+      int? systolic = int.tryParse(_systolicController.text);
+      int? diastolic = int.tryParse(_diastolicController.text);
+      int? pulse = int.tryParse(_pulseController.text);
+
+      // 如果任一輸入不是有效數字，顯示錯誤並返回
+      if (systolic == null || diastolic == null || pulse == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.tr('請輸入有效的數字'), style: TextStyle(fontSize: _contentFontSize)),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(8),
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+        return;
+      }
+
       // 創建血壓記錄
       final record = BloodPressureRecord(
         id: _isEditing ? widget.recordToEdit!.id : const Uuid().v4(),
-        systolic: int.parse(_systolicController.text),
-        diastolic: int.parse(_diastolicController.text),
-        pulse: int.parse(_pulseController.text),
+        systolic: systolic,
+        diastolic: diastolic,
+        pulse: pulse,
         measureTime: measureTime,
         position: _positionKeys[_selectedPositionKey]!,
         arm: _armKeys[_selectedArmKey]!,
