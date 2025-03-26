@@ -3,50 +3,49 @@
 ## 文件資訊
 
 - **文件名稱**：血壓管家 App 文檔目錄說明
-- **版本**：1.3
+- **版本**：1.7
 - **最後更新日期**：2024 年 5 月 29 日
 
 ## 目錄結構
 
 ```
 docs/
-  ├── demand/                                # 需求文檔目錄
-  │   ├── todo/                              # 待實現的需求
-  │   ├── ok/                                # 已完成的需求
-  │   │   ├── multi_language_implementation.md  # 多語言實現需求
-  │   │   ├── onboarding_feature_implementation.md  # 引導頁面功能實現需求
+  ├── demand/                               # 需求文檔目錄
+  │   ├── todo/                             # 待實現的需求
+  │   ├── ok/                               # 已完成的需求
+  │   │   ├── dark_mode_feature.md          # 深色模式功能需求
+  │   │   ├── multi_language_feature.md     # 多國語系功能需求
+  │   │   ├── onboarding_feature.md         # 引導頁功能需求
+  │   │   ├── export_feature.md             # 數據匯出功能需求
   │   │   └── typography_system_implementation.md  # 排版系統實現需求
-  │   └── cancel/                            # 已取消的需求
-  ├── imgs/                                  # 圖片資源目錄
-  ├── store/                                 # 應用商店相關資源
-  ├── blood_pressure_app_ui_ux_design.md     # UI/UX 設計文件
-  ├── blood_pressure_app_technical_architecture.md  # 技術架構文檔
-  ├── blood_pressure_app_prd.md              # 產品需求文檔
-  ├── blood_pressure_app_implementation_plan.md     # 實現計劃
-  ├── blood_pressure_app_ui_prototype.md     # UI 原型文檔
-  ├── changelog.md                           # 更新日誌
-  ├── dark_mode_implementation.md            # 深色模式實現文檔
-  ├── development_plan.md                    # 開發計劃
-  ├── multi_language_implementation.md       # 多國語系實現
-  ├── onboarding_feature_implementation.md   # 引導頁面功能實現
-  ├── onboarding_implementation_update.md    # 引導頁面功能更新
-  ├── project_status_summary.md              # 專案進度摘要
-  ├── typography_guidelines.md               # 排版指南
-  ├── typography_implementation.md           # 排版系統實現指南
-  └── 多國語系實現.md                         # 多國語系實現（繁體中文版）
+  │   └── cancel/                           # 已取消的需求
+  ├── design/                               # 設計文檔目錄
+  │   ├── ui_ux_design.md                   # UI/UX 設計文件
+  │   ├── typography_guidelines.md          # 排版指南
+  │   ├── typography_implementation.md      # 排版實現文檔
+  │   ├── ui_prototype.md                   # UI 原型文檔
+  │   └── color_system.md                   # 色彩系統文檔
+  ├── implementation/                       # 實現文檔目錄
+  │   ├── dark_mode_implementation.md       # 深色模式實現文檔
+  │   ├── multi_language_implementation.md  # 多國語系實現文檔
+  │   └── onboarding_implementation.md      # 引導頁實現文檔
+  ├── technical/                            # 技術文檔目錄
+  │   └── technical_architecture.md         # 技術架構文檔
+  ├── project/                              # 專案管理文檔目錄
+  │   ├── development_plan.md               # 開發計劃
+  │   ├── implementation_plan.md            # 實現計劃
+  │   ├── project_status_summary.md         # 專案進度摘要
+  │   ├── changelog.md                      # 更新日誌
+  │   ├── blood_pressure_app_prd.md         # 產品需求文檔
+  │   └── 文檔整理方案.md                   # 文檔整理方案
+  ├── assets/                               # 資源目錄
+  │   ├── images/                           # 圖片資源
+  │   └── diagrams/                         # 圖表資源
+  ├── store/                                # 應用商店相關資源
+  └── README.md                             # 文檔目錄說明（本文件）
 ```
 
 ## 文檔說明
-
-### 設計文檔
-
-- **[UI/UX 設計文件](blood_pressure_app_ui_ux_design.md)** - 應用程式的 UI/UX 設計規範，包含設計理念、品牌識別、設計系統等
-- **[排版指南](typography_guidelines.md)** - 詳細的文字排版規範，包含字體大小、字重和用途
-- **[排版系統實現指南](typography_implementation.md)** - 排版系統在程式碼中的實現方法和最佳實踐
-- **[多國語系實現方案](multi_language_implementation.md)** - 應用程式的多語言支援實現方案
-- **[引導頁面功能實現](onboarding_feature_implementation.md)** - 引導頁面功能實現文檔
-- **[引導頁面功能更新](onboarding_implementation_update.md)** - 引導頁面功能更新文檔，包含藍色主題設計和多語言支援
-- **[深色模式實現文檔](dark_mode_implementation.md)** - 深色模式的實現方案和設計考量
 
 ### 需求文檔
 
@@ -56,24 +55,40 @@ docs/
 
 2. **已完成 (ok)** - 已經實現的需求
 
-   - **[多語言實現需求](demand/ok/multi_language_implementation.md)** - 多語言支援功能的需求文檔
-   - **[引導頁面功能實現需求](demand/ok/onboarding_feature_implementation.md)** - 引導頁面功能的需求文檔
+   - **[深色模式功能需求](demand/ok/dark_mode_feature.md)** - 深色模式功能的需求文檔
+   - **[多國語系功能需求](demand/ok/multi_language_feature.md)** - 多國語系功能的需求文檔
+   - **[引導頁功能需求](demand/ok/onboarding_feature.md)** - 引導頁功能的需求文檔
+   - **[數據匯出功能需求](demand/ok/export_feature.md)** - 數據匯出功能的需求文檔
    - **[排版系統實現需求](demand/ok/typography_system_implementation.md)** - 排版系統的需求文檔
 
 3. **已取消 (cancel)** - 已取消的需求
 
-### 開發文檔
+### 設計文檔
 
-- **[開發計劃](development_plan.md)** - 應用程式的開發計劃和時間表
-- **[技術架構文檔](blood_pressure_app_technical_architecture.md)** - 應用程式的技術架構和實現細節
-- **[實現計劃](blood_pressure_app_implementation_plan.md)** - 應用程式的實現計劃和步驟
-- **[專案進度摘要](project_status_summary.md)** - 專案進度摘要，包含各階段完成度和當前工作
+- **[UI/UX 設計文件](design/ui_ux_design.md)** - 應用程式的 UI/UX 設計規範，包含設計理念、品牌識別、設計系統等
+- **[排版指南](design/typography_guidelines.md)** - 詳細的文字排版規範，包含字體大小、字重和用途
+- **[排版實現文檔](design/typography_implementation.md)** - 排版系統的實現方案
+- **[UI 原型文檔](design/ui_prototype.md)** - 應用程式的 UI 原型設計
+- **[色彩系統文檔](design/color_system.md)** - 應用程式的色彩系統設計與規範
 
-### 產品文檔
+### 實現文檔
 
-- **[產品需求文檔](blood_pressure_app_prd.md)** - 應用程式的產品需求文檔
-- **[UI 原型文檔](blood_pressure_app_ui_prototype.md)** - 應用程式的 UI 原型文檔
-- **[更新日誌](changelog.md)** - 應用程式的更新日誌，記錄各版本更新內容
+- **[深色模式實現文檔](implementation/dark_mode_implementation.md)** - 深色模式的實現方案和設計考量
+- **[多國語系實現文檔](implementation/multi_language_implementation.md)** - 應用程式的多語言支援實現方案
+- **[引導頁實現文檔](implementation/onboarding_implementation.md)** - 引導頁面功能實現方案
+
+### 技術文檔
+
+- **[技術架構文檔](technical/technical_architecture.md)** - 應用程式的技術架構和實現細節
+
+### 專案管理文檔
+
+- **[開發計劃](project/development_plan.md)** - 應用程式的開發計劃和時間表
+- **[實現計劃](project/implementation_plan.md)** - 應用程式的實現計劃和步驟
+- **[專案進度摘要](project/project_status_summary.md)** - 專案進度摘要，包含各階段完成度和當前工作
+- **[更新日誌](project/changelog.md)** - 應用程式的更新日誌，記錄各版本更新內容
+- **[產品需求文檔](project/blood_pressure_app_prd.md)** - 應用程式的產品需求文檔
+- **[文檔整理方案](project/文檔整理方案.md)** - 文檔整理方案與執行情況
 
 ## 主要功能實現文檔
 
@@ -87,7 +102,7 @@ docs/
 - **統一翻譯管理**：所有 UI 文字都通過本地化系統管理，確保翻譯一致性
 - **完整頁面支援**：所有頁面和功能都支援多語言顯示
 
-詳細實現方案請參閱 [多國語系實現方案](multi_language_implementation.md)
+詳細實現方案請參閱 [多國語系實現文檔](implementation/multi_language_implementation.md)
 
 ### 深色模式支援
 
@@ -99,7 +114,7 @@ docs/
 - **舒適閱讀體驗**：深色模式下優化了色彩對比度，減少夜間使用時的眼睛疲勞
 - **完整 UI 適應**：所有頁面和元件都專門設計了深色模式版本
 
-詳細實現方案請參閱 [深色模式實現文檔](dark_mode_implementation.md)
+詳細實現方案請參閱 [深色模式實現文檔](implementation/dark_mode_implementation.md)
 
 ### 新用戶引導體驗
 
@@ -111,7 +126,7 @@ docs/
 - **直觀的導航控制**：水平滑動切換頁面，簡單易用
 - **靈活跳過選項**：可隨時跳過引導過程直接進入主應用程式
 
-詳細實現方案請參閱 [引導頁面功能更新](onboarding_implementation_update.md)
+詳細實現方案請參閱 [引導頁實現文檔](implementation/onboarding_implementation.md)
 
 ## 文檔管理規範
 
@@ -139,6 +154,60 @@ docs/
    - 重要更新應在文檔開頭的「版本」中反映
    - 保持文檔的一致性和準確性
 
+## 文檔關鍵字索引
+
+以下索引可幫助您快速查找特定主題的文檔：
+
+### 功能特性相關
+
+- **深色模式**
+
+  - [深色模式功能需求](demand/ok/dark_mode_feature.md)
+  - [深色模式實現文檔](implementation/dark_mode_implementation.md)
+
+- **多國語系**
+
+  - [多國語系功能需求](demand/ok/multi_language_feature.md)
+  - [多國語系實現文檔](implementation/multi_language_implementation.md)
+
+- **新用戶引導頁**
+
+  - [引導頁功能需求](demand/ok/onboarding_feature.md)
+  - [引導頁實現文檔](implementation/onboarding_implementation.md)
+
+- **數據匯出**
+
+  - [數據匯出功能需求](demand/ok/export_feature.md)
+
+- **排版系統**
+  - [排版系統實現需求](demand/ok/typography_system_implementation.md)
+  - [排版指南](design/typography_guidelines.md)
+  - [排版實現文檔](design/typography_implementation.md)
+
+### 設計相關
+
+- **UI/UX**
+
+  - [UI/UX 設計文件](design/ui_ux_design.md)
+  - [UI 原型文檔](design/ui_prototype.md)
+
+- **視覺設計**
+  - [色彩系統文檔](design/color_system.md)
+  - [排版指南](design/typography_guidelines.md)
+
+### 技術架構相關
+
+- [技術架構文檔](technical/technical_architecture.md)
+
+### 專案管理相關
+
+- [開發計劃](project/development_plan.md)
+- [實現計劃](project/implementation_plan.md)
+- [專案進度摘要](project/project_status_summary.md)
+- [更新日誌](project/changelog.md)
+- [產品需求文檔](project/blood_pressure_app_prd.md)
+- [文檔整理方案](project/文檔整理方案.md)
+
 <div align="center">
   <h1><a href="#blood-pressure-manager---health-monitoring-application">English Version</a> | <a href="#血壓管家---健康監測應用程式">繁體中文版</a></h1>
 </div>
@@ -146,7 +215,7 @@ docs/
 # Blood Pressure Manager - Health Monitoring Application
 
 <div align="center">
-  <img src="docs/imgs/app_logo.svg" alt="Blood Pressure Manager App Logo" width="200">
+  <img src="docs/assets/images/app_logo.svg" alt="Blood Pressure Manager App Logo" width="200">
 </div>
 
 ## 📱 Application Overview
@@ -154,9 +223,9 @@ docs/
 "Blood Pressure Manager" is a health management application designed for users who need to regularly monitor their blood pressure. Through a clean and intuitive interface, it helps users record, track, and analyze blood pressure data, provides health recommendations, and promotes cardiovascular health management.
 
 <div align="center">
-  <img src="docs/imgs/screenshot1.png" alt="App Screenshot - Main Page" width="250">
-  <img src="docs/imgs/screenshot2.png" alt="App Screenshot - Data Analysis" width="250">
-  <img src="docs/imgs/screenshot3.png" alt="App Screenshot - Recording Feature" width="250">
+  <img src="docs/assets/images/screenshot1.png" alt="App Screenshot - Main Page" width="250">
+  <img src="docs/assets/images/screenshot2.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/assets/images/screenshot3.png" alt="App Screenshot - Recording Feature" width="250">
 </div>
 
 ## ✨ Key Features
@@ -328,7 +397,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 # 血壓管家 - 健康監測應用程式
 
 <div align="center">
-  <img src="docs/imgs/app_logo.svg" alt="血壓管家應用程式標誌" width="200">
+  <img src="docs/assets/images/app_logo.svg" alt="血壓管家應用程式標誌" width="200">
 </div>
 
 ## 📱 應用程式概述
@@ -336,9 +405,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 「血壓管家」是一款專為需要定期監測血壓的用戶設計的健康管理應用程式。透過簡潔直觀的界面，幫助用戶記錄、追蹤和分析血壓數據，提供健康建議，促進心血管健康管理。
 
 <div align="center">
-  <img src="docs/imgs/screenshot1.png" alt="應用程式截圖 - 主頁面" width="250">
-  <img src="docs/imgs/screenshot2.png" alt="應用程式截圖 - 數據分析" width="250">
-  <img src="docs/imgs/screenshot3.png" alt="應用程式截圖 - 記錄功能" width="250">
+  <img src="docs/assets/images/screenshot1.png" alt="應用程式截圖 - 主頁面" width="250">
+  <img src="docs/assets/images/screenshot2.png" alt="應用程式截圖 - 數據分析" width="250">
+  <img src="docs/assets/images/screenshot3.png" alt="應用程式截圖 - 記錄功能" width="250">
 </div>
 
 ## ✨ 主要功能
