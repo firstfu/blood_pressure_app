@@ -13,9 +13,14 @@
 "Blood Pressure Manager" is a health management application designed for users who need to regularly monitor their blood pressure. Through a clean and intuitive interface, it helps users record, track, and analyze blood pressure data, provides health recommendations, and promotes cardiovascular health management.
 
 <div align="center">
+ <img src="docs/assets/images/screenshot5.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/assets/images/screenshot6.png" alt="App Screenshot - Recording Feature" width="250">
+  <img src="docs/assets/images/screenshot7.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/assets/images/screenshot8.png" alt="App Screenshot - Recording Feature" width="250">
   <img src="docs/assets/images/screenshot1.png" alt="App Screenshot - Main Page" width="250">
   <img src="docs/assets/images/screenshot2.png" alt="App Screenshot - Data Analysis" width="250">
   <img src="docs/assets/images/screenshot3.png" alt="App Screenshot - Recording Feature" width="250">
+  <img src="docs/assets/images/screenshot4.png" alt="App Screenshot - Main Page" width="250">
 </div>
 
 ## ✨ Key Features
@@ -195,9 +200,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 「血壓管家」是一款專為需要定期監測血壓的用戶設計的健康管理應用程式。透過簡潔直觀的界面，幫助用戶記錄、追蹤和分析血壓數據，提供健康建議，促進心血管健康管理。
 
 <div align="center">
-  <img src="docs/assets/images/screenshot1.png" alt="應用程式截圖 - 主頁面" width="250">
-  <img src="docs/assets/images/screenshot2.png" alt="應用程式截圖 - 數據分析" width="250">
-  <img src="docs/assets/images/screenshot3.png" alt="應用程式截圖 - 記錄功能" width="250">
+  <img src="docs/assets/images/screenshot5.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/assets/images/screenshot6.png" alt="App Screenshot - Recording Feature" width="250">
+  <img src="docs/assets/images/screenshot7.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/assets/images/screenshot8.png" alt="App Screenshot - Recording Feature" width="250">
+  <img src="docs/assets/images/screenshot1.png" alt="App Screenshot - Main Page" width="250">
+  <img src="docs/assets/images/screenshot2.png" alt="App Screenshot - Data Analysis" width="250">
+  <img src="docs/assets/images/screenshot3.png" alt="App Screenshot - Recording Feature" width="250">
+  <img src="docs/assets/images/screenshot4.png" alt="App Screenshot - Main Page" width="250">
 </div>
 
 ## ✨ 主要功能
