@@ -346,10 +346,10 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       String successMessage;
 
       if (format == 'csv') {
-        filePath = await ExportService.generateCSV(_filteredRecords);
+        filePath = await ExportService.generateCSV(_filteredRecords, context: context);
         successMessage = csvGeneratedText;
       } else {
-        filePath = await ExportService.generateExcel(_filteredRecords);
+        filePath = await ExportService.generateExcel(_filteredRecords, context: context);
         successMessage = excelGeneratedText;
       }
 

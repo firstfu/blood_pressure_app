@@ -26,6 +26,8 @@ const Map<String, String> zhTWCommon = {
   '暫無記錄': '暫無記錄',
   '已服藥': '已服藥',
   '姓名': '姓名',
+  '是': '是',
+  '否': '否',
 
   // 時間相關
   '今天': '今天',
@@ -79,6 +81,8 @@ const Map<String, String> enUSCommon = {
   '暫無記錄': 'No Records',
   '已服藥': 'Medicated',
   '姓名': 'Name',
+  '是': 'Yes',
+  '否': 'No',
 
   // 時間相關
   '今天': 'Today',

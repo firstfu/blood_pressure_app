@@ -30,6 +30,20 @@ const Map<String, String> zhTWStats = {
   '暫無數據': '暫無數據',
   '筆': '筆',
 
+  // 匯出功能相關
+  '匯出': '匯出',
+  '匯出為 CSV 檔案': '匯出為 CSV 檔案',
+  '匯出為 Excel 檔案': '匯出為 Excel 檔案',
+  '適用於 Excel、Google 試算表等': '適用於 Excel、Google 試算表等',
+  '包含格式化和顏色標記': '包含格式化和顏色標記',
+  '選擇匯出格式': '選擇匯出格式',
+  '血壓記錄數據': '血壓記錄數據',
+  'CSV 檔案已生成': 'CSV 檔案已生成',
+  'Excel 檔案已生成': 'Excel 檔案已生成',
+  '匯出失敗：': '匯出失敗：',
+  '暫無數據，無法匯出': '暫無數據，無法匯出',
+  '處理中...': '處理中...',
+
   // 圖表相關
   '正常上限': '正常上限',
   '高血壓': '高血壓',
@@ -115,6 +129,20 @@ const Map<String, String> enUSStats = {
   '取消': 'Cancel',
   '暫無數據': 'No Data Available',
   '筆': 'records',
+
+  // 匯出功能相關
+  '匯出': 'Export',
+  '匯出為 CSV 檔案': 'Export as CSV',
+  '匯出為 Excel 檔案': 'Export as Excel',
+  '適用於 Excel、Google 試算表等': 'Compatible with Excel, Google Sheets, etc.',
+  '包含格式化和顏色標記': 'Includes formatting and color coding',
+  '選擇匯出格式': 'Select Export Format',
+  '血壓記錄數據': 'Blood Pressure Record Data',
+  'CSV 檔案已生成': 'CSV file generated',
+  'Excel 檔案已生成': 'Excel file generated',
+  '匯出失敗：': 'Export failed: ',
+  '暫無數據，無法匯出': 'No data available, cannot export',
+  '處理中...': 'Processing...',
 
   // 圖表相關
   '正常上限': 'Normal Limit',
