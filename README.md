@@ -56,8 +56,9 @@
 - Health report generation in PDF format
 - Lifestyle correlation analysis
 - Blood pressure trend prediction
-- Onboarding experience for new users
+- User-friendly onboarding experience for new users
 - Medication effectiveness analysis
+- Data export in CSV and Excel formats
 
 ## 🛠️ Technical Features
 
@@ -66,8 +67,8 @@
 - **Local Data Storage**: Protects user privacy, no network connection required
 - **Adaptive UI**: Adapts to different device sizes and screens
 - **Material Design 3**: Modern design language, providing a consistent visual experience
-- **Internationalization**: Full support for multiple languages
-- **Theme Customization**: Light and dark mode support (coming soon)
+- **Internationalization**: Full support for multiple languages (English, Traditional Chinese, Simplified Chinese)
+- **Theme Customization**: Light and dark mode support
 - **Professional Medical Color Scheme**: Medical blue primary color with scientifically calibrated accent colors
 
 ## 📋 User Guide
@@ -98,12 +99,42 @@
 ## 🔜 Future Plans
 
 - Multi-user management functionality
-- Data export in PDF/CSV formats
-- Data sharing with healthcare professionals
 - Direct connection to Bluetooth blood pressure monitors
 - Intelligent blood pressure analysis and early warning
 - Cloud synchronization for data backup
-- Dark theme support with eye-comfort design
+- Additional language support (Japanese, Korean)
+- Enhanced onboarding experience with interactive elements
+
+## 📝 Development Status
+
+### Project Progress
+
+| Phase                       | Completion | Status         |
+| --------------------------- | ---------- | -------------- |
+| Phase 1 (Basic Features)    | 100%       | ✅ Completed   |
+| Phase 2 (Advanced Analysis) | 100%       | ✅ Completed   |
+| Phase 3 (Deep Analysis)     | 100%       | ✅ Completed   |
+| Phase 4 (Feature Extension) | 25%        | 🔄 In Progress |
+| Phase 5 (Future Plans)      | 0%         | 📝 Planning    |
+
+### Current Work
+
+- 🔄 User interface optimization
+
+  - Improving visual design
+  - Dark mode implementation
+  - Enhancing user interaction experience
+
+- 🔄 Data backup and recovery functionality
+
+  - Local data backup
+  - Data recovery mechanism
+  - Data security safeguards
+
+- 🔄 Application performance optimization
+  - Optimizing startup time
+  - Improving data processing efficiency
+  - Reducing resource consumption
 
 ## 📝 Developer Notes
 
@@ -207,8 +238,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 健康報告生成（PDF 格式）
 - 生活習慣關聯分析
 - 血壓趨勢預測
-- 新用戶引導體驗
+- 友善的新用戶引導體驗
 - 藥物有效性分析
+- 數據匯出（CSV、Excel 格式）
 
 ## 🛠️ 技術特點
 
@@ -217,8 +249,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **本地數據存儲**：保護用戶隱私，無需網絡連接
 - **自適應 UI**：適配不同尺寸的設備和屏幕
 - **Material Design 3**：現代化的設計語言，提供一致的視覺體驗
-- **國際化**：完整支援多種語言
-- **主題定制**：支援淺色和深色模式（即將推出）
+- **國際化**：完整支援多種語言（英文、繁體中文、簡體中文）
+- **主題定制**：支援淺色和深色模式
 - **專業醫療配色方案**：醫療藍主色調搭配科學校準的輔助色彩
 
 ## 📋 使用指南
@@ -249,12 +281,42 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔜 未來計劃
 
 - 多用戶管理功能
-- 數據導出為 PDF/CSV 格式
-- 與醫療專業人士共享數據功能
 - 藍牙血壓計直接連接功能
 - 智能血壓分析與預警
 - 雲端同步數據備份
-- 深色主題支援與護眼設計
+- 增加更多語言支援（日文、韓文）
+- 增強新用戶引導體驗，添加互動元素
+
+## 📝 開發狀態
+
+### 專案進度
+
+| 階段                 | 完成度 | 狀態      |
+| -------------------- | ------ | --------- |
+| 第一階段（基礎功能） | 100%   | ✅ 已完成 |
+| 第二階段（進階分析） | 100%   | ✅ 已完成 |
+| 第三階段（深度分析） | 100%   | ✅ 已完成 |
+| 第四階段（功能擴展） | 25%    | 🔄 進行中 |
+| 第五階段（未來計劃） | 0%     | 📝 規劃中 |
+
+### 目前工作
+
+- 🔄 用戶界面優化
+
+  - 改進視覺設計
+  - 實現深色模式
+  - 提升用戶交互體驗
+
+- 🔄 數據備份與恢復功能
+
+  - 本地數據備份
+  - 數據恢復機制
+  - 數據安全保障
+
+- 🔄 應用性能優化
+  - 優化啟動時間
+  - 提升數據處理效率
+  - 減少資源消耗
 
 ## 📝 開發者說明
 
@@ -310,6 +372,30 @@ flutter run
 
 要切換深色模式，請前往：我的 > 主題設定，選擇您喜歡的顯示模式。
 
+## 新用戶引導體驗
+
+血壓管家提供精心設計的新用戶引導體驗：
+
+- **吸引人的引導頁面**：展示 App 核心功能和價值的精美引導頁
+- **符合應用主題風格**：藍色主題設計，與應用整體視覺體驗一致
+- **多語言支援**：引導頁面自動根據系統語言切換顯示語言
+- **直觀的導航控制**：水平滑動切換頁面，簡單易用
+- **靈活跳過選項**：可隨時跳過引導過程直接進入主應用程式
+
+首次安裝應用後，您將自動看到這個引導體驗，幫助您快速了解如何使用血壓管家的各項功能。
+
+## 多國語系支援
+
+血壓管家實現了完整的多國語系支援：
+
+- **支援多種語言**：目前支援繁體中文、簡體中文和英文
+- **自動適應系統語言**：根據設備系統語言自動選擇顯示語言
+- **手動語言切換**：在設定中可手動選擇偏好的顯示語言
+- **統一翻譯管理**：所有 UI 文字都通過本地化系統管理，確保翻譯一致性
+- **完整頁面支援**：所有頁面和功能都支援多語言顯示
+
+未來計劃擴展支援更多語言，如日文和韓文，以滿足更廣泛用戶的需求。
+
 ## 技術堆疊
 
 - Flutter 框架
@@ -318,36 +404,6 @@ flutter run
 - SharedPreferences 設定存儲
 - HTTP/Dio 網絡請求
 - Chart 圖表展示
-
-## 版本要求
-
-- Flutter 3.0.0 或更高版本
-- Dart 2.18.0 或更高版本
-- iOS 12+ / Android 6.0+
-
-## 安裝和運行
-
-```bash
-# 克隆項目
-git clone https://github.com/yourusername/blood_pressure_app.git
-
-# 進入項目目錄
-cd blood_pressure_app
-
-# 安裝依賴
-flutter pub get
-
-# 運行應用
-flutter run
-```
-
-## 開發和貢獻
-
-歡迎提交問題和拉取請求。對於重大更改，請先開 issue 討論您想要更改的內容。
-
-## 許可
-
-此項目採用 MIT 許可證 - 有關詳細信息，請查看 LICENSE 文件。
 
 ## 聯繫方式
 
