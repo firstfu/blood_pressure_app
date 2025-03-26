@@ -4,15 +4,67 @@
   <!-- 創建時間: 2024-03-27 20:07:54 -->
   <!-- 描述: 血壓管家應用程式Logo -->
 
+  <!-- 定義漸變和效果 -->
+  <defs>
+    <!-- 心臟填充漸變 -->
+    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E88E5" />
+      <stop offset="100%" stop-color="#0D47A1" />
+    </linearGradient>
+
+    <!-- 圓形背景漸變 -->
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F5F5F5" />
+    </linearGradient>
+
+    <!-- 血壓曲線漸變 -->
+    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#64B5F6" />
+      <stop offset="100%" stop-color="#1976D2" />
+    </linearGradient>
+
+    <!-- 陰影效果 -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+      <feOffset dx="2" dy="2" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- 高光效果 -->
+    <filter id="highlight" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
+      <feOffset dx="-1" dy="-1" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5" />
+      </feComponentTransfer>
+      <feFlood flood-color="#FFFFFF" />
+      <feComposite in2="offsetblur" operator="in" />
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
   <!-- 背景圓形 -->
-  <circle cx="100" cy="100" r="90" fill="#FFFFFF" stroke="#1976D2" stroke-width="6"/>
+  <circle cx="100" cy="100" r="90" fill="url(#circleGradient)" stroke="#1976D2" stroke-width="6" filter="url(#shadow)" />
 
   <!-- 心臟圖標 -->
-  <path d="M100 150C98.3333 150 96.6667 149.333 95.3333 148C75.3333 130 62 114.667 55.3333 102C48.6667 89.3333 46.6667 78 50.6667 68C53.3333 60.6667 58 55.3333 64.6667 52C71.3333 48.6667 78 48 84.6667 49.3333C91.3333 50.6667 97.3333 54.6667 100 62C102.667 54.6667 108.667 50.6667 115.333 49.3333C122 48 128.667 48.6667 135.333 52C142 55.3333 146.667 60.6667 149.333 68C153.333 78 151.333 89.3333 144.667 102C138 114.667 124.667 130 104.667 148C103.333 149.333 101.667 150 100 150Z" fill="#1976D2"/>
+  <path d="M100 150C98.3333 150 96.6667 149.333 95.3333 148C75.3333 130 62 114.667 55.3333 102C48.6667 89.3333 46.6667 78 50.6667 68C53.3333 60.6667 58 55.3333 64.6667 52C71.3333 48.6667 78 48 84.6667 49.3333C91.3333 50.6667 97.3333 54.6667 100 62C102.667 54.6667 108.667 50.6667 115.333 49.3333C122 48 128.667 48.6667 135.333 52C142 55.3333 146.667 60.6667 149.333 68C153.333 78 151.333 89.3333 144.667 102C138 114.667 124.667 130 104.667 148C103.333 149.333 101.667 150 100 150Z" fill="url(#heartGradient)" filter="url(#highlight)" />
+
+  <!-- 心臟反光效果 -->
+  <path d="M85 62C82 66 80 71 78 76C76 81 75 85 77 90C79 95 82 98 85 99C88 100 92 99 95 97C98 95 100 91 102 88C104 85 105 82 105 79C105 76 104 74 103 72C102 70 100 68 98 67C96 66 94 65 92 65C90 65 87 65 85 66C83 67 81 69 80 71" fill="#64B5F6" opacity="0.4" />
 
   <!-- 血壓計袖帶 -->
-  <path d="M52 94C52 94 66 80 100 80C134 80 148 94 148 94" fill="none" stroke="#1976D2" stroke-width="8" stroke-linecap="round"/>
+  <path d="M52 94C52 94 66 80 100 80C134 80 148 94 148 94" fill="none" stroke="#1976D2" stroke-width="8" stroke-linecap="round" filter="url(#shadow)" />
 
   <!-- 血壓曲線 -->
-  <path d="M40 120C45 120 48 115 50 110C52 105 55 100 60 100C65 100 68 110 70 115C72 120 75 125 80 125C85 125 88 115 90 110C92 105 95 100 100 100C105 100 108 110 110 115C112 120 115 125 120 125C125 125 128 115 130 110C132 105 135 100 140 100C145 100 148 110 150 115C152 120 155 120 160 120" fill="none" stroke="#90CAF9" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 120C45 120 48 115 50 110C52 105 55 100 60 100C65 100 68 110 70 115C72 120 75 125 80 125C85 125 88 115 90 110C92 105 95 100 100 100C105 100 108 110 110 115C112 120 115 125 120 125C125 125 128 115 130 110C132 105 135 100 140 100C145 100 148 110 150 115C152 120 155 120 160 120" fill="none" stroke="url(#lineGradient)" stroke-width="4" stroke-linecap="round" filter="url(#shadow)" />
 </svg>
