@@ -4,64 +4,46 @@
   <!-- 創建時間: 2024-03-27 20:07:54 -->
   <!-- 描述: 血壓管家應用程式Logo -->
 
-  <!-- 定義漸變和效果 -->
+  <!-- 定義漸變 -->
   <defs>
-    <!-- 心臟填充漸變 - 調整為更鮮明的對比色 -->
-    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2962FF" />
-      <stop offset="100%" stop-color="#0D47A1" />
+    <!-- Apple 風格的藍色漸變 -->
+    <linearGradient id="appleBlueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007AFF" />
+      <stop offset="100%" stop-color="#0055D6" />
     </linearGradient>
 
-    <!-- 血壓曲線漸變 - 使用對比更強的色彩 -->
-    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#90CAF9" />
-      <stop offset="100%" stop-color="#0277BD" />
+    <!-- 輔助色漸變 -->
+    <linearGradient id="appleLightGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#3B82F6" />
     </linearGradient>
-
-    <!-- 袖帶漸變 -->
-    <linearGradient id="cuffGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#0288D1" />
-      <stop offset="100%" stop-color="#01579B" />
-    </linearGradient>
-
-    <!-- 陰影效果 -->
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-      <feOffset dx="2" dy="2" result="offsetblur" />
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0.3" />
-      </feComponentTransfer>
-      <feMerge>
-        <feMergeNode />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-
-    <!-- 高光效果 -->
-    <filter id="highlight" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
-      <feOffset dx="-1" dy="-1" result="offsetblur" />
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0.5" />
-      </feComponentTransfer>
-      <feFlood flood-color="#FFFFFF" />
-      <feComposite in2="offsetblur" operator="in" />
-      <feMerge>
-        <feMergeNode />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
   </defs>
 
-  <!-- 心臟圖標 - 位置調整以填充更多空間 -->
-  <path d="M100 155C98.3333 155 96.6667 154.333 95.3333 153C75.3333 135 62 119.667 55.3333 107C48.6667 94.3333 46.6667 83 50.6667 73C53.3333 65.6667 58 60.3333 64.6667 57C71.3333 53.6667 78 53 84.6667 54.3333C91.3333 55.6667 97.3333 59.6667 100 67C102.667 59.6667 108.667 55.6667 115.333 54.3333C122 53 128.667 53.6667 135.333 57C142 60.3333 146.667 65.6667 149.333 73C153.333 83 151.333 94.3333 144.667 107C138 119.667 124.667 135 104.667 153C103.333 154.333 101.667 155 100 155Z" fill="url(#heartGradient)" filter="url(#highlight)" />
+  <!-- 血壓計外圓 -->
+  <circle cx="100" cy="100" r="80"
+          fill="white"
+          stroke="url(#appleBlueGradient)"
+          stroke-width="8"/>
 
-  <!-- 心臟反光效果 - 調整顏色使反光更明顯 -->
-  <path d="M85 67C82 71 80 76 78 81C76 86 75 90 77 95C79 100 82 103 85 104C88 105 92 104 95 102C98 100 100 96 102 93C104 90 105 87 105 84C105 81 104 79 103 77C102 75 100 73 98 72C96 71 94 70 92 70C90 70 87 70 85 71C83 72 81 74 80 76" fill="#BBDEFB" opacity="0.5" />
+  <!-- 血壓袖帶 -->
+  <path d="M45 100C45 100 65 80 100 80C135 80 155 100 155 100"
+        fill="none"
+        stroke="url(#appleBlueGradient)"
+        stroke-width="10"
+        stroke-linecap="round"/>
 
-  <!-- 血壓計袖帶 - 使用漸變色增強立體感 -->
-  <path d="M40 94C40 94 66 70 100 70C134 70 160 94 160 94" fill="none" stroke="url(#cuffGradient)" stroke-width="10" stroke-linecap="round" filter="url(#shadow)" />
+  <!-- 血壓曲線 -->
+  <path d="M60 120C65 120 67 115 70 110C73 105 75 95 80 95C85 95 87 110 90 115C93 120 95 120 100 120C105 120 107 100 110 95C113 90 115 100 120 100C125 100 127 105 130 110C133 115 135 120 140 120"
+        fill="none"
+        stroke="url(#appleLightGradient)"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 
-  <!-- 血壓曲線 - 位置調整 -->
-  <path d="M40 130C45 130 48 125 50 120C52 115 55 110 60 110C65 110 68 120 70 125C72 130 75 135 80 135C85 135 88 125 90 120C92 115 95 110 100 110C105 110 108 120 110 125C112 130 115 135 120 135C125 135 128 125 130 120C132 115 135 110 140 110C145 110 148 120 150 125C152 130 155 130 160 130" fill="none" stroke="url(#lineGradient)" stroke-width="5" stroke-linecap="round" filter="url(#shadow)" />
+  <!-- 數字指示 -->
+  <text x="92" y="150"
+        font-family="SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif"
+        font-size="18"
+        font-weight="600"
+        fill="url(#appleBlueGradient)">120/80</text>
 </svg>
