@@ -9,10 +9,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import '../../../models/blood_pressure_record.dart';
 import '../../../services/mock_data_service.dart';
-import '../../../services/report_service.dart';
+import '../../../services/export_service.dart';
 import '../../../utils/stats_utils.dart';
 import '../advanced_features/advanced_features_page.dart';
 import 'widgets/time_range_selector.dart';
@@ -179,12 +178,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
             tooltip: context.tr('匯出數據'),
             onPressed: () => _showExportOptions(context),
           ),
-          // 添加生成報告按鈕
-          IconButton(
-            icon: Icon(Icons.picture_as_pdf, color: theme.appBarTheme.foregroundColor),
-            tooltip: context.tr('生成報告'),
-            onPressed: () => _generateReport(context),
-          ),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -299,210 +292,96 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   // 匯出數據
   Future<void> _exportData(BuildContext context, String format) async {
-    final theme = Theme.of(context);
+    // 記錄這個頁面的狀態
+    bool isCurrentlyMounted = mounted;
 
     if (_filteredRecords.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法匯出'))));
       return;
     }
 
-    // 提前獲取並保存需要的翻譯文本
+    // 先提前獲取所有需要的資源
+    final theme = Theme.of(context);
     final recordDataText = context.tr('血壓記錄數據');
-    String formatGeneratedText(String formatName) => context.tr('$formatName 檔案已生成');
+    final processingText = context.tr('處理中...');
+    final csvGeneratedText = context.tr('CSV 檔案已生成');
+    final excelGeneratedText = context.tr('Excel 檔案已生成');
     final exportFailedText = context.tr('匯出失敗：');
-
-    // 保存 ScaffoldMessenger 的引用
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    // 顯示加載對話框
-    final loadingDialog = _showLoadingDialog(context);
+    // 使用不依賴於 Navigator 操作的方法
+    late final OverlayEntry loadingOverlay;
 
-    try {
-      String filePath;
-      String formatName;
-
-      if (format == 'csv') {
-        filePath = await ReportService.generateCSV(_filteredRecords);
-        formatName = 'CSV';
-      } else {
-        filePath = await ReportService.generateExcel(_filteredRecords);
-        formatName = 'Excel';
-      }
-
-      // 檢查 widget 是否仍然掛載在 widget 樹上
-      if (!mounted) return;
-
-      // 關閉加載對話框
-      loadingDialog.dismiss();
-
-      // 分享文件
-      await Share.shareXFiles([XFile(filePath)], text: recordDataText);
-
-      // 檢查 widget 是否仍然掛載在 widget 樹上
-      if (!mounted) return;
-
-      // 使用保存的 scaffoldMessenger 引用顯示成功消息
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text(formatGeneratedText(formatName)), backgroundColor: theme.colorScheme.primary, behavior: SnackBarBehavior.floating),
-      );
-    } catch (e) {
-      // 檢查 widget 是否仍然掛載在 widget 樹上
-      if (!mounted) return;
-
-      // 關閉加載對話框
-      loadingDialog.dismiss();
-
-      // 使用保存的 scaffoldMessenger 引用顯示錯誤消息
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('$exportFailedText$e'), backgroundColor: theme.colorScheme.error, behavior: SnackBarBehavior.floating),
-      );
-    }
-  }
-
-  // 生成健康報告
-  Future<void> _generateReport(BuildContext context) async {
-    final theme = Theme.of(context);
-
-    if (_filteredRecords.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('暫無數據，無法生成報告'))));
-      return;
-    }
-
-    // 保存當前 context 的引用
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-    // 提前獲取並保存需要的翻譯文本
-    final reportTitleText = context.tr('血壓健康報告');
-    final reportFailedText = context.tr('生成報告失敗');
-    final recordUnitText = context.tr('筆');
-
-    // 提前獲取時間範圍文本
-    final String timeRangeText = _getTimeRangeText(context);
-
-    // 顯示加載對話框
-    final loadingDialog = _showLoadingDialog(context);
-
-    try {
-      // 計算統計數據
-      final Map<String, double> statistics = StatsUtils.calculateStatistics(_filteredRecords);
-
-      // 計算血壓分類統計
-      final Map<String, int> categoryCounts = StatsUtils.calculateCategoryCounts(_filteredRecords);
-
-      // 獲取開始和結束日期
-      final DateTime startDate = _startDate ?? DateTime.now().subtract(const Duration(days: 30));
-      final DateTime endDate = _endDate ?? DateTime.now();
-
-      // 生成報告
-      final pdfData = await ReportService.generateReport(
-        records: _filteredRecords,
-        startDate: startDate,
-        endDate: endDate,
-        categoryCounts: categoryCounts,
-        statistics: statistics,
-        timeRangeText: timeRangeText,
-        recordUnit: recordUnitText,
-      );
-
-      // 檢查 widget 是否仍然掛載在 widget 樹上
-      if (!mounted) return;
-
-      // 關閉加載對話框
-      loadingDialog.dismiss();
-
-      // 生成文件名
-      final dateFormat = DateFormat('yyyyMMdd');
-      final fileName = '${reportTitleText}_${dateFormat.format(DateTime.now())}.pdf';
-
-      // 保存並分享報告
-      await ReportService.saveAndShareReport(pdfData, fileName);
-
-      // 檢查 widget 是否仍然掛載在 widget 樹上
-      if (!mounted) return;
-
-      // 顯示成功消息
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('$reportTitleText已生成'), backgroundColor: theme.colorScheme.primary, behavior: SnackBarBehavior.floating),
-      );
-    } catch (e) {
-      // 檢查 widget 是否仍然掛載在 widget 樹上
-      if (!mounted) return;
-
-      // 關閉加載對話框
-      loadingDialog.dismiss();
-
-      // 顯示錯誤消息
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('$reportFailedText: $e'), backgroundColor: theme.colorScheme.error, behavior: SnackBarBehavior.floating),
-      );
-    }
-  }
-
-  // 顯示加載對話框
-  LoadingDialog _showLoadingDialog(BuildContext context) {
-    return LoadingDialog.show(context);
-  }
-
-  // 獲取時間範圍文本
-  String _getTimeRangeText(BuildContext context) {
-    switch (_selectedTimeRange) {
-      case TimeRange.week:
-        return context.tr('近 7 天');
-      case TimeRange.twoWeeks:
-        return context.tr('近 14 天');
-      case TimeRange.month:
-        return context.tr('近 30 天');
-      case TimeRange.custom:
-        if (_startDate != null && _endDate != null) {
-          final dateFormat = DateFormat('yyyy/MM/dd');
-          return '${dateFormat.format(_startDate!)} - ${dateFormat.format(_endDate!)}';
-        }
-        return context.tr('自定義時間範圍');
-    }
-  }
-}
-
-// 加載對話框
-class LoadingDialog {
-  final BuildContext context;
-  final OverlayEntry _overlayEntry;
-  bool _isShowing = true;
-
-  LoadingDialog._(this.context, this._overlayEntry);
-
-  static LoadingDialog show(BuildContext context) {
-    final overlay = Overlay.of(context);
-    final theme = Theme.of(context);
-
-    final overlayEntry = OverlayEntry(
-      builder:
-          (context) => Material(
-            color: Colors.black.withAlpha(77),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(color: theme.primaryColor),
-                    const SizedBox(height: 16),
-                    Text(context.tr('處理中...'), style: TextStyle(fontSize: 16, color: theme.textTheme.bodyLarge?.color)),
-                  ],
-                ),
+    // 顯示加載狀態
+    loadingOverlay = OverlayEntry(
+      builder: (BuildContext ctx) {
+        return Material(
+          color: Colors.black.withValues(alpha: 128),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(color: theme.primaryColor),
+                  const SizedBox(height: 16),
+                  Text(processingText, style: TextStyle(fontSize: 16, color: theme.textTheme.bodyLarge?.color)),
+                ],
               ),
             ),
           ),
+        );
+      },
     );
 
-    overlay.insert(overlayEntry);
-    return LoadingDialog._(context, overlayEntry);
-  }
+    // 將加載層添加到覆蓋層
+    if (isCurrentlyMounted) {
+      Overlay.of(context).insert(loadingOverlay);
+    }
 
-  void dismiss() {
-    if (_isShowing) {
-      _overlayEntry.remove();
-      _isShowing = false;
+    try {
+      // 執行匯出操作
+      String filePath;
+      String successMessage;
+
+      if (format == 'csv') {
+        filePath = await ExportService.generateCSV(_filteredRecords);
+        successMessage = csvGeneratedText;
+      } else {
+        filePath = await ExportService.generateExcel(_filteredRecords);
+        successMessage = excelGeneratedText;
+      }
+
+      // 移除加載層
+      loadingOverlay.remove();
+
+      // 檢查頁面是否仍然可用
+      if (!isCurrentlyMounted || !mounted) return;
+
+      // 嘗試分享文件
+      try {
+        await Share.shareXFiles([XFile(filePath)], text: recordDataText);
+        // 顯示成功消息
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text(successMessage), backgroundColor: theme.colorScheme.primary, behavior: SnackBarBehavior.floating),
+        );
+      } catch (shareError) {
+        // 文件已生成但分享失敗
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('$successMessage，但分享時出錯'), backgroundColor: theme.colorScheme.secondary, behavior: SnackBarBehavior.floating),
+        );
+      }
+    } catch (e) {
+      // 移除加載層
+      loadingOverlay.remove();
+
+      // 顯示錯誤消息
+      if (isCurrentlyMounted && mounted) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('$exportFailedText$e'), backgroundColor: theme.colorScheme.error, behavior: SnackBarBehavior.floating),
+        );
+      }
     }
   }
 }
