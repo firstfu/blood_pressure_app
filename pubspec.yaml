@@ -59,6 +59,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   # SVG 處理
   flutter_svg: ^2.0.9
+  icon_font_generator: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,31 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+
+  # 應用圖標生成器
+  flutter_launcher_icons: ^0.13.1
+
+# 應用圖標配置
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/logo.png"
+  web:
+    generate: true
+    image_path: "assets/icons/logo.png"
+    background_color: "#F0F7FF"
+    theme_color: "#007AFF"
+  windows:
+    generate: true
+    image_path: "assets/icons/logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icons/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  adaptive_icon_background: "#F0F7FF"
+  adaptive_icon_foreground: "assets/icons/logo.png"
+  remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
