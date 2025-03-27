@@ -73,7 +73,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
   # 應用圖標生成器
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: 0.14.3
 
 # 應用圖標配置
 flutter_launcher_icons:
