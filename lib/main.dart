@@ -8,14 +8,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 import 'constants/app_constants.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/shared_prefs_service.dart';
+import 'services/auth_service.dart';
+import 'services/record_service.dart';
 import 'themes/app_theme.dart';
 import 'views/main_page.dart';
 import 'views/onboarding/onboarding_page.dart';
+
+// GetIt實例
+final getIt = GetIt.instance;
+
+// 設置服務
+void setupServices() {
+  // 註冊認證服務
+  if (!getIt.isRegistered<AuthService>()) {
+    getIt.registerSingleton<AuthService>(AuthService());
+  }
+
+  // 註冊記錄服務
+  if (!getIt.isRegistered<RecordService>()) {
+    getIt.registerSingleton<RecordService>(RecordService());
+  }
+}
 
 // 主應用程式入口
 void main() async {
@@ -29,6 +48,12 @@ void main() async {
       statusBarBrightness: Brightness.light, // iOS
     ),
   );
+
+  // 設置服務
+  setupServices();
+
+  // 初始化認證服務
+  await getIt<AuthService>().initialize();
 
   // 檢查用戶是否已完成 onBoarding
   final bool onBoardingCompleted = await SharedPrefsService.isOnBoardingCompleted();
@@ -44,7 +69,12 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => localeProvider), ChangeNotifierProvider(create: (_) => themeProvider)],
+      providers: [
+        ChangeNotifierProvider(create: (_) => localeProvider),
+        ChangeNotifierProvider(create: (_) => themeProvider),
+        ChangeNotifierProvider.value(value: getIt<AuthService>()),
+        ChangeNotifierProvider.value(value: getIt<RecordService>()),
+      ],
       child: MyApp(onBoardingCompleted: onBoardingCompleted),
     ),
   );
@@ -62,6 +92,8 @@ class MyApp extends StatelessWidget {
     final localeProvider = Provider.of<LocaleProvider>(context);
     // 獲取當前主題
     final themeProvider = Provider.of<ThemeProvider>(context);
+    // 獲取認證服務 (僅為了監聽變化，實際操作通過GetIt獲取)
+    final authService = Provider.of<AuthService>(context, listen: true);
 
     return MaterialApp(
       title: AppConstants.appName,
@@ -79,6 +111,8 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: localeProvider.locale, // 使用 Provider 管理的語系
+      // 在用戶身份變更時重建應用，確保權限控制生效
+      key: ValueKey('app_${authService.isAuthenticated}'),
     );
   }
 }

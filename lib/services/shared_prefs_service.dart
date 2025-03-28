@@ -14,6 +14,7 @@ class SharedPrefsService {
   static const String _keyPrivacySettings = 'privacySettings';
   static const String _keyThemeSettings = 'themeSettings';
   static const String _keyUserProfile = 'userProfile';
+  static const String _keyAuthToken = 'authToken';
 
   /// 獲取 onBoarding 完成狀態
   ///
@@ -161,5 +162,58 @@ class SharedPrefsService {
     // 保存到 SharedPreferences
     await prefs.setString(_keyUserProfile, profileJson);
     print('用戶資料已保存: ${profile.name}');
+  }
+
+  /// 保存認證令牌
+  ///
+  /// 將用戶的認證令牌保存到本地存儲中
+  static Future<void> saveAuthToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyAuthToken, token);
+    print('認證令牌已保存');
+  }
+
+  /// 獲取認證令牌
+  ///
+  /// 返回用戶的認證令牌，如果沒有，返回 null
+  static Future<String?> getAuthToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyAuthToken);
+  }
+
+  /// 清除認證令牌
+  ///
+  /// 用於用戶登出時清除認證令牌
+  static Future<void> clearAuthToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyAuthToken);
+    print('認證令牌已清除');
+  }
+
+  /// 清除用戶資料
+  ///
+  /// 用於用戶登出時清除用戶資料
+  static Future<void> clearUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyUserProfile);
+    print('用戶資料已清除');
+  }
+
+  /// 保存用戶認證信息
+  ///
+  /// 包括用戶資料和認證令牌
+  static Future<void> saveUserAuth(UserProfile profile, String token) async {
+    await saveUserProfile(profile);
+    await saveAuthToken(token);
+    print('用戶認證信息已保存: ${profile.name}');
+  }
+
+  /// 清除所有用戶認證信息
+  ///
+  /// 用於用戶登出時清除所有認證相關信息
+  static Future<void> clearUserAuth() async {
+    await clearUserData();
+    await clearAuthToken();
+    print('所有用戶認證信息已清除');
   }
 }

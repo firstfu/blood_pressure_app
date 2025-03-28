@@ -25,6 +25,13 @@ class UserProfile {
   String? notes; // 其他備註
   String? avatarPath; // 頭像圖片路徑
 
+  // 認證相關屬性
+  String? userId; // 用戶唯一ID
+  String? email; // 電子郵件
+  String? phoneNumber; // 手機號碼
+  bool isGuest; // 是否為遊客
+  DateTime? lastLogin; // 最後登入時間
+
   /// 構造函數
   UserProfile({
     this.name = '',
@@ -41,6 +48,12 @@ class UserProfile {
     this.allergies,
     this.notes,
     this.avatarPath,
+    // 認證相關屬性初始化
+    this.userId,
+    this.email,
+    this.phoneNumber,
+    this.isGuest = true, // 默認為遊客模式
+    this.lastLogin,
   });
 
   /// 從 JSON 創建 UserProfile 對象
@@ -60,6 +73,12 @@ class UserProfile {
       allergies: json['allergies'] as String?,
       notes: json['notes'] as String?,
       avatarPath: json['avatarPath'] as String?,
+      // 認證相關屬性解析
+      userId: json['userId'] as String?,
+      email: json['email'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+      isGuest: json['isGuest'] as bool? ?? true,
+      lastLogin: json['lastLogin'] != null ? DateTime.parse(json['lastLogin'] as String) : null,
     );
   }
 
@@ -80,6 +99,12 @@ class UserProfile {
       'allergies': allergies,
       'notes': notes,
       'avatarPath': avatarPath,
+      // 認證相關屬性序列化
+      'userId': userId,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'isGuest': isGuest,
+      'lastLogin': lastLogin?.toIso8601String(),
     };
   }
 
@@ -97,5 +122,10 @@ class UserProfile {
   /// 創建默認的用戶資料
   static UserProfile createDefault() {
     return UserProfile(name: '', age: 45, gender: 'male', hasDiabetes: false, isSmoker: false, cholesterolLevel: 180.0);
+  }
+
+  /// 創建遊客用戶
+  static UserProfile createGuestUser() {
+    return UserProfile(name: '遊客', userId: 'guest_${DateTime.now().millisecondsSinceEpoch}', isGuest: true, lastLogin: DateTime.now());
   }
 }

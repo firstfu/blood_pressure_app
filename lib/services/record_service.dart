@@ -6,13 +6,21 @@
 
 import 'package:flutter/material.dart';
 import '../models/blood_pressure_record.dart';
+import '../constants/auth_constants.dart';
+import '../utils/permission_handler.dart';
 
 class RecordService extends ChangeNotifier {
   List<BloodPressureRecord> _records = [];
   bool _isLoading = false;
+  BuildContext? _context;
 
   bool get isLoading => _isLoading;
   List<BloodPressureRecord> get records => _records;
+
+  // 設置上下文，用於顯示登入彈窗
+  void setContext(BuildContext context) {
+    _context = context;
+  }
 
   // 獲取所有血壓記錄
   Future<List<BloodPressureRecord>> getRecords() async {
@@ -41,28 +49,56 @@ class RecordService extends ChangeNotifier {
     }
   }
 
-  // 添加血壓記錄
-  Future<void> addRecord(BloodPressureRecord record) async {
-    _records.add(record);
-    // 在實際應用中，這裡應該將記錄保存到數據庫
-    notifyListeners();
-  }
-
-  // 更新血壓記錄
-  Future<void> updateRecord(BloodPressureRecord record) async {
-    final index = _records.indexWhere((r) => r.id == record.id);
-    if (index != -1) {
-      _records[index] = record;
-      // 在實際應用中，這裡應該更新數據庫中的記錄
-      notifyListeners();
+  // 添加血壓記錄 (需要權限檢查)
+  Future<bool> addRecord(BloodPressureRecord record) async {
+    if (_context == null) {
+      debugPrint('無法進行權限檢查：缺少上下文');
+      return false;
     }
+
+    // 使用 PermissionHandler 檢查添加記錄的權限
+    return PermissionHandler.performProtectedOperation(_context!, OperationType.addRecord, () async {
+      _records.add(record);
+      // 在實際應用中，這裡應該將記錄保存到數據庫
+      notifyListeners();
+      return true;
+    }, customMessage: '登入後才能添加血壓記錄').then((result) => result ?? false);
   }
 
-  // 刪除血壓記錄
-  Future<void> deleteRecord(String id) async {
-    _records.removeWhere((record) => record.id == id);
-    // 在實際應用中，這裡應該從數據庫中刪除記錄
-    notifyListeners();
+  // 更新血壓記錄 (需要權限檢查)
+  Future<bool> updateRecord(BloodPressureRecord record) async {
+    if (_context == null) {
+      debugPrint('無法進行權限檢查：缺少上下文');
+      return false;
+    }
+
+    // 使用 PermissionHandler 檢查編輯記錄的權限
+    return PermissionHandler.performProtectedOperation(_context!, OperationType.editRecord, () async {
+      final index = _records.indexWhere((r) => r.id == record.id);
+      if (index != -1) {
+        _records[index] = record;
+        // 在實際應用中，這裡應該更新數據庫中的記錄
+        notifyListeners();
+        return true;
+      }
+      return false;
+    }, customMessage: '登入後才能更新血壓記錄').then((result) => result ?? false);
+  }
+
+  // 刪除血壓記錄 (需要權限檢查)
+  Future<bool> deleteRecord(String id) async {
+    if (_context == null) {
+      debugPrint('無法進行權限檢查：缺少上下文');
+      return false;
+    }
+
+    // 使用 PermissionHandler 檢查刪除記錄的權限
+    return PermissionHandler.performProtectedOperation(_context!, OperationType.deleteRecord, () async {
+      _records.removeWhere((record) => record.id == id);
+      // 在實際應用中，這裡應該從數據庫中刪除記錄
+      notifyListeners();
+      return true;
+    }, customMessage: '登入後才能刪除血壓記錄').then((result) => result ?? false);
   }
 
   // 生成模擬血壓記錄數據

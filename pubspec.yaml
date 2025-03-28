@@ -60,6 +60,8 @@ dependencies:
   # SVG 處理
   flutter_svg: ^2.0.9
   icon_font_generator: ^4.0.0
+  # 依賴注入
+  get_it: ^7.6.7
 
 dev_dependencies:
   flutter_test:

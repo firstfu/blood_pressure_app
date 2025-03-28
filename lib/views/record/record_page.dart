@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
+import 'package:provider/provider.dart';
 import '../../models/blood_pressure_record.dart';
 import '../../l10n/app_localizations_extension.dart';
+import '../../services/record_service.dart';
+import '../../utils/permission_handler.dart';
+import '../../constants/auth_constants.dart';
 
 class RecordPage extends StatefulWidget {
   final BloodPressureRecord? recordToEdit;
@@ -73,6 +77,12 @@ class _RecordPageState extends State<RecordPage> {
 
       _isMedicated = widget.recordToEdit!.isMedicated;
     }
+
+    // 獲取 RecordService 並設置上下文
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final recordService = Provider.of<RecordService>(context, listen: false);
+      recordService.setContext(context);
+    });
   }
 
   // 獲取當前語系的姿勢選項
@@ -202,7 +212,7 @@ class _RecordPageState extends State<RecordPage> {
         );
       },
     ).then((value) {
-      if (value != null) {
+      if (value != null && mounted) {
         setState(() {
           _selectedTime = TimeOfDay(hour: value.hour, minute: value.minute);
         });
@@ -211,7 +221,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   // 保存記錄
-  void _saveRecord() {
+  Future<void> _saveRecord() async {
     if (_formKey.currentState!.validate()) {
       // 創建測量時間
       final measureTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, _selectedTime.hour, _selectedTime.minute);
@@ -223,16 +233,18 @@ class _RecordPageState extends State<RecordPage> {
 
       // 如果任一輸入不是有效數字，顯示錯誤並返回
       if (systolic == null || diastolic == null || pulse == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.tr('請輸入有效的數字'), style: TextStyle(fontSize: _contentFontSize)),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8),
-            duration: const Duration(milliseconds: 1500),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.tr('請輸入有效的數字'), style: TextStyle(fontSize: _contentFontSize)),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8),
+              duration: const Duration(milliseconds: 1500),
+            ),
+          );
+        }
         return;
       }
 
@@ -250,41 +262,73 @@ class _RecordPageState extends State<RecordPage> {
       );
 
       try {
-        // 先顯示成功消息
-        final snackBar = SnackBar(
-          content: Text(_isEditing ? context.tr('記錄已更新') : context.tr('記錄已保存'), style: TextStyle(fontSize: _contentFontSize)),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: const EdgeInsets.all(8),
-          duration: const Duration(milliseconds: 1500),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // 在異步操作前獲取 RecordService
+        final recordService = Provider.of<RecordService>(context, listen: false);
+        bool success = false;
 
-        // 使用延遲來確保 SnackBar 顯示完整
-        Future.delayed(const Duration(milliseconds: 200), () {
-          // 檢查 widget 是否仍然掛載
-          if (mounted) {
-            // 如果是從 Tab 導航欄進入，則不進行導航操作，只重置表單
-            if (widget.isFromTabNav) {
-              _resetForm();
-            } else {
-              // 如果是從其他地方進入，則返回記錄對象
-              Navigator.of(context).pop(record);
-            }
+        // 檢查權限
+        OperationType operationType = _isEditing ? OperationType.editRecord : OperationType.addRecord;
+
+        // 執行受保護操作
+        final result = await PermissionHandler.performProtectedOperation(context, operationType, () async {
+          // 進行異步操作
+          if (_isEditing) {
+            return await recordService.updateRecord(record);
+          } else {
+            return await recordService.addRecord(record);
           }
-        });
+        }, customMessage: _isEditing ? '編輯記錄需要登入' : '添加記錄需要登入');
+
+        // 如果操作沒有執行或失敗（沒有權限）
+        if (result == null) {
+          return;
+        }
+
+        success = result;
+
+        // 如果保存成功且組件仍然掛載
+        if (success && mounted) {
+          // 顯示成功消息
+          final snackBar = SnackBar(
+            content: Text(_isEditing ? context.tr('記錄已更新') : context.tr('記錄已保存'), style: TextStyle(fontSize: _contentFontSize)),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(8),
+            duration: const Duration(milliseconds: 1500),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          // 使用延遲來確保 SnackBar 顯示完整
+          Future.delayed(const Duration(milliseconds: 200), () {
+            // 檢查 widget 是否仍然掛載
+            if (mounted) {
+              // 如果是從 Tab 導航欄進入，則不進行導航操作，只重置表單
+              if (widget.isFromTabNav) {
+                _resetForm();
+              } else {
+                // 如果是從其他地方進入，則返回記錄對象
+                Navigator.of(context).pop(record);
+              }
+            }
+          });
+        }
       } catch (e) {
-        // 捕獲導航過程中可能出現的異常
+        // 捕獲過程中可能出現的異常
         debugPrint('保存記錄時發生錯誤: $e');
 
-        // 最後嘗試直接返回
         if (mounted) {
-          if (widget.isFromTabNav) {
-            _resetForm();
-          } else {
-            Navigator.of(context).pop(record);
-          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.tr('保存記錄失敗'), style: TextStyle(fontSize: _contentFontSize)),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8),
+              duration: const Duration(milliseconds: 1500),
+            ),
+          );
         }
       }
     }
