@@ -62,6 +62,10 @@ dependencies:
   icon_font_generator: ^4.0.0
   # 依賴注入
   get_it: ^7.6.7
+  # 新增 Google 和 Apple 登入相關依賴
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^5.0.0
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:

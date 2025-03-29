@@ -24,6 +24,7 @@ class UserProfile {
   String? allergies; // 過敏史
   String? notes; // 其他備註
   String? avatarPath; // 頭像圖片路徑
+  String? photoUrl; // 用戶頭像 URL (用於社交登入)
 
   // 認證相關屬性
   String? userId; // 用戶唯一ID
@@ -48,6 +49,7 @@ class UserProfile {
     this.allergies,
     this.notes,
     this.avatarPath,
+    this.photoUrl,
     // 認證相關屬性初始化
     this.userId,
     this.email,
@@ -73,6 +75,7 @@ class UserProfile {
       allergies: json['allergies'] as String?,
       notes: json['notes'] as String?,
       avatarPath: json['avatarPath'] as String?,
+      photoUrl: json['photoUrl'] as String?,
       // 認證相關屬性解析
       userId: json['userId'] as String?,
       email: json['email'] as String?,
@@ -99,6 +102,7 @@ class UserProfile {
       'allergies': allergies,
       'notes': notes,
       'avatarPath': avatarPath,
+      'photoUrl': photoUrl,
       // 認證相關屬性序列化
       'userId': userId,
       'email': email,

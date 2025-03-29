@@ -45,7 +45,7 @@ def high_quality_convert(svg_path, png_path, width=1024, height=1024, dpi=300):
                     import cairosvg
 
                     # 使用較高解析度 (2x size, 後面再調整)
-                    cairosvg.svg2png(url=svg_path, write_to=png_path, output_width=width * 2, output_height=height * 2, scale=2.0)
+                    cairosvg.svg2png(url=svg_path, write_to=png_path, output_width=width * 2, output_height=height * 2, scale=2)
 
                     # 如果需要優化尺寸，使用 PIL 調整
                     from PIL import Image
