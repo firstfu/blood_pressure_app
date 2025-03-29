@@ -60,7 +60,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
     final mediaQuery = MediaQuery.of(context);
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
-    final dialogHeight = height * 0.75;
+    final dialogHeight = height * 0.85;
     final isDarkMode = theme.brightness == Brightness.dark;
 
     return AnimatedBuilder(
@@ -69,7 +69,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
         return Dialog(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: FadeTransition(
             opacity: _animation,
             child: Container(
@@ -108,7 +108,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
   Widget _buildHeader(ThemeData theme) {
     // 創建符合專案風格的漸變背景
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 28),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -180,17 +180,23 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
                 // 錯誤信息
                 if (_errorMessage != null) _buildErrorMessage(_errorMessage!, theme),
 
+                // 社交登入按鈕
+                _buildSocialLoginOptions(theme),
+
+                // 增加分隔線
+                _buildDivider(theme),
+
                 // 輸入欄位區域
                 _buildInputFields(theme),
 
                 // 增加提交按鈕前的間距
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // 提交按鈕
                 _isLoading ? const Center(child: CircularProgressIndicator()) : _buildSubmitButton(theme),
 
                 // 增加切換登入/註冊前的間距
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
 
                 // 切換登入/註冊
                 _buildToggleMode(theme),
@@ -206,7 +212,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
   Widget _buildInfoMessage(String message, ThemeData theme) {
     return Container(
       // 增加底部間距
-      margin: const EdgeInsets.only(bottom: 24),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.brightness == Brightness.light ? const Color(0xFFE3F2FD) : const Color(0xFF0D2C4D),
@@ -240,7 +246,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
   Widget _buildErrorMessage(String message, ThemeData theme) {
     return Container(
       // 增加底部間距
-      margin: const EdgeInsets.only(bottom: 24),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.brightness == Brightness.light ? const Color(0xFFFFEBEE) : const Color(0xFF3E2426),
@@ -289,6 +295,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
                 }
                 return null;
               },
+              bottomPadding: 20,
             ),
 
           // 電子郵件欄位
@@ -307,6 +314,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
               }
               return null;
             },
+            bottomPadding: 20,
           ),
 
           // 密碼欄位
@@ -325,6 +333,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
               }
               return null;
             },
+            bottomPadding: 20,
             suffixIcon: IconButton(
               icon: Icon(
                 _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
@@ -354,17 +363,18 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
     TextCapitalization textCapitalization = TextCapitalization.none,
     bool obscureText = false,
     Widget? suffixIcon,
+    double bottomPadding = 24,
   }) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      // 增加輸入欄位間的間距
-      padding: const EdgeInsets.only(bottom: 24),
+      // 可調整輸入欄位間的間距
+      padding: EdgeInsets.only(bottom: bottomPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             // 調整標籤的間距
-            padding: const EdgeInsets.only(left: 4, bottom: 10),
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
             child: Text(
               label,
               style: TextStyle(
@@ -429,7 +439,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
   Widget _buildSubmitButton(ThemeData theme) {
     return Container(
       // 調整按鈕高度
-      height: 60,
+      height: 56,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           // 調整為與頂部區域一致的漸變方向
@@ -543,6 +553,180 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
             _isLoading = false;
           });
         }
+      }
+    }
+  }
+
+  // 構建分隔線
+  Widget _buildDivider(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(color: theme.brightness == Brightness.light ? Colors.grey.withOpacity(0.3) : Colors.grey.withOpacity(0.4), thickness: 1),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              '或使用電子郵件',
+              style: TextStyle(
+                color: theme.brightness == Brightness.light ? AppTheme.lightTextSecondaryColor : AppTheme.darkTextSecondaryColor,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Divider(color: theme.brightness == Brightness.light ? Colors.grey.withOpacity(0.3) : Colors.grey.withOpacity(0.4), thickness: 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 構建社交登入選項
+  Widget _buildSocialLoginOptions(ThemeData theme) {
+    return Column(
+      children: [
+        // Google 登入按鈕
+        _buildSocialLoginButton(
+          onPressed: _handleGoogleSignIn,
+          icon: Icons.g_translate_rounded, // Google 圖標
+          text: '使用 Google 帳號繼續',
+          backgroundColor: theme.brightness == Brightness.light ? Colors.white : const Color(0xFF2A2A2A),
+          textColor: theme.brightness == Brightness.light ? AppTheme.lightTextPrimaryColor : AppTheme.darkTextPrimaryColor,
+          borderColor: theme.brightness == Brightness.light ? Colors.grey.shade300 : Colors.grey.shade800,
+          theme: theme,
+        ),
+
+        const SizedBox(height: 12),
+
+        // Apple 登入按鈕
+        _buildSocialLoginButton(
+          onPressed: _handleAppleSignIn,
+          icon: Icons.apple, // Apple 圖標
+          text: '使用 Apple 帳號繼續',
+          backgroundColor: theme.brightness == Brightness.light ? Colors.black : Colors.white,
+          textColor: theme.brightness == Brightness.light ? Colors.white : Colors.black,
+          borderColor: theme.brightness == Brightness.light ? Colors.black : Colors.white,
+          theme: theme,
+        ),
+      ],
+    );
+  }
+
+  // 構建社交登入按鈕
+  Widget _buildSocialLoginButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String text,
+    required Color backgroundColor,
+    required Color textColor,
+    required Color borderColor,
+    required ThemeData theme,
+  }) {
+    return Container(
+      width: double.infinity,
+      height: 52,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: borderColor, width: 1.0),
+        boxShadow: [
+          if (theme.brightness == Brightness.light) BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Icon(icon, color: textColor, size: 26),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(text, style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
+                ),
+                SizedBox(width: 26), // 讓文字居中
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 處理 Google 登入
+  Future<void> _handleGoogleSignIn() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // 獲取 AuthService 實例
+      final authService = GetIt.instance<AuthService>();
+
+      // 調用 Google 登入方法
+      final user = await authService.signInWithGoogle();
+
+      // 登入成功，執行回調
+      if (user != null && widget.onSuccess != null) {
+        widget.onSuccess!();
+      }
+
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Google 登入失敗: ${e.toString()}';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  // 處理 Apple 登入
+  Future<void> _handleAppleSignIn() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // 獲取 AuthService 實例
+      final authService = GetIt.instance<AuthService>();
+
+      // 調用 Apple 登入方法
+      final user = await authService.signInWithApple();
+
+      // 登入成功，執行回調
+      if (user != null && widget.onSuccess != null) {
+        widget.onSuccess!();
+      }
+
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Apple 登入失敗: ${e.toString()}';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
