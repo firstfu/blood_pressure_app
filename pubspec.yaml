@@ -41,14 +41,13 @@ dependencies:
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   uuid: ^4.3.3
-  # PDF 生成和分享相關 - 已移除
-  # pdf: ^3.10.7
   path_provider: ^2.1.2
-  share_plus: ^7.2.2 # 恢復 share_plus，用於分享 CSV 和 Excel 文件
+  share_plus: ^10.1.4
   # 獲取應用版本信息
-  package_info_plus: ^5.0.1
+  package_info_plus: ^8.3.0
   # 打開 URL
   url_launcher: ^6.3.1
+  # 應用程式內評論
   in_app_review: ^2.0.10
   # 數據匯出相關 - 恢復 CSV 和 Excel
   csv: ^6.0.0
@@ -56,16 +55,17 @@ dependencies:
   image_picker: ^1.1.2
   app_settings: ^5.2.0
   # 頁面指示器
-  smooth_page_indicator: ^1.1.0
+  smooth_page_indicator: ^1.2.1
   # SVG 處理
-  flutter_svg: ^2.0.9
+  flutter_svg: ^2.0.17
   icon_font_generator: ^4.0.0
   # 依賴注入
-  get_it: ^7.6.7
+  get_it: ^8.0.3
   # 新增 Google 和 Apple 登入相關依賴
-  google_sign_in: ^6.2.1
-  sign_in_with_apple: ^5.0.0
-  crypto: ^3.0.3
+  google_sign_in: ^6.3.0
+  sign_in_with_apple: ^6.1.4
+  crypto: ^3.0.6
+  supabase_flutter: ^2.8.4
 
 dev_dependencies:
   flutter_test:

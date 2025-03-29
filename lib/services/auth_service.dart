@@ -214,7 +214,7 @@ class AuthService extends ChangeNotifier {
         nonce: nonce,
       );
 
-      // 這裡應該將 credential.identityToken 發送到後端進行驗證
+      // TODO: 這裡應該將 credential.identityToken 發送到後端進行驗證
       // 並獲取用戶信息和訪問令牌
       // 這裡僅做模擬
 

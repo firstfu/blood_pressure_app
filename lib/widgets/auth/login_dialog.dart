@@ -61,7 +61,6 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
     final dialogHeight = height * 0.85;
-    final isDarkMode = theme.brightness == Brightness.dark;
 
     return AnimatedBuilder(
       animation: _animation,
@@ -77,7 +76,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
               decoration: BoxDecoration(
                 color: theme.cardColor,
                 borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 30, offset: const Offset(0, 10))],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 30, offset: const Offset(0, 10))],
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24),
@@ -116,7 +115,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
           colors: [AppTheme.primaryColor, AppTheme.primaryDarkColor],
           stops: const [0.0, 1.0],
         ),
-        boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.3), blurRadius: 6, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: AppTheme.primaryColor.withValues(alpha: 0.3), blurRadius: 6, offset: const Offset(0, 3))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -136,7 +135,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
               ),
               const Spacer(),
               Container(
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(50)),
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(50)),
                 child: IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
                   onPressed: () => Navigator.of(context).pop(false),
@@ -218,10 +217,13 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
         color: theme.brightness == Brightness.light ? const Color(0xFFE3F2FD) : const Color(0xFF0D2C4D),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: theme.brightness == Brightness.light ? AppTheme.primaryLightColor.withOpacity(0.5) : AppTheme.primaryDarkColor.withOpacity(0.5),
+          color:
+              theme.brightness == Brightness.light
+                  ? AppTheme.primaryLightColor.withValues(alpha: 0.5)
+                  : AppTheme.primaryDarkColor.withValues(alpha: 0.5),
           width: 1.0,
         ),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 3, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 3, offset: const Offset(0, 1))],
       ),
       child: Row(
         children: [
@@ -252,10 +254,11 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
         color: theme.brightness == Brightness.light ? const Color(0xFFFFEBEE) : const Color(0xFF3E2426),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: theme.brightness == Brightness.light ? AppTheme.warningLightColor.withOpacity(0.5) : AppTheme.warningColor.withOpacity(0.4),
+          color:
+              theme.brightness == Brightness.light ? AppTheme.warningLightColor.withValues(alpha: 0.5) : AppTheme.warningColor.withValues(alpha: 0.4),
           width: 1.0,
         ),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 3, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 3, offset: const Offset(0, 1))],
       ),
       child: Row(
         children: [
@@ -449,15 +452,15 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
           stops: const [0.0, 1.0],
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.25), blurRadius: 8, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: AppTheme.primaryColor.withValues(alpha: 0.25), blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: _submitForm,
           borderRadius: BorderRadius.circular(16),
-          highlightColor: Colors.white.withOpacity(0.1),
-          splashColor: Colors.white.withOpacity(0.1),
+          highlightColor: Colors.white.withValues(alpha: 0.1),
+          splashColor: Colors.white.withValues(alpha: 0.1),
           child: Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -564,7 +567,10 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
       child: Row(
         children: [
           Expanded(
-            child: Divider(color: theme.brightness == Brightness.light ? Colors.grey.withOpacity(0.3) : Colors.grey.withOpacity(0.4), thickness: 1),
+            child: Divider(
+              color: theme.brightness == Brightness.light ? Colors.grey.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.4),
+              thickness: 1,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -578,7 +584,10 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
             ),
           ),
           Expanded(
-            child: Divider(color: theme.brightness == Brightness.light ? Colors.grey.withOpacity(0.3) : Colors.grey.withOpacity(0.4), thickness: 1),
+            child: Divider(
+              color: theme.brightness == Brightness.light ? Colors.grey.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.4),
+              thickness: 1,
+            ),
           ),
         ],
       ),
@@ -634,7 +643,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: borderColor, width: 1.0),
         boxShadow: [
-          if (theme.brightness == Brightness.light) BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+          if (theme.brightness == Brightness.light) BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: Material(
@@ -652,7 +661,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
                 Expanded(
                   child: Text(text, style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
                 ),
-                SizedBox(width: 26), // 讓文字居中
+                const SizedBox(width: 26), // 讓文字居中
               ],
             ),
           ),
