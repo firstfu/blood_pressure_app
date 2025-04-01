@@ -13,7 +13,6 @@ import 'home/home_page.dart';
 import 'record/record_page.dart';
 import 'analysis/stats/stats_page.dart';
 import 'my/profile/profile_page.dart';
-import 'test/auth_test_page.dart'; // 添加測試頁面引用
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -25,13 +24,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-    const RecordPage(isFromTabNav: true),
-    const StatsPage(),
-    const ProfilePage(),
-    const AuthTestPage(), // 認證測試頁面
-  ];
+  final List<Widget> _pages = [const HomePage(), const RecordPage(isFromTabNav: true), const StatsPage(), const ProfilePage()];
 
   @override
   void initState() {
@@ -63,7 +56,6 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(icon: const Icon(Icons.add_box), label: context.tr('新增記錄')),
           BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('報表')),
           BottomNavigationBarItem(icon: const Icon(Icons.settings), label: context.tr('設定')),
-          BottomNavigationBarItem(icon: const Icon(Icons.login), label: context.tr('認證測試')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onTabTapped,
@@ -83,7 +75,11 @@ class _MainPageState extends State<MainPage> {
       // 如果是遊客用戶
       if (authService.isGuestUser) {
         // 顯示登入對話框
-        final bool? result = await showLoginDialog(context, message: '新增記錄需要登入。您想現在登入嗎？', operationType: OperationType.addRecord);
+        final bool? result = await showLoginDialog(
+          context,
+          message: '新增記錄需要登入。您想現在登入嗎？',
+          operationType: authService.getLoginDialogOperationType(OperationType.addRecord),
+        );
 
         // 如果用戶取消登入或登入失敗，不切換頁面
         if (result != true) {

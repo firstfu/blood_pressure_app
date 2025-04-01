@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants/app_constants.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
@@ -35,6 +36,9 @@ void setupServices() {
     getIt.registerSingleton<RecordService>(RecordService());
   }
 }
+
+// 方便後續使用的全局 Supabase 客戶端
+final supabase = Supabase.instance.client;
 
 // 主應用程式入口
 void main() async {

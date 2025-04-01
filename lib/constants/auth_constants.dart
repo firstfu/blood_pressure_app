@@ -49,6 +49,7 @@ class AuthConstants {
   static const String emptyPasswordError = '請輸入密碼';
   static const String shortPasswordError = '密碼至少需要6個字符';
   static const String emptyNameError = '請輸入您的名稱';
+  static const String passwordMismatchError = '兩次輸入的密碼不一致';
 
   // 登入彈窗默認信息
   static const String defaultLoginMessage = '登入後可以使用更多功能';

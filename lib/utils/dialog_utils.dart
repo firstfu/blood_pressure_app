@@ -5,7 +5,7 @@
  */
 
 import 'package:flutter/material.dart';
-import '../constants/auth_constants.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/auth/login_dialog.dart';
 
 /// 顯示登入彈窗
@@ -19,7 +19,7 @@ import '../widgets/auth/login_dialog.dart';
 /// - true: 用戶成功登入
 /// - false: 用戶取消登入
 /// - null: 出現錯誤或彈窗被關閉
-Future<bool?> showLoginDialog(BuildContext context, {String? message, required OperationType operationType, Function? onSuccess}) {
+Future<bool?> showLoginDialog(BuildContext context, {String? message, required AuthOperation operationType, Function(User user)? onSuccess}) {
   return showDialog<bool>(
     context: context,
     barrierDismissible: false,

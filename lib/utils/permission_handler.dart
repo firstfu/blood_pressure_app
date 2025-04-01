@@ -40,12 +40,16 @@ class PermissionHandler {
 
     // 如果是遊客且需要登入
     if (authService.needsLoginDialog(operationType)) {
-      // 顯示登入彈窗
-      final result = await showLoginDialog(
+      // 顯示登入對話框
+      final bool? result = await showLoginDialog(
         context,
-        message: customMessage ?? AuthConstants.defaultLoginMessage,
-        operationType: operationType,
-        onSuccess: onLoginSuccess,
+        message: customMessage ?? '您需要登入才能${operationType.description}。',
+        operationType: authService.getLoginDialogOperationType(operationType),
+        onSuccess: (user) {
+          if (onLoginSuccess != null) {
+            onLoginSuccess(user);
+          }
+        },
       );
 
       // 返回登入結果
