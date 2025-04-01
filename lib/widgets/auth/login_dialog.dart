@@ -1,17 +1,14 @@
-/*
- * @ Author: firstfu
- * @ Create Time: 2024-05-12 17:57:30
- * @ Description: 登入/註冊彈窗組件 - 美化版
- */
+// @ Author: firstfu
+// @ Create Time: 2024-05-11 17:45:30
+// @ Description: 登入/註冊彈窗組件 - 整合 Supabase
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../themes/app_theme.dart';
-
-// 獲取 Supabase 實例
-final supabase = Supabase.instance.client;
+import '../../providers/auth_provider.dart';
 
 // 認證操作類型
 enum AuthOperation { login, register }
@@ -157,7 +154,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
               await _animationController.reverse();
               // 退出動畫完成後關閉對話框
               if (mounted && context.mounted) {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);
               }
             },
             icon: const Icon(Icons.close, color: Colors.white, size: 24),
@@ -283,23 +280,24 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 8),
-        // Apple 登入按鈕
-        ElevatedButton.icon(
-          onPressed: _isLoading ? null : _handleAppleSignIn,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: theme.brightness == Brightness.light ? Colors.black : Colors.white,
-            foregroundColor: theme.brightness == Brightness.light ? Colors.white : Colors.black,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            elevation: 1,
+        // Apple 登入按鈕 (只在支持的平台上顯示)
+        if (kIsWeb || defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS)
+          ElevatedButton.icon(
+            onPressed: _isLoading ? null : _handleAppleSignIn,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.brightness == Brightness.light ? Colors.black : Colors.white,
+              foregroundColor: theme.brightness == Brightness.light ? Colors.white : Colors.black,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              elevation: 1,
+            ),
+            icon: const Icon(Icons.apple, size: 24),
+            label: Text(
+              '使用 Apple 帳號繼續',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.light ? Colors.white : Colors.black),
+            ),
           ),
-          icon: const Icon(Icons.apple, size: 24),
-          label: Text(
-            '使用 Apple 帳號繼續',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.light ? Colors.white : Colors.black),
-          ),
-        ),
-        const SizedBox(height: 12),
+        if (kIsWeb || defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) const SizedBox(height: 12),
         // Google 登入按鈕
         ElevatedButton.icon(
           onPressed: _isLoading ? null : _handleGoogleSignIn,
@@ -313,7 +311,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             elevation: 1,
           ),
-          icon: SizedBox(width: 24, height: 24, child: Image.asset('assets/images/google_logo.png', fit: BoxFit.contain)),
+          icon: Icon(Icons.g_mobiledata, color: Colors.red, size: 26),
           label: Text(
             '使用 Google 帳號繼續',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.light ? Colors.black87 : Colors.white),
@@ -531,7 +529,7 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
     );
   }
 
-  // 處理提交按鈕事件
+  /// 處理提交按鈕事件
   Future<void> _handleSubmit() async {
     // 隱藏鍵盤
     FocusScope.of(context).unfocus();
@@ -550,135 +548,59 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
       // 獲取輸入值
       final email = _emailController.text.trim();
       final password = _passwordController.text;
-      final name = _nameController.text.trim();
+
+      // 獲取授權提供者
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       // 根據操作類型執行登入或註冊
+      bool success = false;
       if (_operationType == AuthOperation.login) {
-        await _handleEmailSignIn(email, password);
+        success = await authProvider.signInWithEmailAndPassword(email, password);
       } else {
-        await _handleEmailSignUp(email, password, name);
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = '發生錯誤：${e.toString()}';
-        _isLoading = false;
-      });
-    }
-  }
-
-  // 處理電子郵件登入
-  Future<void> _handleEmailSignIn(String email, String password) async {
-    try {
-      // 使用 Supabase 進行電子郵件登入
-      final response = await supabase.auth.signInWithPassword(email: email, password: password);
-
-      if (response.user != null) {
-        // 登入成功，關閉對話框並返回用戶資訊
-        if (mounted) {
-          Navigator.of(context).pop();
-          widget.onSuccess?.call(response.user!);
-        }
-      } else {
-        // 登入失敗
-        if (mounted) {
-          setState(() {
-            _errorMessage = '登入失敗，請檢查您的帳號和密碼';
-            _isLoading = false;
-          });
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = _getAuthErrorMessage(e);
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  // 處理電子郵件註冊
-  Future<void> _handleEmailSignUp(String email, String password, String name) async {
-    try {
-      // 使用 Supabase 進行電子郵件註冊
-      final response = await supabase.auth.signUp(email: email, password: password, data: {'name': name});
-
-      if (response.user != null) {
-        // 註冊成功
-        if (mounted) {
-          if (response.session != null) {
-            // 自動登入成功，關閉對話框並返回用戶資訊
-            Navigator.of(context).pop();
-            widget.onSuccess?.call(response.user!);
-          } else {
-            // 需要驗證電子郵件
+        success = await authProvider.signUpWithEmailAndPassword(email, password);
+        if (success) {
+          // 如果是註冊模式且註冊成功，自動切換到登入模式
+          if (mounted) {
             setState(() {
-              _isLoading = false;
-              _errorMessage = null;
-              // 切換到登入模式
               _operationType = AuthOperation.login;
-              // 顯示成功信息
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('註冊成功！請檢查您的電子郵件來驗證您的帳號。'), behavior: SnackBarBehavior.floating));
+              _passwordController.clear(); // 清除密碼
+              _confirmPasswordController.clear(); // 清除確認密碼
             });
           }
+
+          if (mounted && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('註冊成功！請先驗證您的電子郵件再登入。'), behavior: SnackBarBehavior.floating));
+          }
         }
-      } else {
-        // 註冊失敗
+      }
+
+      // 如果登入成功，通知並關閉對話框
+      if (success && _operationType == AuthOperation.login && authProvider.currentUser != null) {
+        widget.onSuccess?.call(authProvider.currentUser!);
+
         if (mounted) {
-          setState(() {
-            _errorMessage = '註冊失敗，請稍後再試';
-            _isLoading = false;
-          });
+          await _animationController.reverse();
+          if (mounted && context.mounted) {
+            Navigator.of(context).pop(true);
+          }
         }
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _errorMessage = _getAuthErrorMessage(e);
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
           _isLoading = false;
         });
       }
     }
   }
 
-  // 處理 Apple 登入
-  Future<void> _handleAppleSignIn() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      // 使用 Supabase 的 Apple 登入
-      final response = await supabase.auth.signInWithOAuth(OAuthProvider.apple, redirectTo: 'io.supabase.flutterquickstart://login-callback/');
-
-      // Supabase 的 signInWithOAuth 返回 OAuthResponse 類型
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-
-      if (kDebugMode) {
-        print('已開始 Apple 登入流程: ${response.toString()}');
-      }
-
-      // 在實際應用中，需要打開此 URL 讓用戶完成登入
-      // final url = response.url;
-      // await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = _getAuthErrorMessage(e);
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  // 處理 Google 登入
+  /// 處理 Google 登入
   Future<void> _handleGoogleSignIn() async {
     setState(() {
       _isLoading = true;
@@ -686,27 +608,68 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
     });
 
     try {
-      // 使用 Supabase 的 Google 登入
-      final response = await supabase.auth.signInWithOAuth(OAuthProvider.google, redirectTo: 'io.supabase.flutterquickstart://login-callback/');
+      // 獲取授權提供者
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final success = await authProvider.signInWithGoogle();
 
-      // Supabase 的 signInWithOAuth 返回 OAuthResponse 類型
+      // 如果登入成功，通知並關閉對話框
+      if (success && authProvider.currentUser != null) {
+        widget.onSuccess?.call(authProvider.currentUser!);
+
+        if (mounted) {
+          await _animationController.reverse();
+          if (mounted && context.mounted) {
+            Navigator.of(context).pop(true);
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = _getAuthErrorMessage(e);
+        });
+      }
+    } finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
+    }
+  }
 
-      if (kDebugMode) {
-        print('已開始 Google 登入流程: ${response.toString()}');
+  /// 處理 Apple 登入
+  Future<void> _handleAppleSignIn() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // 獲取授權提供者
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final success = await authProvider.signInWithApple();
+
+      // 如果登入成功，通知並關閉對話框
+      if (success && authProvider.currentUser != null) {
+        widget.onSuccess?.call(authProvider.currentUser!);
+
+        if (mounted) {
+          await _animationController.reverse();
+          if (mounted && context.mounted) {
+            Navigator.of(context).pop(true);
+          }
+        }
       }
-
-      // 在實際應用中，需要打開此 URL 讓用戶完成登入
-      // final url = response.url;
-      // await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } catch (e) {
       if (mounted) {
         setState(() {
           _errorMessage = _getAuthErrorMessage(e);
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
           _isLoading = false;
         });
       }
@@ -729,16 +692,19 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
     });
 
     try {
-      // 發送重置密碼電子郵件
-      await supabase.auth.resetPasswordForEmail(email, redirectTo: 'io.supabase.flutterquickstart://reset-callback/');
+      // 獲取授權提供者
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final success = await authProvider.resetPassword(email);
 
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
 
-        // 顯示成功消息
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('重置密碼的電子郵件已發送，請檢查您的郵箱'), behavior: SnackBarBehavior.floating));
+        if (success && context.mounted) {
+          // 顯示成功消息
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('重置密碼的電子郵件已發送，請檢查您的郵箱'), behavior: SnackBarBehavior.floating));
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -754,7 +720,9 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
   String _getAuthErrorMessage(dynamic error) {
     final errorMessage = error.toString().toLowerCase();
 
-    if (errorMessage.contains('user already registered')) {
+    if (errorMessage.contains('user already registered') ||
+        errorMessage.contains('email already in use') ||
+        errorMessage.contains('email already registered')) {
       return '此電子郵件已被註冊';
     } else if (errorMessage.contains('invalid login credentials')) {
       return '電子郵件或密碼不正確';
@@ -764,6 +732,10 @@ class LoginDialogState extends State<LoginDialog> with SingleTickerProviderState
       return '網絡連接出現問題，請檢查您的網絡連接';
     } else if (errorMessage.contains('too many requests')) {
       return '嘗試次數過多，請稍後再試';
+    } else if (errorMessage.contains('weak password')) {
+      return '密碼太弱，請使用更強的密碼';
+    } else if (errorMessage.contains('canceled') || errorMessage.contains('cancelled')) {
+      return '登入已取消';
     } else {
       return '認證過程中發生錯誤: $errorMessage';
     }

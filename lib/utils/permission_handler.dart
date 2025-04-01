@@ -1,8 +1,6 @@
-/*
- * @ Author: firstfu
- * @ Create Time: 2024-03-28 20:45:25
- * @ Description: 權限控制類，處理CRUD操作前的權限檢查
- */
+/// @ Author: firstfu
+/// @ Create Time: 2024-03-28 20:45:25
+/// @ Description: 權限控制類，處理CRUD操作前的權限檢查
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
