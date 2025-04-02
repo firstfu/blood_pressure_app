@@ -9,8 +9,8 @@ alwaysApply: true
 2、Create Time 的時間必須是當下的時間。當下的時間請自行查看。
 3、註解的代碼不要移除。
 
-'''
- # @ Author: firstfu
- # @ Create Time: 2025-03-13 16:16:42
- # @ Description: [文件描述與其他細節補充]
- '''
+```註解裡面的內容
+Author: firstfu
+Create Time: 2025-03-13 16:16:42
+Description: [文件描述與其他細節補充]
+```
