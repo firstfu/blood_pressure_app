@@ -58,6 +58,12 @@ class AuthProvider extends ChangeNotifier {
           debugPrint('用戶登出');
           notifyListeners();
           break;
+        // 處理初始會話事件
+        case AuthChangeEvent.initialSession:
+          debugPrint('初始會話載入完成: ${data.session != null ? "有效會話" : "無會話"}');
+          // 通知監聽器更新認證狀態
+          notifyListeners();
+          break;
         // ignoring deprecated event
         case AuthChangeEvent.passwordRecovery:
           debugPrint('用戶請求重置密碼');
