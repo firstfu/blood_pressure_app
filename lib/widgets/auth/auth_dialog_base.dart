@@ -48,6 +48,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
     final dialogHeight = height * 0.85;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return AnimatedBuilder(
       animation: _animation,
@@ -65,9 +66,19 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
                 child: Container(
                   constraints: BoxConstraints(maxWidth: width > 400 ? 400 : width * 0.9, maxHeight: dialogHeight),
                   decoration: BoxDecoration(
-                    color: theme.scaffoldBackgroundColor,
+                    color:
+                        isDarkMode
+                            ? const Color(0xFF2A2A2A) // 暗黑模式下使用較淺的灰色，增加與背景的對比度
+                            : theme.scaffoldBackgroundColor,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [BoxShadow(color: Colors.black.withAlpha(51), blurRadius: 30, spreadRadius: 2)],
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDarkMode ? Colors.black.withAlpha(120) : Colors.black.withAlpha(51),
+                        blurRadius: isDarkMode ? 40 : 30,
+                        spreadRadius: isDarkMode ? 4 : 2,
+                      ),
+                    ],
+                    border: isDarkMode ? Border.all(color: Colors.grey.shade800, width: 1) : null,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -111,28 +122,28 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
 
   /// 構建提示信息
   Widget buildInfoMessage(String message, ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       // 增加底部間距
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.brightness == Brightness.light ? const Color(0xFFE3F2FD) : const Color(0xFF0D2C4D),
+        color: isDarkMode ? const Color(0xFF0D2C4D) : const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: theme.brightness == Brightness.light ? AppTheme.primaryLightColor.withAlpha(128) : AppTheme.primaryDarkColor.withAlpha(128),
-          width: 1.0,
-        ),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 3, offset: const Offset(0, 1))],
+        border: Border.all(color: isDarkMode ? AppTheme.darkPrimaryColor.withAlpha(128) : AppTheme.primaryLightColor.withAlpha(128), width: 1.0),
+        boxShadow: [
+          BoxShadow(color: isDarkMode ? Colors.black.withAlpha(26) : Colors.black.withAlpha(13), blurRadius: 3, offset: const Offset(0, 1)),
+        ],
       ),
       child: Row(
         children: [
-          Icon(Icons.info_outline_rounded, color: AppTheme.primaryColor, size: 22),
+          Icon(Icons.info_outline_rounded, color: isDarkMode ? AppTheme.darkPrimaryColor : AppTheme.primaryColor, size: 22),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
               style: TextStyle(
-                color: theme.brightness == Brightness.light ? AppTheme.primaryDarkColor : AppTheme.primaryLightColor,
+                color: isDarkMode ? AppTheme.darkPrimaryLightColor : AppTheme.primaryDarkColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -145,24 +156,29 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
 
   /// 構建錯誤信息
   Widget buildErrorMessage(String message, ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       // 增加底部間距
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.brightness == Brightness.light ? const Color(0xFFFFEBEE) : const Color(0xFF3E2426),
+        color: isDarkMode ? const Color(0xFF3E2426) : const Color(0xFFFFEBEE),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: theme.brightness == Brightness.light ? AppTheme.warningLightColor.withAlpha(128) : AppTheme.warningColor.withAlpha(102),
-          width: 1.0,
-        ),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 3, offset: const Offset(0, 1))],
+        border: Border.all(color: isDarkMode ? AppTheme.warningColor.withAlpha(102) : AppTheme.warningLightColor.withAlpha(128), width: 1.0),
+        boxShadow: [
+          BoxShadow(color: isDarkMode ? Colors.black.withAlpha(26) : Colors.black.withAlpha(13), blurRadius: 3, offset: const Offset(0, 1)),
+        ],
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline_rounded, color: AppTheme.warningColor, size: 22),
+          Icon(Icons.error_outline_rounded, color: isDarkMode ? AppTheme.warningLightColor : AppTheme.warningColor, size: 22),
           const SizedBox(width: 12),
-          Expanded(child: Text(message, style: TextStyle(color: AppTheme.warningColor, fontSize: 14, fontWeight: FontWeight.w500))),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(color: isDarkMode ? AppTheme.warningLightColor : AppTheme.warningColor, fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+          ),
         ],
       ),
     );
@@ -170,6 +186,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
 
   /// 構建社交登入選項
   Widget buildSocialLoginOptions(ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -179,16 +196,17 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
           ElevatedButton.icon(
             onPressed: _isLoading ? null : handleAppleSignIn,
             style: ElevatedButton.styleFrom(
-              backgroundColor: theme.brightness == Brightness.light ? Colors.black : Colors.white,
-              foregroundColor: theme.brightness == Brightness.light ? Colors.white : Colors.black,
+              backgroundColor: isDarkMode ? Colors.white : Colors.black,
+              foregroundColor: isDarkMode ? Colors.black : Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              elevation: 1,
+              elevation: isDarkMode ? 1.5 : 1,
+              shadowColor: isDarkMode ? Colors.black.withAlpha(50) : Colors.black.withAlpha(30),
             ),
             icon: const Icon(Icons.apple, size: 24),
             label: Text(
               '使用 Apple 帳號繼續',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.light ? Colors.white : Colors.black),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.black : Colors.white),
             ),
           ),
         if (kIsWeb || defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) const SizedBox(height: 12),
@@ -196,19 +214,20 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
         ElevatedButton.icon(
           onPressed: _isLoading ? null : handleGoogleSignIn,
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme.brightness == Brightness.light ? Colors.white : const Color(0xFF2A2A2A),
-            foregroundColor: theme.brightness == Brightness.light ? Colors.black : Colors.white,
+            backgroundColor: isDarkMode ? const Color(0xFF2A2A2A) : Colors.white,
+            foregroundColor: isDarkMode ? Colors.white : Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: theme.brightness == Brightness.light ? Colors.grey.shade300 : Colors.grey.shade700, width: 1),
+              side: BorderSide(color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300, width: 1),
             ),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            elevation: 1,
+            elevation: isDarkMode ? 1.5 : 1,
+            shadowColor: isDarkMode ? Colors.black.withAlpha(50) : Colors.black.withAlpha(30),
           ),
           icon: const Icon(Icons.g_mobiledata, color: Colors.red, size: 26),
           label: Text(
             '使用 Google 帳號繼續',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.light ? Colors.black87 : Colors.white),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.white : Colors.black87),
           ),
         ),
       ],
@@ -217,23 +236,20 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
 
   /// 構建分隔線
   Widget buildDivider(ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Row(
         children: [
-          Expanded(child: Divider(color: theme.brightness == Brightness.light ? Colors.grey.shade300 : Colors.grey.shade700, thickness: 1)),
+          Expanded(child: Divider(color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300, thickness: 1)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               '或者',
-              style: TextStyle(
-                color: theme.brightness == Brightness.light ? Colors.grey.shade600 : Colors.grey.shade400,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ),
-          Expanded(child: Divider(color: theme.brightness == Brightness.light ? Colors.grey.shade300 : Colors.grey.shade700, thickness: 1)),
+          Expanded(child: Divider(color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300, thickness: 1)),
         ],
       ),
     );

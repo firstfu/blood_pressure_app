@@ -30,13 +30,17 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
 
   @override
   Widget buildHeader(ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       height: 90,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [theme.brightness == Brightness.light ? AppTheme.primaryLightColor : AppTheme.primaryDarkColor, AppTheme.primaryColor],
+          colors:
+              isDarkMode
+                  ? [const Color(0xFF333333), const Color(0xFF1E1E1E)] // 暗黑模式使用深灰色漸層
+                  : [AppTheme.primaryLightColor, AppTheme.primaryColor], // 淺色模式使用藍色漸層
         ),
         borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
@@ -176,7 +180,14 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: Text('忘記密碼？', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.primaryColor)),
+            child: Text(
+              '忘記密碼？',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: theme.brightness == Brightness.dark ? Colors.lightBlueAccent : AppTheme.primaryColor,
+              ),
+            ),
           ),
         ),
       ],
@@ -185,15 +196,16 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
 
   // 構建提交按鈕
   Widget buildSubmitButton(ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return ElevatedButton(
       onPressed: isLoading ? null : _handleLogin,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: isDarkMode ? const Color(0xFF424242) : AppTheme.primaryColor,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        elevation: 2,
-        shadowColor: Colors.black.withAlpha(13),
+        elevation: isDarkMode ? 3 : 2,
+        shadowColor: isDarkMode ? Colors.black.withAlpha(50) : Colors.black.withAlpha(13),
       ),
       child: const Text('登入', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
     );
@@ -201,6 +213,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
 
   // 構建切換到註冊的按鈕
   Widget buildToggleToRegister(ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
     return TextButton(
       onPressed:
           isLoading
@@ -216,11 +229,11 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
       child: Text.rich(
         TextSpan(
           children: [
+            TextSpan(text: '還沒有帳號？', style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700)),
             TextSpan(
-              text: '還沒有帳號？',
-              style: TextStyle(fontSize: 14, color: theme.brightness == Brightness.light ? Colors.grey.shade700 : Colors.grey.shade300),
+              text: ' 立即註冊',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.lightBlueAccent : AppTheme.primaryColor),
             ),
-            TextSpan(text: ' 立即註冊', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryColor)),
           ],
         ),
       ),
