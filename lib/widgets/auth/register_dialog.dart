@@ -44,7 +44,7 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
           colors:
               isDarkMode
                   ? [const Color(0xFF333333), const Color(0xFF1E1E1E)] // 暗黑模式使用深灰色漸層
-                  : [AppTheme.primaryLightColor, AppTheme.primaryColor], // 淺色模式使用藍色漸層
+                  : [theme.primaryColor, theme.primaryColor], // 明亮模式下使用 primaryColor 的純色
         ),
         borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),

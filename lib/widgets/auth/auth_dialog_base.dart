@@ -90,7 +90,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
                       Flexible(
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-                          child: SingleChildScrollView(padding: const EdgeInsets.fromLTRB(24, 4, 24, 24), child: buildContent(theme)),
+                          child: SingleChildScrollView(padding: const EdgeInsets.fromLTRB(24, 16, 24, 24), child: buildContent(theme)),
                         ),
                       ),
                     ],
