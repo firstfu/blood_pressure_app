@@ -19,11 +19,8 @@ class SupabaseService {
   /// 工廠構造函數提供單例訪問
   factory SupabaseService() => _instance;
 
-  /// Supabase 客戶端實例
-  late final Supabase _supabase;
-
   /// 獲取 Supabase 客戶端
-  SupabaseClient get client => _supabase.client;
+  SupabaseClient get client => Supabase.instance.client;
 
   /// 獲取 Supabase 授權實例
   GoTrueClient get auth => client.auth;
@@ -31,11 +28,15 @@ class SupabaseService {
   /// 初始化 Supabase
   Future<void> initialize() async {
     try {
-      _supabase = await Supabase.initialize(
-        url: SupabaseConstants.supabaseUrl,
-        anonKey: SupabaseConstants.supabaseAnonKey,
-        debug: kDebugMode, // 在開發模式啟用調試
-      );
+      // 如果 Supabase 已經在 main.dart 中初始化，這裡就不需要再次初始化
+      // 只需確認 Supabase.instance 是否可用
+      if (Supabase.instance == null) {
+        await Supabase.initialize(
+          url: SupabaseConstants.supabaseUrl,
+          anonKey: SupabaseConstants.supabaseAnonKey,
+          debug: kDebugMode, // 在開發模式啟用調試
+        );
+      }
       debugPrint('Supabase 初始化成功');
     } catch (error) {
       debugPrint('Supabase 初始化失敗: $error');

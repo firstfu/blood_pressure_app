@@ -25,7 +25,7 @@ import 'views/onboarding/onboarding_page.dart';
 // GetIt實例
 final getIt = GetIt.instance;
 
-// 設置服務
+// 設置服務 - 確保所有服務在此處註冊
 void setupServices() {
   // 註冊 Supabase 服務
   if (!getIt.isRegistered<SupabaseService>()) {
@@ -44,7 +44,8 @@ void setupServices() {
 }
 
 // 方便後續使用的全局 Supabase 客戶端的快捷方法
-SupabaseClient get supabase => Supabase.instance.client;
+// 直接使用 SupabaseService 中的客戶端，確保一致性
+SupabaseClient get supabase => getIt<SupabaseService>().client;
 
 // 主應用程式入口
 void main() async {
@@ -67,7 +68,7 @@ void main() async {
       debug: true, // 在開發時啟用調試
     );
 
-    // 設置服務
+    // 設置服務 - 確保所有服務在此處註冊
     setupServices();
 
     // 檢查用戶是否已完成 onBoarding
