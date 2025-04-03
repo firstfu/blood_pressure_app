@@ -71,7 +71,13 @@ class LoginStatusWidget extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '使用者: ${provider.displayName}',
-                        style: TextStyle(fontSize: 14, color: isDarkMode ? AppTheme.darkTextSecondaryColor : AppTheme.lightTextSecondaryColor),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color:
+                              isDarkMode
+                                  ? AppTheme.darkTextSecondaryColor.withValues(alpha: 204)
+                                  : AppTheme.lightTextSecondaryColor.withValues(alpha: 204),
+                        ),
                       ),
                       if (currentUser.email != null && currentUser.email!.isNotEmpty) ...[
                         const SizedBox(height: 4),
@@ -79,7 +85,10 @@ class LoginStatusWidget extends StatelessWidget {
                           '電子郵件: ${currentUser.email}',
                           style: TextStyle(
                             fontSize: 13,
-                            color: isDarkMode ? AppTheme.darkTextSecondaryColor.withOpacity(0.8) : AppTheme.lightTextSecondaryColor.withOpacity(0.8),
+                            color:
+                                isDarkMode
+                                    ? AppTheme.darkTextSecondaryColor.withValues(alpha: 204)
+                                    : AppTheme.lightTextSecondaryColor.withValues(alpha: 204),
                           ),
                         ),
                       ],

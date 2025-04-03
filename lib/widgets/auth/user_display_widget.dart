@@ -86,7 +86,7 @@ class UserDisplayWidget extends StatelessWidget {
                 else
                   CircleAvatar(
                     radius: avatarRadius,
-                    backgroundColor: theme.primaryColor.withOpacity(0.2),
+                    backgroundColor: theme.primaryColor.withValues(alpha: 51), // 0.2 * 255 ≈ 51
                     child: Text(
                       displayName.isNotEmpty ? displayName[0].toUpperCase() : '?',
                       style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: avatarRadius * 0.8),
