@@ -171,8 +171,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icon(Icons.settings, color: theme.primaryColor),
                     tooltip: '帳號設定',
                     onPressed: () {
-                      // 可以添加導航到帳號設定頁面的邏輯
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('帳號設定功能即將推出')));
+                      if (_userProfile == null) return;
+                      Navigator.push<UserProfile>(context, MaterialPageRoute(builder: (context) => EditProfilePage(userProfile: _userProfile!))).then(
+                        (updatedProfile) {
+                          if (updatedProfile != null) {
+                            setState(() {
+                              _userProfile = updatedProfile;
+                              _loadAvatarFile();
+                            });
+                          }
+                        },
+                      );
                     },
                   ),
                 ],
