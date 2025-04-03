@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations_extension.dart';
 import '../../../services/shared_prefs_service.dart';
 import '../../../constants/app_constants.dart';
 import '../../../models/user_profile.dart';
+import '../../../providers/auth_provider.dart';
+import '../../../widgets/auth/user_display_widget.dart';
+import '../../../services/auth_manager.dart';
 import '../about_app/about_app_page.dart';
 import '../edit_profile/edit_profile_page.dart';
 import '../help_feedback/help_feedback_page.dart';
@@ -117,38 +121,95 @@ class _ProfilePageState extends State<ProfilePage> {
 
   /// 構建用戶資料卡片
   Widget _buildUserProfileCard(ThemeData theme) {
+    // 獲取認證狀態
+    final authProvider = Provider.of<AuthProvider>(context);
+    final isAuthenticated = authProvider.isAuthenticated;
+
     return Card(
       elevation: 2,
       color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 用戶頭像
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: theme.primaryColor.withAlpha(26),
-              backgroundImage: _avatarFile != null ? FileImage(_avatarFile!) : null,
-              child: _avatarFile == null ? Icon(Icons.person, size: 40, color: theme.primaryColor) : null,
+            // 認證狀態和操作按鈕
+            Row(
+              children: [
+                if (isAuthenticated) ...[
+                  Icon(Icons.verified_user, size: 16, color: theme.primaryColor),
+                  const SizedBox(width: 4),
+                  Text('已登入', style: TextStyle(fontSize: 14, color: theme.primaryColor, fontWeight: FontWeight.w500)),
+                  const Spacer(),
+                  TextButton(onPressed: _handleLogout, child: Text('登出', style: TextStyle(color: theme.colorScheme.error))),
+                ] else ...[
+                  Icon(Icons.person_outline, size: 16, color: theme.hintColor),
+                  const SizedBox(width: 4),
+                  Text('未登入', style: TextStyle(fontSize: 14, color: theme.hintColor)),
+                  const Spacer(),
+                  TextButton(onPressed: _handleLogin, child: Text('登入', style: TextStyle(color: theme.primaryColor))),
+                ],
+              ],
             ),
-            const SizedBox(width: 16),
-            // 用戶信息
-            Expanded(
-              child: Column(
+
+            const SizedBox(height: 16),
+
+            // 用戶資訊區域 - 根據登入狀態顯示不同內容
+            if (isAuthenticated)
+              // 已登入 - 顯示Supabase認證用戶資訊
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    _userProfile?.name.isNotEmpty == true ? _userProfile!.name : context.tr('姓名'),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color),
+                  // 使用定制化的頭像顯示 - 包裝在 Expanded 中以防止溢出
+                  Expanded(
+                    child: UserDisplayWidget(avatarRadius: 40, showEmail: true, alignment: CrossAxisAlignment.start, padding: EdgeInsets.zero),
                   ),
-                  const SizedBox(height: 4),
-                  Text(context.tr('點擊編輯個人資料'), style: TextStyle(color: theme.textTheme.bodySmall?.color)),
+
+                  // 編輯按鈕 (可根據需要添加編輯Supabase用戶資料的功能)
+                  IconButton(
+                    icon: Icon(Icons.settings, color: theme.primaryColor),
+                    tooltip: '帳號設定',
+                    onPressed: () {
+                      // 可以添加導航到帳號設定頁面的邏輯
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('帳號設定功能即將推出')));
+                    },
+                  ),
+                ],
+              )
+            else
+              // 未登入 - 顯示本地用戶資料
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 用戶頭像
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: theme.primaryColor.withAlpha(26),
+                    backgroundImage: _avatarFile != null ? FileImage(_avatarFile!) : null,
+                    child: _avatarFile == null ? Icon(Icons.person, size: 40, color: theme.primaryColor) : null,
+                  ),
+                  const SizedBox(width: 16),
+                  // 用戶信息
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _userProfile?.name.isNotEmpty == true ? _userProfile!.name : context.tr('姓名'),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleLarge?.color),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(context.tr('點擊編輯個人資料'), style: TextStyle(color: theme.textTheme.bodySmall?.color), overflow: TextOverflow.ellipsis),
+                      ],
+                    ),
+                  ),
+                  // 編輯按鈕
+                  IconButton(icon: Icon(Icons.edit, color: theme.primaryColor), onPressed: _navigateToEditProfile),
                 ],
               ),
-            ),
-            // 編輯按鈕
-            IconButton(icon: Icon(Icons.edit, color: theme.primaryColor), onPressed: _navigateToEditProfile),
           ],
         ),
       ),
@@ -167,6 +228,19 @@ class _ProfilePageState extends State<ProfilePage> {
         _loadAvatarFile();
       });
     }
+  }
+
+  /// 處理登入
+  void _handleLogin() async {
+    await AuthManager.showLoginDialog(context, message: '請登入以獲取更多功能');
+    setState(() {}); // 更新UI以反映登入狀態變化
+  }
+
+  /// 處理登出
+  void _handleLogout() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.signOut();
+    setState(() {}); // 更新UI以反映登出狀態變化
   }
 
   /// 構建設置選項

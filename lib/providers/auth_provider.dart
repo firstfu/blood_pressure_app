@@ -22,6 +22,38 @@ class AuthProvider extends ChangeNotifier {
   /// 是否已登入
   bool get isAuthenticated => _authService.isAuthenticated;
 
+  /// 獲取用戶姓名，優先從用戶元數據中獲取，如果沒有則回傳電子郵件或空值
+  String get displayName {
+    final user = currentUser;
+    if (user == null) {
+      return '';
+    }
+
+    // 優先使用元數據中的姓名
+    final fullName = user.userMetadata?['full_name'] as String?;
+    if (fullName != null && fullName.isNotEmpty) {
+      return fullName;
+    }
+
+    // 次優先使用元數據中的名稱
+    final name = user.userMetadata?['name'] as String?;
+    if (name != null && name.isNotEmpty) {
+      return name;
+    }
+
+    // 再次優先使用元數據中的用戶名
+    final username = user.userMetadata?['username'] as String?;
+    if (username != null && username.isNotEmpty) {
+      return username;
+    }
+
+    // 最後回傳電子郵件或空值
+    return user.email ?? '';
+  }
+
+  /// 獲取用戶頭像URL
+  String? get avatarUrl => currentUser?.userMetadata?['avatar_url'] as String?;
+
   /// 登入狀態
   bool _isLoading = false;
   bool get isLoading => _isLoading;

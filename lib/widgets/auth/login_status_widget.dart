@@ -70,9 +70,19 @@ class LoginStatusWidget extends StatelessWidget {
                     if (currentUser != null) ...[
                       const SizedBox(height: 8),
                       Text(
-                        '使用者: ${currentUser.email ?? '未知'}',
+                        '使用者: ${provider.displayName}',
                         style: TextStyle(fontSize: 14, color: isDarkMode ? AppTheme.darkTextSecondaryColor : AppTheme.lightTextSecondaryColor),
                       ),
+                      if (currentUser.email != null && currentUser.email!.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          '電子郵件: ${currentUser.email}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: isDarkMode ? AppTheme.darkTextSecondaryColor.withOpacity(0.8) : AppTheme.lightTextSecondaryColor.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
                     ],
                   ],
                 ),
