@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import '../l10n/app_localizations_extension.dart';
 import '../services/auth_service.dart';
-import '../constants/auth_constants.dart';
-import '../utils/dialog_utils.dart';
+import '../constants/auth_constants.dart' as auth_constants;
+import '../services/auth_manager.dart';
 import 'home/home_page.dart';
 import 'record/record_page.dart';
 import 'analysis/stats/stats_page.dart';
@@ -75,16 +75,18 @@ class _MainPageState extends State<MainPage> {
 
       // 如果是遊客用戶
       if (authService.isGuestUser) {
-        // 顯示登入對話框
-        final bool? result = await showLoginDialog(
-          context,
-          message: '新增記錄需要登入。您想現在登入嗎？',
-          operationType: authService.getLoginDialogOperationType(OperationType.addRecord),
-        );
+        // 檢查是否需要登入
+        if (authService.needsLoginDialog(auth_constants.OperationType.addRecord)) {
+          // 確定顯示登入還是註冊對話框
+          final showRegister = authService.shouldShowRegisterDialog(auth_constants.OperationType.addRecord);
 
-        // 如果用戶取消登入或登入失敗，不切換頁面
-        if (result != true) {
-          return;
+          // 顯示登入對話框
+          final bool result = await AuthManager.showLoginDialog(context, message: '新增記錄需要登入。您想現在登入嗎？', showRegister: showRegister);
+
+          // 如果用戶取消登入或登入失敗，不切換頁面
+          if (!result) {
+            return;
+          }
         }
       }
     }

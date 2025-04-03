@@ -10,8 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../constants/supabase_constants.dart';
-import '../constants/auth_constants.dart';
-import '../widgets/auth/login_dialog.dart';
+import '../constants/auth_constants.dart' as auth_constants;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'supabase_service.dart';
 
@@ -201,30 +200,30 @@ class AuthService {
   /// [operationType] - 要執行的操作類型
   ///
   /// 返回是否需要顯示登入對話框
-  bool needsLoginDialog(OperationType operationType) {
+  bool needsLoginDialog(auth_constants.OperationType operationType) {
     // 在這裡，我們可以根據不同的操作類型來決定是否需要登入
     // 例如，某些操作可能允許遊客進行，但其他操作可能需要登入
     switch (operationType) {
-      case OperationType.addRecord:
-      case OperationType.editRecord:
-      case OperationType.deleteRecord:
-      case OperationType.editProfile:
-      case OperationType.setReminder:
-      case OperationType.exportData:
+      case auth_constants.OperationType.addRecord:
+      case auth_constants.OperationType.editRecord:
+      case auth_constants.OperationType.deleteRecord:
+      case auth_constants.OperationType.editProfile:
+      case auth_constants.OperationType.setReminder:
+      case auth_constants.OperationType.exportData:
         return true; // 這些操作需要登入
-      case OperationType.viewHistory:
+      case auth_constants.OperationType.viewHistory:
         return false; // 假設查看歷史記錄不需要登入
     }
   }
 
-  /// 獲取登入對話框的操作類型
+  /// 顯示登入還是註冊對話框
   ///
   /// [operationType] - 要執行的操作類型
   ///
-  /// 返回登入對話框的操作類型 (login 或 register)
-  AuthOperation getLoginDialogOperationType(OperationType operationType) {
+  /// 返回 true 表示顯示註冊對話框，false 表示顯示登入對話框
+  bool shouldShowRegisterDialog(auth_constants.OperationType operationType) {
     // 在這裡，我們可以根據不同的操作類型來決定顯示登入還是註冊界面
     // 默認顯示登入界面
-    return AuthOperation.login;
+    return false;
   }
 }

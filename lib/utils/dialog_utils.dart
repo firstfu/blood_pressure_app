@@ -7,24 +7,44 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/auth/login_dialog.dart';
+import '../widgets/auth/register_dialog.dart';
 
 /// 顯示登入彈窗
 ///
 /// [context] - 構建上下文
 /// [message] - 可選的自定義信息
-/// [operationType] - 操作類型，用於顯示相應的提示信息
 /// [onSuccess] - 登入成功後的回調函數
 ///
 /// 返回一個Future&lt;bool?&gt;，表示用戶是否成功登入
 /// - true: 用戶成功登入
 /// - false: 用戶取消登入
 /// - null: 出現錯誤或彈窗被關閉
-Future<bool?> showLoginDialog(BuildContext context, {String? message, required AuthOperation operationType, Function(User user)? onSuccess}) {
+Future<bool?> showLoginDialog(BuildContext context, {String? message, Function(User user)? onSuccess}) {
   return showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return LoginDialog(message: message, operationType: operationType, onSuccess: onSuccess);
+      return LoginDialog(message: message, onSuccess: onSuccess);
+    },
+  );
+}
+
+/// 顯示註冊彈窗
+///
+/// [context] - 構建上下文
+/// [message] - 可選的自定義信息
+/// [onSuccess] - 註冊成功後的回調函數
+///
+/// 返回一個Future&lt;bool?&gt;，表示用戶是否成功註冊
+/// - true: 用戶成功註冊
+/// - false: 用戶取消註冊
+/// - null: 出現錯誤或彈窗被關閉
+Future<bool?> showRegisterDialog(BuildContext context, {String? message, Function(User user)? onSuccess}) {
+  return showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return RegisterDialog(message: message, onSuccess: onSuccess);
     },
   );
 }

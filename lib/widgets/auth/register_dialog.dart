@@ -1,30 +1,34 @@
 // @ Author: firstfu
-// @ Create Time: 2024-05-13 17:35:30
-// @ Description: 登入彈窗組件 - 整合 Supabase
+// @ Create Time: 2024-05-13 17:50:30
+// @ Description: 註冊彈窗組件 - 整合 Supabase
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../themes/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import 'auth_dialog_base.dart';
-import 'register_dialog.dart';
+import 'login_dialog.dart';
 
-/// 登入彈窗組件
-class LoginDialog extends AuthDialogBase {
-  const LoginDialog({super.key, super.message, super.onSuccess});
+/// 註冊彈窗組件
+class RegisterDialog extends AuthDialogBase {
+  const RegisterDialog({super.key, super.message, super.onSuccess});
 
   @override
-  LoginDialogState createState() => LoginDialogState();
+  RegisterDialogState createState() => RegisterDialogState();
 }
 
-class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
+class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -49,10 +53,10 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 標題
-                const Text('歡迎回來', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                const Text('創建帳號', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                 // 副標題
                 const SizedBox(height: 4),
-                Text('登入您的帳號繼續', style: TextStyle(color: Colors.white.withAlpha(230), fontSize: 14)),
+                Text('註冊新帳號開始使用', style: TextStyle(color: Colors.white.withAlpha(230), fontSize: 14)),
               ],
             ),
           ),
@@ -99,11 +103,11 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
           // 提交按鈕
           isLoading ? const Center(child: CircularProgressIndicator()) : buildSubmitButton(theme),
 
-          // 增加切換到註冊的間距
+          // 增加切換到登入的間距
           const SizedBox(height: 16),
 
-          // 切換到註冊
-          buildToggleToRegister(theme),
+          // 切換到登入
+          buildToggleToLogin(theme),
         ],
       ),
     );
@@ -114,6 +118,27 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 名稱欄位
+        TextFormField(
+          controller: _nameController,
+          decoration: InputDecoration(
+            labelText: '您的名字',
+            hintText: '請輸入您的名字',
+            prefixIcon: const Icon(Icons.person_outline_rounded),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          ),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return '請輸入您的名字';
+            }
+            return null;
+          },
+          textInputAction: TextInputAction.next,
+          enabled: !isLoading,
+        ),
+        const SizedBox(height: 16),
+
         // 電子郵件欄位
         TextFormField(
           controller: _emailController,
@@ -143,7 +168,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
           controller: _passwordController,
           decoration: InputDecoration(
             labelText: '密碼',
-            hintText: '請輸入您的密碼',
+            hintText: '請設定至少 8 位的密碼',
             prefixIcon: const Icon(Icons.lock_outline_rounded),
             suffixIcon: IconButton(
               icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -159,25 +184,46 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '請輸入密碼';
+            } else if (value.length < 8) {
+              return '密碼長度至少為 8 位';
+            }
+            return null;
+          },
+          obscureText: !isPasswordVisible,
+          textInputAction: TextInputAction.next,
+          enabled: !isLoading,
+        ),
+        const SizedBox(height: 16),
+
+        // 確認密碼欄位
+        TextFormField(
+          controller: _confirmPasswordController,
+          decoration: InputDecoration(
+            labelText: '確認密碼',
+            hintText: '請再次輸入密碼',
+            prefixIcon: const Icon(Icons.lock_outline_rounded),
+            suffixIcon: IconButton(
+              icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+              onPressed: () {
+                setState(() {
+                  isPasswordVisible = !isPasswordVisible;
+                });
+              },
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          ),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return '請確認您的密碼';
+            } else if (value != _passwordController.text) {
+              return '兩次輸入的密碼不一致';
             }
             return null;
           },
           obscureText: !isPasswordVisible,
           textInputAction: TextInputAction.done,
           enabled: !isLoading,
-        ),
-
-        // 忘記密碼選項
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: isLoading ? null : _handleForgotPassword,
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Text('忘記密碼？', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.primaryColor)),
-          ),
         ),
       ],
     );
@@ -186,7 +232,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
   // 構建提交按鈕
   Widget buildSubmitButton(ThemeData theme) {
     return ElevatedButton(
-      onPressed: isLoading ? null : _handleLogin,
+      onPressed: isLoading ? null : _handleRegister,
       style: ElevatedButton.styleFrom(
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: Colors.white,
@@ -195,12 +241,12 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
         elevation: 2,
         shadowColor: Colors.black.withAlpha(13),
       ),
-      child: const Text('登入', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+      child: const Text('註冊', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
     );
   }
 
-  // 構建切換到註冊的按鈕
-  Widget buildToggleToRegister(ThemeData theme) {
+  // 構建切換到登入的按鈕
+  Widget buildToggleToLogin(ThemeData theme) {
     return TextButton(
       onPressed:
           isLoading
@@ -209,26 +255,26 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
                 // 先關閉當前對話框
                 await closeDialog();
                 if (mounted && context.mounted) {
-                  // 打開註冊對話框
-                  showDialog(context: context, barrierDismissible: false, builder: (context) => RegisterDialog(onSuccess: widget.onSuccess));
+                  // 打開登入對話框
+                  showDialog(context: context, barrierDismissible: false, builder: (context) => LoginDialog(onSuccess: widget.onSuccess));
                 }
               },
       child: Text.rich(
         TextSpan(
           children: [
             TextSpan(
-              text: '還沒有帳號？',
+              text: '已經有帳號？',
               style: TextStyle(fontSize: 14, color: theme.brightness == Brightness.light ? Colors.grey.shade700 : Colors.grey.shade300),
             ),
-            TextSpan(text: ' 立即註冊', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryColor)),
+            TextSpan(text: ' 立即登入', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryColor)),
           ],
         ),
       ),
     );
   }
 
-  /// 處理登入
-  Future<void> _handleLogin() async {
+  /// 處理註冊
+  Future<void> _handleRegister() async {
     // 隱藏鍵盤
     FocusScope.of(context).unfocus();
 
@@ -250,13 +296,27 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
       // 獲取授權提供者
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-      // 執行登入
-      final success = await authProvider.signInWithEmailAndPassword(email, password);
+      // 執行註冊
+      final success = await authProvider.signUpWithEmailAndPassword(email, password);
 
-      // 如果登入成功，通知並關閉對話框
-      if (success && authProvider.currentUser != null) {
-        widget.onSuccess?.call(authProvider.currentUser!);
-        await closeDialog(success: true);
+      if (success) {
+        if (mounted) {
+          setState(() {
+            _emailController.clear();
+            _passwordController.clear();
+            _confirmPasswordController.clear();
+          });
+
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('註冊成功！請先驗證您的電子郵件再登入。'), behavior: SnackBarBehavior.floating));
+          }
+
+          // 註冊成功後自動切換到登入界面
+          await closeDialog();
+          if (mounted && context.mounted) {
+            showDialog(context: context, barrierDismissible: false, builder: (context) => LoginDialog(onSuccess: widget.onSuccess));
+          }
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -267,46 +327,6 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  /// 處理忘記密碼
-  void _handleForgotPassword() async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      setState(() {
-        errorMessage = '請先輸入您的電子郵件地址';
-      });
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
-
-    try {
-      // 獲取授權提供者
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final success = await authProvider.resetPassword(email);
-
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-
-        if (success && context.mounted) {
-          // 顯示成功消息
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('重置密碼的電子郵件已發送，請檢查您的郵箱'), behavior: SnackBarBehavior.floating));
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          errorMessage = getAuthErrorMessage(e);
           isLoading = false;
         });
       }
