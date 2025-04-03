@@ -9,7 +9,6 @@ import '../l10n/app_localizations_extension.dart';
 import '../services/auth_service.dart';
 import '../constants/auth_constants.dart';
 import '../utils/dialog_utils.dart';
-import '../widgets/developer/dev_menu_trigger.dart';
 import 'home/home_page.dart';
 import 'record/record_page.dart';
 import 'analysis/stats/stats_page.dart';
@@ -49,23 +48,21 @@ class _MainPageState extends State<MainPage> {
       ),
     );
 
-    // 使用開發者選單觸發器包裝整個 Scaffold
-    return DevMenuTrigger(
-      child: Scaffold(
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('首頁')),
-            BottomNavigationBarItem(icon: const Icon(Icons.add_box), label: context.tr('新增記錄')),
-            BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('報表')),
-            BottomNavigationBarItem(icon: const Icon(Icons.settings), label: context.tr('設定')),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onTabTapped,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).primaryColor,
-          unselectedItemColor: Theme.of(context).unselectedWidgetColor,
-        ),
+    // 直接返回 Scaffold，移除開發者選單觸發器
+    return Scaffold(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('首頁')),
+          BottomNavigationBarItem(icon: const Icon(Icons.add_box), label: context.tr('新增記錄')),
+          BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('報表')),
+          BottomNavigationBarItem(icon: const Icon(Icons.settings), label: context.tr('設定')),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onTabTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Theme.of(context).unselectedWidgetColor,
       ),
     );
   }
