@@ -11,11 +11,11 @@ import '../../../l10n/app_localizations_extension.dart';
 import '../../../services/shared_prefs_service.dart';
 import '../../../constants/app_constants.dart';
 import '../../../models/user_profile.dart';
+import '../../../widgets/developer/dev_menu_dialog.dart';
 import '../about_app/about_app_page.dart';
 import '../edit_profile/edit_profile_page.dart';
 import '../help_feedback/help_feedback_page.dart';
 import '../language_settings/language_settings_page.dart';
-import '../../onboarding/onboarding_page.dart';
 import '../privacy_settings/privacy_settings_page.dart';
 import '../theme_settings/theme_settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +48,15 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     _loadUserProfile();
+    _checkDeveloperMode();
+  }
+
+  /// 檢查是否啟用開發者模式
+  Future<void> _checkDeveloperMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _showDevOptions = prefs.getBool('developer_mode') ?? false;
+    });
   }
 
   /// 加載用戶資料
@@ -82,6 +91,38 @@ class _ProfilePageState extends State<ProfilePage> {
         });
       }
     }
+  }
+
+  /// 增加開發者模式計數器
+  void _incrementDevModeCounter() {
+    setState(() {
+      _devModeCounter++;
+      if (_devModeCounter >= 7) {
+        _toggleDeveloperMode();
+        _devModeCounter = 0;
+      }
+    });
+  }
+
+  /// 切換開發者模式
+  Future<void> _toggleDeveloperMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final newValue = !_showDevOptions;
+
+    await prefs.setBool('developer_mode', newValue);
+
+    setState(() {
+      _showDevOptions = newValue;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(newValue ? '開發者模式已啟用' : '開發者模式已停用'), duration: const Duration(seconds: 2)));
+    }
+  }
+
+  /// 打開開發者選單
+  void _openDeveloperMenu() {
+    showDialog(context: context, builder: (context) => const DevMenuDialog());
   }
 
   @override
@@ -224,6 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 12),
         Text('開發者選項', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.colorScheme.error)),
         const SizedBox(height: 12),
+        _buildDevSettingItem(theme, Icons.developer_mode, '開發者工具', '打開開發者測試頁面選單', _openDeveloperMenu),
         _buildDevSettingItem(theme, Icons.refresh, context.tr('重置 OnBoarding'), context.tr('重置引導頁面狀態'), _resetOnboarding),
         _buildDevSettingItem(theme, Icons.delete, context.tr('清除所有數據'), context.tr('刪除應用所有數據'), () {
           _showClearDataConfirmDialog();
@@ -251,39 +293,31 @@ class _ProfilePageState extends State<ProfilePage> {
 
   /// 構建開發者設置項
   Widget _buildDevSettingItem(ThemeData theme, IconData icon, String title, String subtitle, VoidCallback onTap) {
-    final errorColor = theme.colorScheme.error;
-
     return Card(
       elevation: 0,
-      color: errorColor.withAlpha(26),
+      color: Colors.red.withValues(red: 255, green: 0, blue: 0, alpha: 26),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: Icon(icon, color: errorColor),
-        title: Text(title, style: TextStyle(color: errorColor)),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: errorColor.withAlpha(179))),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: errorColor),
+        leading: Icon(icon, color: theme.colorScheme.error),
+        title: Text(title, style: TextStyle(color: theme.colorScheme.error)),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: theme.colorScheme.error.withValues(alpha: 179))),
+        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: theme.colorScheme.error.withAlpha(128)),
         onTap: onTap,
       ),
     );
   }
 
-  /// 增加開發者模式計數器
-  void _incrementDevModeCounter() {
-    setState(() {
-      _devModeCounter++;
-      if (_devModeCounter >= 7) {
-        _showDevOptions = true;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('開發者選項已啟用'))));
-      }
-    });
-  }
-
   /// 重置引導頁面
   Future<void> _resetOnboarding() async {
-    await SharedPrefsService.resetOnBoardingStatus();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_completed', false);
+
     if (mounted) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const OnboardingPage()), (route) => false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('引導頁面已重置')), duration: const Duration(seconds: 2)));
+
+      // 可選：直接導航到 OnboardingPage
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnboardingPage()));
     }
   }
 
@@ -302,14 +336,16 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PrivacySettingsPage()));
   }
 
-  /// 評分應用
+  /// 在應用商店評分
   Future<void> _rateApp() async {
     if (await _inAppReview.isAvailable()) {
       _inAppReview.requestReview();
     } else {
-      final url = Uri.parse(AppConstants.appStoreUrl);
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
+      // 如果內部評分不可用，嘗試打開應用商店
+      final url = Platform.isIOS ? 'https://apps.apple.com/app/id${AppConstants.appStoreId}' : 'market://details?id=${AppConstants.packageName}';
+
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('無法打開應用商店'))));
@@ -320,66 +356,54 @@ class _ProfilePageState extends State<ProfilePage> {
 
   /// 分享應用
   Future<void> _shareApp() async {
-    await Share.share('${context.tr('推薦您使用血壓管家 App，幫助您輕鬆記錄和管理血壓數據！')}\n${AppConstants.appStoreUrl}', subject: context.tr('分享血壓管家 App'));
+    final String shareText = context.tr('我正在使用「血壓管家」App記錄和追蹤我的血壓，非常實用！推薦給你：');
+    final String url =
+        Platform.isIOS
+            ? 'https://apps.apple.com/app/id${AppConstants.appStoreId}'
+            : 'https://play.google.com/store/apps/details?id=${AppConstants.packageName}';
+
+    await Share.share('$shareText $url');
   }
 
-  void _showClearDataConfirmDialog() {
-    showDialog(
+  /// 顯示清除數據確認對話框
+  Future<void> _showClearDataConfirmDialog() async {
+    final result = await showDialog<bool>(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text(context.tr('確認清除數據')),
-            content: Text(context.tr('此操作將清除應用中的所有數據，包括血壓記錄和設置。此操作不可恢復。')),
+            title: Text(context.tr('確認清除所有數據')),
+            content: Text(context.tr('此操作將刪除應用中的所有數據，包括用戶資料、血壓記錄和設置，且無法恢復。確定要繼續嗎？')),
             actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(context.tr('取消'))),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(context.tr('取消'), style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _clearAllData();
-                },
-                child: Text(context.tr('確認清除'), style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                onPressed: () => Navigator.of(context).pop(true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: Text(context.tr('清除所有數據')),
               ),
             ],
           ),
     );
+
+    if (result == true) {
+      await _clearAllData();
+    }
   }
 
+  /// 清除所有數據
   Future<void> _clearAllData() async {
-    // 顯示加載指示器
-    showDialog(context: context, barrierDismissible: false, builder: (context) => const Center(child: CircularProgressIndicator()));
-
     try {
-      // 這裡實現清除數據的邏輯
-      // 1. 清除 SharedPreferences 數據
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
-      // 3. 重置引導頁面狀態
-      await SharedPrefsService.resetOnBoardingStatus();
+      // 重新載入用戶資料
+      await _loadUserProfile();
 
-      // 關閉加載指示器
-      if (mounted) Navigator.of(context).pop();
-
-      // 顯示成功消息
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('所有數據已清除'))));
-      }
-
-      // 重啟應用或返回到引導頁面
-      if (mounted) {
-        // 重新啟動應用或跳轉到首頁
-        Navigator.of(context).pushNamedAndRemoveUntil('/onboarding', (route) => false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('所有數據已清除')), duration: const Duration(seconds: 2)));
       }
     } catch (e) {
-      // 關閉加載指示器
-      if (mounted) Navigator.of(context).pop();
-
-      // 顯示錯誤消息
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${context.tr('清除數據失敗')}: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('清除數據失敗：$e')), backgroundColor: Colors.red));
       }
     }
   }

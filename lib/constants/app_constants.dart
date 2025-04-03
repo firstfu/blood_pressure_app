@@ -109,4 +109,11 @@ class AppConstants {
   static const String appStoreUrl = 'https://apps.apple.com/app/id123456789'; // 替換為實際的 App Store ID
   static const String googlePlayUrl = 'https://play.google.com/store/apps/details?id=com.example.bloodpressuremanager'; // 替換為實際的 Google Play 包名
   static const String appDescription = '一款幫助您監測和管理血壓的應用';
+
+  // TODO: 未完成
+  // 應用商店 ID，用於深層連結和分享
+  static const String appStoreId = '123456789'; // 替換為實際的 App Store ID
+
+  // 應用包名，用於 Google Play 連結
+  static const String packageName = 'com.example.blood_pressure_app'; // 替換為實際的應用包名
 }
