@@ -52,20 +52,30 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadUserProfile() async {
     setState(() {
       _isLoading = true;
+      _avatarFile = null; // 重置頭像文件
     });
 
     try {
       final profile = await SharedPrefsService.getUserProfile();
+
+      // 檢查是否為預設或是剛清除後的資料
+      final bool isDefaultOrEmptyProfile = profile.name.isEmpty || profile.isGuest;
+
       setState(() {
         _userProfile = profile;
         _isLoading = false;
-        _loadAvatarFile();
+
+        // 只有當不是預設資料時才加載頭像
+        if (!isDefaultOrEmptyProfile) {
+          _loadAvatarFile();
+        }
       });
     } catch (e) {
       print('加載用戶資料時出錯: $e');
       setState(() {
         _userProfile = UserProfile.createDefault();
         _isLoading = false;
+        _avatarFile = null; // 確保頭像為空
       });
     }
   }
@@ -170,18 +180,53 @@ class _ProfilePageState extends State<ProfilePage> {
                   IconButton(
                     icon: Icon(Icons.settings, color: theme.primaryColor),
                     tooltip: '帳號設定',
-                    onPressed: () {
-                      if (_userProfile == null) return;
-                      Navigator.push<UserProfile>(context, MaterialPageRoute(builder: (context) => EditProfilePage(userProfile: _userProfile!))).then(
-                        (updatedProfile) {
-                          if (updatedProfile != null) {
-                            setState(() {
-                              _userProfile = updatedProfile;
-                              _loadAvatarFile();
-                            });
-                          }
-                        },
+                    onPressed: () async {
+                      // 獲取認證服務提供者
+                      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+                      // 確保用戶已登入
+                      if (!authProvider.isAuthenticated || authProvider.currentUser == null) return;
+
+                      // 將已登入用戶的資料填充到 UserProfile 中
+                      UserProfile authenticatedUserProfile;
+
+                      if (_userProfile == null) {
+                        // 如果本地沒有資料，創建一個新的基於登入用戶的資料
+                        authenticatedUserProfile = UserProfile(
+                          name: authProvider.displayName,
+                          email: authProvider.currentUser?.email,
+                          userId: authProvider.currentUser?.id,
+                          isGuest: false,
+                          lastLogin: DateTime.now(),
+                          photoUrl: authProvider.avatarUrl,
+                        );
+                      } else {
+                        // 如果有本地資料，更新關鍵欄位
+                        authenticatedUserProfile = _userProfile!;
+                        authenticatedUserProfile.name = authProvider.displayName;
+                        authenticatedUserProfile.email = authProvider.currentUser?.email;
+                        authenticatedUserProfile.userId = authProvider.currentUser?.id;
+                        authenticatedUserProfile.isGuest = false;
+                        authenticatedUserProfile.lastLogin = DateTime.now();
+                        authenticatedUserProfile.photoUrl = authProvider.avatarUrl;
+                      }
+
+                      // 導航到編輯頁面
+                      final result = await Navigator.push<UserProfile>(
+                        context,
+                        MaterialPageRoute(builder: (context) => EditProfilePage(userProfile: authenticatedUserProfile)),
                       );
+
+                      // 處理編輯結果
+                      if (result != null) {
+                        setState(() {
+                          _userProfile = result;
+                          _loadAvatarFile();
+                        });
+
+                        // 保存更新後的資料
+                        await SharedPrefsService.saveUserProfile(_userProfile!);
+                      }
                     },
                   ),
                 ],
@@ -241,22 +286,42 @@ class _ProfilePageState extends State<ProfilePage> {
 
   /// 處理登入
   void _handleLogin() async {
-    await AuthManager.showLoginDialog(context, message: '請登入以獲取更多功能');
+    final bool loginSuccess = await AuthManager.showLoginDialog(context, message: '請登入以獲取更多功能');
 
     // 確保 widget 仍在樹中
     if (mounted) {
-      setState(() {}); // 更新UI以反映登入狀態變化
+      if (loginSuccess) {
+        // 登入成功後重新載入用戶資料
+        await _loadUserProfile();
+      } else {
+        // 即使登入失敗也刷新 UI
+        setState(() {});
+      }
     }
   }
 
   /// 處理登出
   void _handleLogout() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    // 首先執行 Supabase 登出操作
     await authProvider.signOut();
+
+    // 清除本地存儲的所有用戶認證資訊
+    await SharedPrefsService.clearUserAuth(); // 這會同時清除用戶資料和認證令牌
+
+    // 載入預設的用戶資料
+    final defaultProfile = UserProfile.createDefault();
+
+    // 保存預設資料到本地
+    await SharedPrefsService.saveUserProfile(defaultProfile);
 
     // 在呼叫 setState 前檢查 widget 是否仍然掛載
     if (mounted) {
-      setState(() {}); // 更新UI以反映登出狀態變化
+      setState(() {
+        _userProfile = defaultProfile;
+        _avatarFile = null; // 清除頭像
+      }); // 更新UI以反映登出狀態變化
     }
   }
 
