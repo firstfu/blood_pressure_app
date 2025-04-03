@@ -58,13 +58,14 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
           child: Dialog(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 24),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: FadeTransition(
               opacity: _animation,
               child: ScaleTransition(
                 scale: Tween<double>(begin: 0.9, end: 1.0).animate(_animation),
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: width > 400 ? 400 : width * 0.9, maxHeight: dialogHeight),
+                  constraints: BoxConstraints(maxWidth: width > 520 ? 520 : width * 0.90, maxHeight: dialogHeight),
                   decoration: BoxDecoration(
                     color:
                         isDarkMode
