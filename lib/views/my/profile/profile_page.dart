@@ -233,14 +233,22 @@ class _ProfilePageState extends State<ProfilePage> {
   /// 處理登入
   void _handleLogin() async {
     await AuthManager.showLoginDialog(context, message: '請登入以獲取更多功能');
-    setState(() {}); // 更新UI以反映登入狀態變化
+
+    // 確保 widget 仍在樹中
+    if (mounted) {
+      setState(() {}); // 更新UI以反映登入狀態變化
+    }
   }
 
   /// 處理登出
   void _handleLogout() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await authProvider.signOut();
-    setState(() {}); // 更新UI以反映登出狀態變化
+
+    // 在呼叫 setState 前檢查 widget 是否仍然掛載
+    if (mounted) {
+      setState(() {}); // 更新UI以反映登出狀態變化
+    }
   }
 
   /// 構建設置選項
