@@ -28,16 +28,21 @@ class SupabaseService {
   /// 初始化 Supabase
   Future<void> initialize() async {
     try {
-      // 如果 Supabase 已經在 main.dart 中初始化，這裡就不需要再次初始化
-      // 只需確認 Supabase.instance 是否可用
-      if (Supabase.instance == null) {
+      // 檢查 Supabase 是否已經初始化，使用一個更安全的方式
+      // 嘗試訪問 client 屬性，如果沒有初始化會拋出例外
+      try {
+        // 如果能夠成功訪問 client，表示已經初始化
+        Supabase.instance.client;
+        debugPrint('Supabase 已經初始化，重用現有實例');
+      } catch (e) {
+        // 如果無法訪問 client，則需要初始化
         await Supabase.initialize(
           url: SupabaseConstants.supabaseUrl,
           anonKey: SupabaseConstants.supabaseAnonKey,
           debug: kDebugMode, // 在開發模式啟用調試
         );
+        debugPrint('Supabase 初始化成功');
       }
-      debugPrint('Supabase 初始化成功');
     } catch (error) {
       debugPrint('Supabase 初始化失敗: $error');
       rethrow;

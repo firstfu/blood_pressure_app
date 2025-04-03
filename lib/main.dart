@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants/app_constants.dart';
-import 'constants/supabase_constants.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
 import 'providers/theme_provider.dart';
@@ -61,15 +60,11 @@ void main() async {
   );
 
   try {
-    // 初始化 Supabase
-    await Supabase.initialize(
-      url: SupabaseConstants.supabaseUrl,
-      anonKey: SupabaseConstants.supabaseAnonKey,
-      debug: true, // 在開發時啟用調試
-    );
-
-    // 設置服務 - 確保所有服務在此處註冊
+    // 設置服務 - 先註冊服務
     setupServices();
+
+    // 通過服務初始化 Supabase，確保只初始化一次
+    await getIt<SupabaseService>().initialize();
 
     // 檢查用戶是否已完成 onBoarding
     final bool onBoardingCompleted = await SharedPrefsService.isOnBoardingCompleted();
