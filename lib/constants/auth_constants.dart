@@ -13,6 +13,7 @@ enum OperationType {
   exportData, // 導出數據
   editRecord, // 編輯記錄
   deleteRecord, // 刪除記錄
+  viewStats, // 查看統計報表
 }
 
 /// 擴展方法，用於獲取操作的描述文本
@@ -33,6 +34,8 @@ extension OperationTypeExtension on OperationType {
         return '編輯記錄';
       case OperationType.deleteRecord:
         return '刪除記錄';
+      case OperationType.viewStats:
+        return '查看統計報表';
     }
   }
 }

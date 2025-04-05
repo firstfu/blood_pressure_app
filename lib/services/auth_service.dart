@@ -210,6 +210,7 @@ class AuthService {
       case auth_constants.OperationType.editProfile:
       case auth_constants.OperationType.setReminder:
       case auth_constants.OperationType.exportData:
+      case auth_constants.OperationType.viewStats:
         return true; // 這些操作需要登入
       case auth_constants.OperationType.viewHistory:
         return false; // 假設查看歷史記錄不需要登入

@@ -90,6 +90,28 @@ class _MainPageState extends State<MainPage> {
         }
       }
     }
+    // 如果點擊了 "報表"，檢查是否需要登入
+    else if (index == 2) {
+      // 報表頁
+      final authService = GetIt.instance<AuthService>();
+
+      // 如果是遊客用戶
+      if (authService.isGuestUser) {
+        // 檢查是否需要登入
+        if (authService.needsLoginDialog(auth_constants.OperationType.viewStats)) {
+          // 確定顯示登入還是註冊對話框
+          final showRegister = authService.shouldShowRegisterDialog(auth_constants.OperationType.viewStats);
+
+          // 顯示登入對話框
+          final bool result = await AuthManager.showLoginDialog(context, message: tr(context, '查看報表需要登入。您想現在登入嗎？'), showRegister: showRegister);
+
+          // 如果用戶取消登入或登入失敗，不切換頁面
+          if (!result) {
+            return;
+          }
+        }
+      }
+    }
 
     // 更新選中的索引
     if (mounted) {
