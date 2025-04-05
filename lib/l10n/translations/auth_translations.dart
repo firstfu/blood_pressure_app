@@ -69,6 +69,7 @@ const Map<String, String> zhTWAuth = {
   '您需要登入才能使用報告功能': '您需要登入才能使用報告功能',
   '您需要登入才能設定提醒': '您需要登入才能設定提醒',
   '您需要登入才能同步數據': '您需要登入才能同步數據',
+  '新增記錄需要登入。您想現在登入嗎？': '新增記錄需要登入。您想現在登入嗎？',
 };
 
 // 英文登入/註冊介面翻譯
@@ -136,4 +137,5 @@ const Map<String, String> enUSAuth = {
   '您需要登入才能使用報告功能': 'You need to sign in to use the report feature',
   '您需要登入才能設定提醒': 'You need to sign in to set reminders',
   '您需要登入才能同步數據': 'You need to sign in to sync data',
+  '新增記錄需要登入。您想現在登入嗎？': 'Adding records requires login. Would you like to sign in now?',
 };

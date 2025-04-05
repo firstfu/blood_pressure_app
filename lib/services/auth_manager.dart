@@ -11,6 +11,7 @@ import '../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'auth_service.dart';
 import '../constants/auth_constants.dart' as auth_constants;
+import '../l10n/app_localizations.dart' hide AppLocalizationsExtension;
 
 /// 身份認證管理器
 ///
@@ -87,7 +88,7 @@ class AuthManager {
     final showRegister = authService.shouldShowRegisterDialog(operationType);
 
     // 顯示登入或註冊對話框
-    final message = '您需要登入才能$operationName。';
+    final message = '${_tr(context, '您需要登入才能繼續')} $operationName';
     return await showLoginDialog(context, message: message, showRegister: showRegister);
   }
 
@@ -97,5 +98,10 @@ class AuthManager {
   static Future<void> signOut(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await authProvider.signOut();
+  }
+
+  // 輔助函數用於處理翻譯
+  static String _tr(BuildContext context, String key) {
+    return AppLocalizations.of(context).translate(key);
   }
 }

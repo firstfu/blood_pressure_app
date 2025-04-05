@@ -342,7 +342,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
     } else if (errorMessage.contains('canceled') || errorMessage.contains('cancelled')) {
       return context.tr('登入已取消');
     } else {
-      return context.tr('認證過程中發生錯誤') + ': $errorMessage';
+      return "${context.tr('認證過程中發生錯誤')}: $errorMessage";
     }
   }
 

@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import '../l10n/app_localizations_extension.dart';
+import '../l10n/app_localizations.dart' hide AppLocalizationsExtension;
 import '../services/auth_service.dart';
 import '../constants/auth_constants.dart' as auth_constants;
 import '../services/auth_manager.dart';
@@ -53,10 +53,10 @@ class _MainPageState extends State<MainPage> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.tr('首頁')),
-          BottomNavigationBarItem(icon: const Icon(Icons.add_box), label: context.tr('新增記錄')),
-          BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: context.tr('報表')),
-          BottomNavigationBarItem(icon: const Icon(Icons.settings), label: context.tr('設定')),
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: tr(context, '首頁')),
+          BottomNavigationBarItem(icon: const Icon(Icons.add_box), label: tr(context, '新增記錄')),
+          BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: tr(context, '報表')),
+          BottomNavigationBarItem(icon: const Icon(Icons.settings), label: tr(context, '設定')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onTabTapped,
@@ -81,7 +81,7 @@ class _MainPageState extends State<MainPage> {
           final showRegister = authService.shouldShowRegisterDialog(auth_constants.OperationType.addRecord);
 
           // 顯示登入對話框
-          final bool result = await AuthManager.showLoginDialog(context, message: '新增記錄需要登入。您想現在登入嗎？', showRegister: showRegister);
+          final bool result = await AuthManager.showLoginDialog(context, message: tr(context, '新增記錄需要登入。您想現在登入嗎？'), showRegister: showRegister);
 
           // 如果用戶取消登入或登入失敗，不切換頁面
           if (!result) {
@@ -98,4 +98,9 @@ class _MainPageState extends State<MainPage> {
       });
     }
   }
+}
+
+// 輔助函數以避免擴展衝突
+String tr(BuildContext context, String key) {
+  return AppLocalizations.of(context).translate(key);
 }
