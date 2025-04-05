@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../themes/app_theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 認證對話框基礎組件
 /// 提供共用的對話框架構、動畫、社交登入和錯誤處理
@@ -206,7 +207,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
             ),
             icon: const Icon(Icons.apple, size: 24),
             label: Text(
-              '使用 Apple 帳號繼續',
+              context.tr('使用 Apple 帳號繼續'),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.black : Colors.white),
             ),
           ),
@@ -227,7 +228,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
           ),
           icon: const Icon(Icons.g_mobiledata, color: Colors.red, size: 26),
           label: Text(
-            '使用 Google 帳號繼續',
+            context.tr('使用 Google 帳號繼續'),
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.white : Colors.black87),
           ),
         ),
@@ -246,7 +247,7 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              '或者',
+              context.tr('或者使用其他方式登入'),
               style: TextStyle(color: isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ),
@@ -327,21 +328,21 @@ abstract class AuthDialogBaseState<T extends AuthDialogBase> extends State<T> wi
     if (errorMessage.contains('user already registered') ||
         errorMessage.contains('email already in use') ||
         errorMessage.contains('email already registered')) {
-      return '此電子郵件已被註冊';
+      return context.tr('此電子郵件已被註冊');
     } else if (errorMessage.contains('invalid login credentials')) {
-      return '電子郵件或密碼不正確';
+      return context.tr('帳號密碼不匹配');
     } else if (errorMessage.contains('email not confirmed')) {
-      return '請先驗證您的電子郵件再登入';
+      return context.tr('請先驗證您的電子郵件再登入');
     } else if (errorMessage.contains('network')) {
-      return '網絡連接出現問題，請檢查您的網絡連接';
+      return context.tr('網絡連接出現問題，請檢查您的網絡連接');
     } else if (errorMessage.contains('too many requests')) {
-      return '嘗試次數過多，請稍後再試';
+      return context.tr('嘗試次數過多，請稍後再試');
     } else if (errorMessage.contains('weak password')) {
-      return '密碼太弱，請使用更強的密碼';
+      return context.tr('密碼太弱，請使用更強的密碼');
     } else if (errorMessage.contains('canceled') || errorMessage.contains('cancelled')) {
-      return '登入已取消';
+      return context.tr('登入已取消');
     } else {
-      return '認證過程中發生錯誤: $errorMessage';
+      return context.tr('認證過程中發生錯誤') + ': $errorMessage';
     }
   }
 

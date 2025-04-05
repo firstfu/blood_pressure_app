@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../themes/app_theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../l10n/app_localizations.dart';
 import 'auth_dialog_base.dart';
 import 'register_dialog.dart';
 
@@ -53,10 +54,10 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 標題
-                const Text('歡迎回來', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(context.tr('歡迎回來'), style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                 // 副標題
                 const SizedBox(height: 4),
-                Text('登入您的帳號繼續', style: TextStyle(color: Colors.white.withAlpha(230), fontSize: 14)),
+                Text(context.tr('登入您的帳號繼續'), style: TextStyle(color: Colors.white.withAlpha(230), fontSize: 14)),
               ],
             ),
           ),
@@ -122,17 +123,17 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
         TextFormField(
           controller: _emailController,
           decoration: InputDecoration(
-            labelText: '電子郵件',
-            hintText: '請輸入您的電子郵件',
+            labelText: context.tr('電子郵件'),
+            hintText: context.tr('請輸入您的電子郵件'),
             prefixIcon: const Icon(Icons.email_outlined),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return '請輸入電子郵件';
+              return context.tr('請輸入電子郵件');
             } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-              return '請輸入有效的電子郵件地址';
+              return context.tr('電子郵件格式不正確');
             }
             return null;
           },
@@ -146,8 +147,8 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
         TextFormField(
           controller: _passwordController,
           decoration: InputDecoration(
-            labelText: '密碼',
-            hintText: '請輸入您的密碼',
+            labelText: context.tr('密碼'),
+            hintText: context.tr('請輸入您的密碼'),
             prefixIcon: const Icon(Icons.lock_outline_rounded),
             suffixIcon: IconButton(
               icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -162,7 +163,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return '請輸入密碼';
+              return context.tr('密碼不能為空');
             }
             return null;
           },
@@ -181,7 +182,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: Text(
-              '忘記密碼？',
+              context.tr('忘記密碼？'),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -207,7 +208,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
         elevation: isDarkMode ? 3 : 2,
         shadowColor: isDarkMode ? Colors.black.withAlpha(50) : Colors.black.withAlpha(13),
       ),
-      child: const Text('登入', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+      child: Text(context.tr('登入'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
     );
   }
 
@@ -229,9 +230,9 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
       child: Text.rich(
         TextSpan(
           children: [
-            TextSpan(text: '還沒有帳號？', style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700)),
+            TextSpan(text: context.tr('還沒有帳號？'), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700)),
             TextSpan(
-              text: ' 立即註冊',
+              text: context.tr('立即註冊'),
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.lightBlueAccent : AppTheme.primaryColor),
             ),
           ],
@@ -291,7 +292,7 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
       setState(() {
-        errorMessage = '請先輸入您的電子郵件地址';
+        errorMessage = context.tr('請先輸入您的電子郵件地址');
       });
       return;
     }
@@ -313,7 +314,9 @@ class LoginDialogState extends AuthDialogBaseState<LoginDialog> {
 
         if (success && context.mounted) {
           // 顯示成功消息
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('重置密碼的電子郵件已發送，請檢查您的郵箱'), behavior: SnackBarBehavior.floating));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(context.tr('重置密碼的電子郵件已發送，請檢查您的郵箱')), behavior: SnackBarBehavior.floating));
         }
       }
     } catch (e) {

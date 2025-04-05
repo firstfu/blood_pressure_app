@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../themes/app_theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../l10n/app_localizations.dart';
 import 'auth_dialog_base.dart';
 import 'login_dialog.dart';
 
@@ -57,10 +58,10 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 標題
-                const Text('創建帳號', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(context.tr('創建新帳號'), style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                 // 副標題
                 const SizedBox(height: 4),
-                Text('註冊新帳號開始使用', style: TextStyle(color: Colors.white.withAlpha(230), fontSize: 14)),
+                Text(context.tr('註冊'), style: TextStyle(color: Colors.white.withAlpha(230), fontSize: 14)),
               ],
             ),
           ),
@@ -126,15 +127,15 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
         TextFormField(
           controller: _nameController,
           decoration: InputDecoration(
-            labelText: '您的名字',
-            hintText: '請輸入您的名字',
+            labelText: context.tr('名字'),
+            hintText: context.tr('請輸入您的名字'),
             prefixIcon: const Icon(Icons.person_outline_rounded),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return '請輸入您的名字';
+              return context.tr('名字不能為空');
             }
             return null;
           },
@@ -147,17 +148,17 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
         TextFormField(
           controller: _emailController,
           decoration: InputDecoration(
-            labelText: '電子郵件',
-            hintText: '請輸入您的電子郵件',
+            labelText: context.tr('電子郵件'),
+            hintText: context.tr('請輸入您的電子郵件'),
             prefixIcon: const Icon(Icons.email_outlined),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return '請輸入電子郵件';
+              return context.tr('請輸入電子郵件');
             } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-              return '請輸入有效的電子郵件地址';
+              return context.tr('電子郵件格式不正確');
             }
             return null;
           },
@@ -171,8 +172,8 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
         TextFormField(
           controller: _passwordController,
           decoration: InputDecoration(
-            labelText: '密碼',
-            hintText: '請設定至少 8 位的密碼',
+            labelText: context.tr('密碼'),
+            hintText: context.tr('請輸入您的密碼'),
             prefixIcon: const Icon(Icons.lock_outline_rounded),
             suffixIcon: IconButton(
               icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -187,9 +188,9 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return '請輸入密碼';
-            } else if (value.length < 8) {
-              return '密碼長度至少為 8 位';
+              return context.tr('密碼不能為空');
+            } else if (value.length < 6) {
+              return context.tr('密碼至少需要6個字符');
             }
             return null;
           },
@@ -203,8 +204,8 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
         TextFormField(
           controller: _confirmPasswordController,
           decoration: InputDecoration(
-            labelText: '確認密碼',
-            hintText: '請再次輸入密碼',
+            labelText: context.tr('確認密碼'),
+            hintText: context.tr('請再次輸入密碼'),
             prefixIcon: const Icon(Icons.lock_outline_rounded),
             suffixIcon: IconButton(
               icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
@@ -219,9 +220,9 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return '請確認您的密碼';
+              return context.tr('請確認您的密碼');
             } else if (value != _passwordController.text) {
-              return '兩次輸入的密碼不一致';
+              return context.tr('密碼不匹配');
             }
             return null;
           },
@@ -246,7 +247,7 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
         elevation: isDarkMode ? 3 : 2,
         shadowColor: isDarkMode ? Colors.black.withAlpha(50) : Colors.black.withAlpha(13),
       ),
-      child: const Text('註冊', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+      child: Text(context.tr('註冊'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
     );
   }
 
@@ -268,9 +269,9 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
       child: Text.rich(
         TextSpan(
           children: [
-            TextSpan(text: '已經有帳號？', style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700)),
+            TextSpan(text: context.tr('已有帳號？'), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700)),
             TextSpan(
-              text: ' 立即登入',
+              text: context.tr('立即登入'),
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.lightBlueAccent : AppTheme.primaryColor),
             ),
           ],
@@ -314,7 +315,7 @@ class RegisterDialogState extends AuthDialogBaseState<RegisterDialog> {
           });
 
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('註冊成功！請先驗證您的電子郵件再登入。'), behavior: SnackBarBehavior.floating));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.tr('請檢查您的郵箱激活帳號')), behavior: SnackBarBehavior.floating));
           }
 
           // 註冊成功後自動切換到登入界面
